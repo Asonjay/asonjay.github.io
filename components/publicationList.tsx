@@ -1,6 +1,8 @@
 // components/PublicationList.tsx
 import React, { use } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
+import { FileText, ExternalLink, ChevronRight } from 'lucide-react'
 import { getAllPublications } from '../lib/publications'
 import { Publication } from '../types/publication'
 
@@ -57,50 +59,79 @@ export function PublicationList({
       <div className="mt-3">
         {years.map((year, yearIndex) => (
           <div key={year}>
-            {yearIndex !== 0 && <hr className="border-back-subtle my-6" />}
+            {yearIndex !== 0 && <hr className="border-back-subtle my-2" />}
             <div className="grid grid-cols-[1fr_80px] gap-8">
-              <div className="border-back-subtle space-y-8 pb-4">
+              <div className="border-back-subtle pb overflow-hidden">
                 {groupedPubs[year].map((pub, index) => (
-                  <li key={index} className="group list-none">
-                    <div className="border-b border-back-subtle/50 pb-2 last:border-b-0 hover:bg-back-subtle/20 hover:scale-[1.01] transition-all duration-200 rounded-lg p-4 -m-4">
-                      <div className="flex items-start gap-8 mb-1">
-                        <span className="text-lg font-semibold group-hover:text-accent leading-tight block cursor-default transition-colors">
-                          {pub.title}
-                        </span>
-                      </div>
-                      <div className="space-y-1 mb-2">
-                        <p className="text-sm text-fore-subtle">
-                          {formatAuthors(pub.authors)}
-                        </p>
-                        <p className="text-sm italic text-fore-subtle font-medium">
-                          {pub.venue}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-3 mt-1">
-                        {pub.abbr && (
-                          <span className="inline-flex items-center px-3 py-1 text-xs font-semibold bg-gradient-to-r from-accent to-teal-600 text-white rounded-full shadow-sm">
-                            {pub.abbr}
-                          </span>
+                  <li
+                    key={index}
+                    className="group list-none relative overflow-hidden mb-1"
+                  >
+                    <div className="pl-2 pb-4 pr-4 pt-4 transition-all duration-300 group-hover:translate-x-20 relative z-10 bg-back-primary">
+                      <div className="flex gap-4">
+                        {pub.thumbnail && (
+                          <div className="flex-shrink-0 w-[240px] h-[160px]">
+                            <Image
+                              src={pub.thumbnail}
+                              alt={pub.title}
+                              width={400}
+                              height={300}
+                              className="object-fill w-full h-full"
+                            />
+                          </div>
                         )}
-                        {pub.pdf && (
-                          <Link
-                            href={pub.pdf}
-                            className="inline-flex items-center px-3 py-1 text-xs border border-accent text-accent hover:bg-accent hover:text-white rounded-md transition-all hover:shadow-sm"
-                            target="_blank"
-                          >
-                            PDF
-                          </Link>
-                        )}
-                        {pub.url && !pub.pdf && (
-                          <Link
-                            href={pub.url}
-                            className="inline-flex items-center px-3 py-1 text-sm border border-accent text-accent hover:bg-accent hover:text-white rounded-md transition-all hover:shadow-sm"
-                            target="_blank"
-                          >
-                            PDF
-                          </Link>
-                        )}
+                        <div className="flex-1">
+                          <div className="flex items-start justify-between gap-4 mb-1">
+                            <span className="text-lg font-semibold leading-tight block cursor-default group-hover:text-accent transition-colors">
+                              {pub.title}
+                            </span>
+                            {pub.abbr && (
+                              <span className="inline-flex items-center px-3 py-1 text-xs font-semibold bg-gradient-to-r from-accent to-teal-600 text-white rounded-full shadow-sm flex-shrink-0">
+                                {pub.abbr}
+                              </span>
+                            )}
+                          </div>
+                          <div className="space-y-1 mb-2">
+                            <p className="text-sm text-fore-subtle">
+                              {formatAuthors(pub.authors)}
+                            </p>
+                            <p className="text-sm italic text-fore-subtle font-medium">
+                              {pub.venue}
+                            </p>
+                          </div>
+                        </div>
                       </div>
+                    </div>
+                    {/* Hidden action panel revealed on hover */}
+                    <div className="absolute left-0 top-0 bottom-0 w-20 flex">
+                      {pub.pdf && (
+                        <Link
+                          href={pub.pdf}
+                          className="relative flex flex-col items-center justify-center gap-1 w-full bg-accent text-white hover:bg-accent/90 transition-colors"
+                          target="_blank"
+                          style={{
+                            clipPath:
+                              'polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%)',
+                          }}
+                        >
+                          <FileText size={20} />
+                          <span className="text-xs font-semibold">PDF</span>
+                        </Link>
+                      )}
+                      {pub.url && !pub.pdf && (
+                        <Link
+                          href={pub.url}
+                          className="relative flex flex-col items-center justify-center gap-1 w-full bg-accent text-white hover:bg-accent/90 transition-colors"
+                          target="_blank"
+                          style={{
+                            clipPath:
+                              'polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%)',
+                          }}
+                        >
+                          <ExternalLink size={20} />
+                          <span className="text-xs font-semibold">Link</span>
+                        </Link>
+                      )}
                     </div>
                   </li>
                 ))}

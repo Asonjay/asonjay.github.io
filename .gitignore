@@ -76,3 +76,6 @@ out
 
 # Local Netlify folder
 .netlify
+
+.claude
+CLAUDE.md

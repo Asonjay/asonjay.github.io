@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import { Fira_Code, Inter } from 'next/font/google'
+import { Fira_Code, Inter_Tight } from 'next/font/google'
 import { Analytics } from '../components/analytics'
 import { Footer } from '../components/footer'
 import { Header } from '../components/header'
@@ -8,7 +8,7 @@ import { MobileNav } from '../components/mobileNav'
 import './styles/codeblock.css'
 import './styles/globals.css'
 
-const FontInter = Inter({
+const FontInterTight = Inter_Tight({
   subsets: ['latin'],
   variable: '--font-inter',
 })
@@ -65,11 +65,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${FontInter.variable} ${FontFiraCode.variable} font-sans flex flex-col min-h-screen relative`}
+        className={`${FontInterTight.variable} ${FontFiraCode.variable} font-sans flex flex-col min-h-screen relative`}
       >
         <MobileNav />
         <Header />
-        <main className="container flex-grow max-w-screen-xl px-5 m-auto mt-16 sm:px-12 md:px-20">
+        <main className="container flex-grow max-w-screen-xl px-5 m-auto mt-6 sm:px-12 md:px-20">
           {children}
         </main>
         <Contact />

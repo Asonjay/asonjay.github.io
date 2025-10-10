@@ -9,4 +9,5 @@ export type Publication = {
   doi?: string
   abbr?: string
   selected?: boolean
+  thumbnail?: string
 }

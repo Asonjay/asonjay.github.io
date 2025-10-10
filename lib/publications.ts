@@ -24,6 +24,7 @@ function parseBibTeX(content: string): Publication[] {
     if (
       type.toLowerCase() === 'article' ||
       type.toLowerCase() === 'inproceedings' ||
+      type.toLowerCase() === 'inbook' ||
       type.toLowerCase() === 'misc'
     ) {
       const publication: Partial<Publication> = {}
@@ -68,6 +69,9 @@ function parseBibTeX(content: string): Publication[] {
             break
           case 'selected':
             publication.selected = fieldValue.toLowerCase() === 'true'
+            break
+          case 'thumbnail':
+            publication.thumbnail = fieldValue.trim()
             break
         }
       }

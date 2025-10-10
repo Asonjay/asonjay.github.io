@@ -12,10 +12,10 @@ export const NavLink = ({ to, title = 'Link', selected = false, ...props }) => {
       {...props}
       href={to}
       className={classNames(
-        'font-semibold tracking-wide text-sm hover:text-accent transition duration-150 ',
+        'font-semibold tracking-wide text-sm transition duration-150 inline-flex items-center border-b-2',
         {
-          'text-accent': selected,
-          'text-fore-secondary': !selected,
+          'text-accent border-accent font-bold': selected,
+          'text-fore-secondary hover:text-accent border-transparent': !selected,
         }
       )}
     >

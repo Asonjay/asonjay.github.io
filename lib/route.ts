@@ -25,6 +25,10 @@ export const routes = [
     label: 'BLOG',
   },
   // {
+  //   path: '/life',
+  //   label: 'LIFE',
+  // },
+  // {
   //   path: '/moments',
   //   label: 'MOMENTS',
   // },

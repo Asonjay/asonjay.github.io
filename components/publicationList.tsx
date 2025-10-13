@@ -60,36 +60,39 @@ export function PublicationList({
         {years.map((year, yearIndex) => (
           <div key={year}>
             {yearIndex !== 0 && <hr className="border-back-subtle my-2" />}
-            <div className="grid grid-cols-[1fr_80px] gap-8">
+            <div className="grid grid-cols-[1fr_60px] gap-0">
               <div className="border-back-subtle pb overflow-hidden">
                 {groupedPubs[year].map((pub, index) => (
                   <li
                     key={index}
-                    className="group list-none relative overflow-hidden mb-1"
+                    className="group list-none relative overflow-hidden mb-3"
                   >
-                    <div className="pl-2 pb-4 pr-4 pt-4 transition-all duration-300 group-hover:translate-x-20 relative z-10 bg-back-primary">
+                    <div className="pl-2 pb- pr-2 pt-0 transition-transform duration-300 group-hover:translate-x-12 relative z-10 bg-back-primary will-change-transform">
                       <div className="flex gap-4">
                         {pub.thumbnail && (
-                          <div className="flex-shrink-0 w-[240px] h-[160px]">
+                          <div className="flex-shrink-0 w-[240px]">
                             <Image
                               src={pub.thumbnail}
                               alt={pub.title}
                               width={400}
                               height={300}
-                              className="object-fill w-full h-full"
+                              className="object-cover w-full h-auto"
                             />
                           </div>
                         )}
                         <div className="flex-1">
-                          <div className="flex items-start justify-between gap-4 mb-1">
-                            <span className="text-lg font-semibold leading-tight block cursor-default group-hover:text-accent transition-colors">
+                          <div className="mb-1">
+                            <span className="text-lg font-semibold leading-tight cursor-default group-hover:text-accent transition-colors">
                               {pub.title}
+                              {pub.abbr && (
+                                <>
+                                  {' '}
+                                  <span className="inline-flex items-center px-3 py-1 text-xs font-semibold bg-gradient-to-r from-accent to-teal-600 text-white rounded-full shadow-sm align-middle">
+                                    {pub.abbr}
+                                  </span>
+                                </>
+                              )}
                             </span>
-                            {pub.abbr && (
-                              <span className="inline-flex items-center px-3 py-1 text-xs font-semibold bg-gradient-to-r from-accent to-teal-600 text-white rounded-full shadow-sm flex-shrink-0">
-                                {pub.abbr}
-                              </span>
-                            )}
                           </div>
                           <div className="space-y-1 mb-2">
                             <p className="text-sm text-fore-subtle">
@@ -103,7 +106,7 @@ export function PublicationList({
                       </div>
                     </div>
                     {/* Hidden action panel revealed on hover */}
-                    <div className="absolute left-0 top-0 bottom-0 w-20 flex">
+                    <div className="absolute left-0 top-0 bottom-1 w-12 flex z-0">
                       {pub.pdf && (
                         <Link
                           href={pub.pdf}
@@ -136,7 +139,7 @@ export function PublicationList({
                   </li>
                 ))}
               </div>
-              <div className="text-3xl text-fore-subtle text-right opacity-20 sticky top-4">
+              <div className="text-2xl text-fore-subtle text-right opacity-20 sticky top-4">
                 {year}
               </div>
             </div>

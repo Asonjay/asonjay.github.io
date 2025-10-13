@@ -19,12 +19,12 @@ export default function Publications() {
       </h1>
 
       <p className="mb-2 text-fore-subtle">
-        My research focuses on advancing the capabilities and security of Large
-        Language Models (LLMs), with particular emphasis on code understanding,
-        robustness against adversarial attacks, system integration, and
-        educational applications. Current research directions include LLM-based
-        code generation, attack/defense mechanisms for LLMs, development of
-        reliable LLM-powered systems, and AI-enhanced educational technology.
+        My research focuses on reinforcement learning for robotics and the
+        capabilities and security of Large Language Models (LLMs). My current
+        research directions include reinforcement learning algorithms for
+        robotic manipulation, responsible AI, LLM post-training, development of
+        reliable LLM-powered applications, and AI-enhanced educational
+        technology.
       </p>
       <div className="border-t-2 border-dotted border-back-subtle"></div>
       <PublicationList selectedOnly={false} />

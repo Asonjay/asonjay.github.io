@@ -64,7 +64,7 @@ export function MobileNav() {
         )}
       </button>
       {navShow && (
-        <div className="relative z-10">
+        <div className="relative z-50">
           <div className="fixed w-full h-screen bg-back-primary"></div>
           <button
             type="button"

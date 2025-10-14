@@ -65,6 +65,18 @@ export function Footer() {
               </span>
               <span>
                 <a
+                  href="https://scholar.google.com/citations?user=NvnoD1kAAAAJ&hl=en"
+                  aria-label="Visit Google Scholar Profile"
+                  title="Visit Google Scholar Profile"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="focus:text-accent"
+                >
+                  <GoogleScholar24 className="transition-transform ease-in-out hover:-translate-y-1 hover:text-accent" />
+                </a>
+              </span>
+              <span>
+                <a
                   href="https://github.com/asonjay"
                   aria-label="Visit GitHub profile"
                   title="Visit GitHub profile"
@@ -85,18 +97,6 @@ export function Footer() {
                   className="focus:text-accent"
                 >
                   <Twitter24 className="transition-transform ease-in-out hover:-translate-y-1 hover:text-accent" />
-                </a>
-              </span>
-              <span>
-                <a
-                  href="https://scholar.google.com/citations?user=NvnoD1kAAAAJ&hl=en"
-                  aria-label="Visit Google Scholar Profile"
-                  title="Visit Google Scholar Profile"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="focus:text-accent"
-                >
-                  <GoogleScholar24 className="transition-transform ease-in-out hover:-translate-y-1 hover:text-accent" />
                 </a>
               </span>
               <span>

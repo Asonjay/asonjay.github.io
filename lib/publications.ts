@@ -58,6 +58,9 @@ function parseBibTeX(content: string): Publication[] {
           case 'pdf':
             publication.pdf = fieldValue.trim()
             break
+          case 'code':
+            publication.code = fieldValue.trim()
+            break
           case 'abstract':
             publication.abstract = fieldValue.trim()
             break

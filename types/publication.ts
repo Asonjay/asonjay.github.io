@@ -5,6 +5,7 @@ export type Publication = {
   venue: string
   url?: string
   pdf?: string
+  code?: string
   abstract?: string
   doi?: string
   abbr?: string

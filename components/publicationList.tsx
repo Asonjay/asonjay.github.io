@@ -2,7 +2,7 @@
 import React, { use } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { FileText, ExternalLink, ChevronRight } from 'lucide-react'
+import { FileText, ExternalLink, ChevronRight, Code } from 'lucide-react'
 import { getAllPublications } from '../lib/publications'
 import { Publication } from '../types/publication'
 
@@ -67,7 +67,13 @@ export function PublicationList({
                     key={index}
                     className="group list-none relative overflow-hidden mb-3"
                   >
-                    <div className="pl-2 pb- pr-2 pt-0 transition-transform duration-300 group-hover:translate-x-12 relative z-10 bg-back-primary will-change-transform">
+                    <div
+                      className={`pl-2 pb- pr-2 pt-0 transition-transform duration-300 ${
+                        pub.pdf && pub.code
+                          ? 'group-hover:translate-x-[6.5rem]'
+                          : 'group-hover:translate-x-12'
+                      } relative z-10 bg-back-primary will-change-transform`}
+                    >
                       <div className="flex gap-4">
                         {pub.thumbnail && (
                           <div className="flex-shrink-0 w-[240px]">
@@ -106,11 +112,11 @@ export function PublicationList({
                       </div>
                     </div>
                     {/* Hidden action panel revealed on hover */}
-                    <div className="absolute left-0 top-0 bottom-1 w-12 flex z-0">
+                    <div className="absolute left-0 top-0 bottom-1 z-0">
                       {pub.pdf && (
                         <Link
                           href={pub.pdf}
-                          className="relative flex flex-col items-center justify-center gap-1 w-full bg-accent text-white hover:bg-accent/90 transition-colors"
+                          className="absolute left-0 top-0 bottom-0 flex flex-col items-center justify-center gap-1 w-12 bg-accent text-white hover:brightness-90 transition-all z-10"
                           target="_blank"
                           style={{
                             clipPath:
@@ -121,10 +127,24 @@ export function PublicationList({
                           <span className="text-xs font-semibold">PDF</span>
                         </Link>
                       )}
-                      {pub.url && !pub.pdf && (
+                      {pub.code && (
+                        <Link
+                          href={pub.code}
+                          className="absolute left-[2.5rem] top-0 bottom-0 flex flex-col items-center justify-center gap-1 w-12 bg-back-secondary text-fore-primary hover:bg-back-subtle transition-colors z-0 pl-1"
+                          target="_blank"
+                          style={{
+                            clipPath:
+                              'polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%)',
+                          }}
+                        >
+                          <Code size={20} />
+                          <span className="text-xs font-semibold">Code</span>
+                        </Link>
+                      )}
+                      {pub.url && !pub.pdf && !pub.code && (
                         <Link
                           href={pub.url}
-                          className="relative flex flex-col items-center justify-center gap-1 w-full bg-accent text-white hover:bg-accent/90 transition-colors"
+                          className="absolute left-0 top-0 bottom-0 flex flex-col items-center justify-center gap-1 w-12 bg-accent text-white hover:brightness-90 transition-all"
                           target="_blank"
                           style={{
                             clipPath:

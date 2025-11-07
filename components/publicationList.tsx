@@ -70,7 +70,7 @@ export function PublicationList({
                     <div
                       className={`pl-2 pb- pr-2 pt-0 transition-transform duration-300 ${
                         pub.pdf && pub.code
-                          ? 'group-hover:translate-x-[6.5rem]'
+                          ? 'group-hover:translate-x-[6rem]'
                           : 'group-hover:translate-x-12'
                       } relative z-10 bg-back-primary will-change-transform`}
                     >

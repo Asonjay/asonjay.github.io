@@ -97,7 +97,7 @@ function convertHuggingFaceToConference(hf: HuggingFaceConference): Conference |
     if (subjects.length === 1) {
       sub = subjects[0]
     } else if (subjects.length > 1) {
-      sub = [...new Set(subjects)] // Remove duplicates
+      sub = Array.from(new Set(subjects)) // Remove duplicates
     }
   }
 

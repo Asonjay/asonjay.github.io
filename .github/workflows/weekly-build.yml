@@ -6,9 +6,6 @@ on:
     - cron: '0 0 * * 0'
   # Also allows manual trigger from GitHub Actions tab
   workflow_dispatch:
-  # Also runs on push to master
-  push:
-    branches: [master]
 
 jobs:
   build-and-deploy:

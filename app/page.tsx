@@ -18,12 +18,16 @@ import PostList from 'components/postList'
 import NewsList from 'components/newsList'
 import PublicationList from 'components/publicationList'
 import ProjectList from 'components/projectList'
+import { DeadlineSectionFull } from 'components/deadlineSection'
+import { getAllConferences } from '../lib/deadlines'
 import Introduction from '../components/introduction'
 import avatar from '../public/images/profile-img.jpeg'
 import { components as mdx } from '../components/mdxComponents'
 import { wenKai } from './fonts'
 
 export default async function Page() {
+  const conferences = await getAllConferences('all', true) // Include expired deadlines
+
   return (
     <div>
       {/* Introduction Section */}
@@ -170,6 +174,9 @@ export default async function Page() {
         </div>
         <NewsList />
       </div>
+
+      {/* Deadlines Section */}
+      <DeadlineSectionFull conferences={conferences} limit={10} />
 
       {/* Publications Section */}
       <div className="mt-12">

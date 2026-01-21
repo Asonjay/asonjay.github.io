@@ -426,3 +426,19 @@ export const External24 = ({ className }: IconProps) => {
     </svg>
   )
 }
+
+export const Clock24 = ({ className }: IconProps) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className={classNames('w-6 h-6 text-accent', className)}
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      role="img"
+    >
+      <circle cx="12" cy="12" r="10" strokeWidth={2} />
+      <polyline points="12 6 12 12 16 14" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}

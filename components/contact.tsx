@@ -24,7 +24,7 @@ export function Contact() {
         ></div>
       </div>
 
-      <div className="container max-w-screen-lg pt-8 mx-auto">
+      <div className="container max-w-screen-lg pt-8 mx-auto px-5 md:px-20">
         {/* <h1 className="text-3xl font-semibold text-center">
           Get in touch{' '}
           <span role="img" aria-label="wave">

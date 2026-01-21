@@ -23,10 +23,15 @@ export function MobileNav() {
   }, [navShow])
 
   return (
-    <div className="text-xl sm:hidden" aria-hidden={!navShow}>
+    <>
+      {/* Fixed menu button - outside main container to avoid layout issues */}
       <button
         type="button"
-        className="fixed right-0 z-50 px-5 py-12 md:hidden focus:outline-none"
+        className="fixed right-4 top-4 z-[9999] p-3 sm:hidden focus:outline-none bg-back-secondary rounded-lg shadow-md"
+        style={{
+          transform: 'translate3d(0,0,0)',
+          WebkitTransform: 'translate3d(0,0,0)',
+        }}
         onClick={_ => {
           setNavShow(!navShow)
         }}
@@ -63,6 +68,7 @@ export function MobileNav() {
           </svg>
         )}
       </button>
+
       {navShow && (
         <div className="relative z-50">
           <div className="fixed w-full h-screen bg-back-primary"></div>
@@ -91,7 +97,7 @@ export function MobileNav() {
           </nav>
         </div>
       )}
-    </div>
+    </>
   )
 }
 

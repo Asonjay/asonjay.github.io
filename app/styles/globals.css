@@ -93,11 +93,10 @@
   }
 
   body {
-    transition: all 0.3s ease 0s;
-    overflow-x: hidden;
+    transition: background-color 0.3s ease 0s, color 0.3s ease 0s;
     background-color: var(--color-back-primary);
     color: var(--color-fore-primary);
-    @apply overflow-x-hidden antialiased;
+    @apply antialiased;
   }
 
   .full-width-container {

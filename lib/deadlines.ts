@@ -76,10 +76,9 @@ function convertHuggingFaceToConference(hf: HuggingFaceConference): Conference |
 
   if (!deadline && hf.deadlines && hf.deadlines.length > 0) {
     // Priority order: 1) Paper submission, 2) Abstract, 3) Everything else
-    let bestDeadline = null
 
     // 1st: Look for paper/submission deadline
-    bestDeadline = hf.deadlines.find(d =>
+    let bestDeadline = hf.deadlines.find(d =>
       d.type?.toLowerCase() === 'submission' ||
       d.type?.toLowerCase() === 'paper' ||
       d.label?.toLowerCase().includes('submission') ||

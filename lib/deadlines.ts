@@ -75,10 +75,32 @@ function convertHuggingFaceToConference(hf: HuggingFaceConference): Conference |
   let timezone = hf.timezone || 'UTC-12'
 
   if (!deadline && hf.deadlines && hf.deadlines.length > 0) {
-    // Find submission deadline
-    const submission = hf.deadlines.find(d => d.type === 'submission') || hf.deadlines[0]
-    deadline = submission.date
-    timezone = submission.timezone || timezone
+    // Priority order: 1) Paper submission, 2) Abstract, 3) Everything else
+    let bestDeadline = null
+
+    // 1st: Look for paper/submission deadline
+    bestDeadline = hf.deadlines.find(d =>
+      d.type?.toLowerCase() === 'submission' ||
+      d.type?.toLowerCase() === 'paper' ||
+      d.label?.toLowerCase().includes('submission') ||
+      d.label?.toLowerCase().includes('paper deadline')
+    )
+
+    // 2nd: Look for abstract deadline
+    if (!bestDeadline) {
+      bestDeadline = hf.deadlines.find(d =>
+        d.type?.toLowerCase() === 'abstract' ||
+        d.label?.toLowerCase().includes('abstract')
+      )
+    }
+
+    // 3rd: Fall back to first deadline (workshop, etc.)
+    if (!bestDeadline) {
+      bestDeadline = hf.deadlines[0]
+    }
+
+    deadline = bestDeadline.date
+    timezone = bestDeadline.timezone || timezone
   }
 
   if (!deadline) return null

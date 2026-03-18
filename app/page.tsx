@@ -153,7 +153,7 @@ export default async function Page() {
                     Curriculum Vitae
                   </span>
                   <span className="text-xs text-fore-subtle">
-                    Last Updated: 11/18/2025
+                    Last Updated: 03/18/2026
                   </span>
                 </div>
               </Link>

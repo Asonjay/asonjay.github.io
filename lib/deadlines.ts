@@ -5,10 +5,6 @@ import { Conference, SubjectFilter } from '../types/deadline'
 
 // HuggingFace maintains this with AI agents - more up-to-date
 const HUGGINGFACE_CONFERENCES = [
-  'icra',
-  'iros',
-  'corl',
-  'rss',
   'cvpr',
   'iccv',
   'eccv',
@@ -23,10 +19,6 @@ const HUGGINGFACE_BASE_URL =
 
 // Tag to subject mapping for HuggingFace format
 const TAG_TO_SUBJECT: Record<string, string> = {
-  'robotics': 'RO',
-  'robot': 'RO',
-  'robots': 'RO',
-  'automation': 'RO',
   'machine-learning': 'ML',
   'ml': 'ML',
   'deep-learning': 'ML',
@@ -39,11 +31,8 @@ const TAG_TO_SUBJECT: Record<string, string> = {
   'nlp': 'NLP',
 }
 
-// Conferences that should always be tagged as robotics
-const ROBOTICS_CONFERENCES = ['icra', 'iros', 'rss', 'corl']
-
 // Subjects we care about
-const RELEVANT_SUBJECTS = ['ML', 'CV', 'RO', 'NLP']
+const RELEVANT_SUBJECTS = ['ML', 'CV', 'NLP']
 
 interface HuggingFaceConference {
   title: string
@@ -107,11 +96,7 @@ function convertHuggingFaceToConference(hf: HuggingFaceConference): Conference |
   // Convert tags to subject
   let sub: string | string[] = 'ML'
 
-  // Check if this is a known robotics conference by title
-  const titleLower = hf.title.toLowerCase()
-  if (ROBOTICS_CONFERENCES.some(rc => titleLower.includes(rc))) {
-    sub = 'RO'
-  } else if (hf.tags && hf.tags.length > 0) {
+  if (hf.tags && hf.tags.length > 0) {
     const subjects = hf.tags
       .map(tag => TAG_TO_SUBJECT[tag.toLowerCase()])
       .filter(Boolean)

@@ -5,7 +5,7 @@ import DeadlinePageContent from './DeadlinePageContent'
 
 export const metadata: Metadata = {
   title: 'Conference Deadlines',
-  description: 'Upcoming ML, CV, and Robotics conference submission deadlines',
+  description: 'Upcoming ML and CV conference submission deadlines',
 }
 
 export default async function DeadlinesPage() {
@@ -35,7 +35,7 @@ export default async function DeadlinesPage() {
       </h1>
 
       <p className="mb-4 text-fore-subtle">
-        Upcoming submission deadlines for ML, CV, and Robotics conferences.
+        Upcoming submission deadlines for ML and CV conferences.
         Data sourced from the community-maintained{' '}
         <a
           href="https://github.com/abhshkdz/ai-deadlines"

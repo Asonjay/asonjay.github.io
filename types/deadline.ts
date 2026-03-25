@@ -16,4 +16,4 @@ export type Conference = {
   note?: string
 }
 
-export type SubjectFilter = 'all' | 'ML' | 'CV' | 'RO'
+export type SubjectFilter = 'all' | 'ML' | 'CV'

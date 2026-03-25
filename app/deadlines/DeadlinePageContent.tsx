@@ -12,7 +12,6 @@ const FILTERS: { label: string; value: SubjectFilter }[] = [
   { label: 'All', value: 'all' },
   { label: 'Machine Learning', value: 'ML' },
   { label: 'Computer Vision', value: 'CV' },
-  { label: 'Robotics', value: 'RO' },
 ]
 
 function matchesSubject(conference: Conference, filter: SubjectFilter): boolean {

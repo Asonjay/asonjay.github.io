@@ -35,7 +35,22 @@ export const metadata: Metadata = {
     default: 'Zexin (Jason) Xu',
     template: '%s | Jason Xu',
   },
-  description: 'PhD Student at UTD',
+  description: 'PhD Student at The University of Texas at Dallas',
+  openGraph: {
+    title: 'Zexin (Jason) Xu',
+    description: 'PhD Student at The University of Texas at Dallas',
+    url: 'https://asonjay.github.io',
+    siteName: 'Zexin (Jason) Xu',
+    images: [
+      {
+        url: 'https://asonjay.github.io/images/JJ-icon.png',
+        width: 512,
+        height: 512,
+      },
+    ],
+    locale: 'en-US',
+    type: 'website',
+  },
   robots: {
     index: true,
     follow: true,
@@ -45,9 +60,11 @@ export const metadata: Metadata = {
     },
   },
   twitter: {
-    creator: '@',
-    title: 'Jason Xu',
-    card: 'summary_large_image',
+    creator: '@zexin_jason_xu',
+    title: 'Zexin (Jason) Xu',
+    description: 'PhD Student at The University of Texas at Dallas',
+    card: 'summary',
+    images: ['https://asonjay.github.io/images/JJ-icon.png'],
   },
   icons: {
     shortcut: '/static/favicon.ico',

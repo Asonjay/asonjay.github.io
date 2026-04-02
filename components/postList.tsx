@@ -11,35 +11,56 @@ export async function PostList({
 }) {
   const posts = await getAllFrontMatters()
 
+  // Group by year
+  const grouped: Record<string, typeof posts> = {}
+  for (const post of posts) {
+    const year = format(parseISO(post.publishedAt), 'yyyy')
+    if (!grouped[year]) grouped[year] = []
+    grouped[year].push(post)
+  }
+  const years = Object.keys(grouped).sort((a, b) => Number(b) - Number(a))
+
   return (
     <section>
       {showHeading && (
-        <h2 className="mt-64 text-accent tracking-[.2em]">WRITINGS</h2>
+        <h2 className="section-label text-fore-subtle mb-4">Writings</h2>
       )}
-      <ul className="mt-3 divide-y divide-back-subtle">
-        {posts.map(post => (
-          <li key={post.slug} className="py-5">
-            <Link href={`blog/${post.slug}`}>
-              <div className="flex flex-col px-8 py-3 -my-5 transition-colors ease-in-out -mx-7 group sm:flex-row sm:justify-between sm:items-end hover:bg-back-secondary focus:bg-back-secondary focus:text-accent">
-                <div>
-                  <span className="text-lg font-semibold group-hover:text-accent">
-                    {post.title}
-                  </span>
-                  <h4 className="text-sm text-fore-subtle">
-                    {post.description}
-                  </h4>
-                </div>
-                <div className="mt-2 text-sm sm:mt-0 sm:text-base text-accent sm:text-fore-subtle">
-                  {format(parseISO(post.publishedAt), 'MMMM yyyy')}
-                </div>
-              </div>
-            </Link>
-          </li>
+      <div className="space-y-2">
+        {years.map(year => (
+          <div key={year}>
+            {/* Year separator */}
+            <div className="flex items-center gap-3 mb-2 mt-4 first:mt-0">
+              <span className="font-mono-label text-xs text-fore-subtle tracking-wider">{year}</span>
+              <div className="flex-1 h-px bg-[var(--color-border)]"></div>
+            </div>
+
+            <div className="space-y-2">
+              {grouped[year].map(post => (
+                <Link key={post.slug} href={`blog/${post.slug}`} className="block">
+                  <div className="panel-list-item">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1 min-w-0">
+                        <span className="text-sm font-medium text-fore-primary">
+                          {post.title}
+                        </span>
+                        <p className="text-xs text-fore-subtle mt-0.5">
+                          {post.description}
+                        </p>
+                      </div>
+                      <span className="font-mono-label whitespace-nowrap flex-shrink-0 text-center leading-tight">
+                        <span className="block text-accent font-bold text-xs">{format(parseISO(post.publishedAt), 'MMM')}</span>
+                        <span className="block text-fore-primary text-lg font-bold leading-none">{format(parseISO(post.publishedAt), 'dd')}</span>
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
         ))}
-      </ul>
+      </div>
     </section>
   )
 }
 
-// TODO: This is just a workaround. See https://github.com/vercel/next.js/issues/42292
 export default (PostList as unknown) as (props: Props) => JSX.Element

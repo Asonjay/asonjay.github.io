@@ -1,8 +1,6 @@
 // app/publications/page.tsx
 import { Metadata } from 'next'
-import { Fragment } from 'react'
 import PublicationList from '../../components/publicationList'
-import { Papers24 } from '../../components/icons'
 
 export const metadata: Metadata = {
   title: 'Publications',
@@ -10,24 +8,23 @@ export const metadata: Metadata = {
 
 export default function Publications() {
   return (
-    <Fragment>
-      <span className="inline-flex p-3 rounded-full bg-back-subtle">
-        <Papers24 />
-      </span>
-      <h1 className="mt-3 mb-2 text-2xl font-bold tracking-tight text-accent">
-        Publications
-      </h1>
-
-      <p className="mb-2 text-fore-subtle">
-        My research focuses on reinforcement learning for robotics and the
-        capabilities and security of Large Language Models (LLMs). My current
-        research directions include reinforcement learning algorithms for
-        robotic manipulation, responsible AI, LLM post-training, development of
-        reliable LLM-powered applications, and AI-enhanced educational
-        technology.
-      </p>
-      <div className="border-t-2 border-dotted border-back-subtle"></div>
-      <PublicationList selectedOnly={false} />
-    </Fragment>
+    <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="glass-panel">
+        <div className="section-label text-fore-subtle mb-2">Research.Log</div>
+        <h1 className="font-heading text-3xl sm:text-4xl font-bold tracking-tight text-fore-primary mb-4">
+          Publications
+        </h1>
+        <p className="text-sm text-fore-subtle mb-6 max-w-3xl leading-relaxed">
+          My research focuses on reinforcement learning for robotics and the
+          capabilities and security of Large Language Models (LLMs). My current
+          research directions include reinforcement learning algorithms for
+          robotic manipulation, responsible AI, LLM post-training, development of
+          reliable LLM-powered applications, and AI-enhanced educational
+          technology.
+        </p>
+        <div className="h-px bg-[var(--color-border)] mb-4"></div>
+        <PublicationList selectedOnly={false} />
+      </div>
+    </div>
   )
 }

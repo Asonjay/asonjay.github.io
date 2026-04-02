@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import { Fragment, Suspense } from 'react'
+import { Suspense } from 'react'
 import { getAllConferences } from '../../lib/deadlines'
 import DeadlinePageContent from './DeadlinePageContent'
 
@@ -9,56 +9,39 @@ export const metadata: Metadata = {
 }
 
 export default async function DeadlinesPage() {
-  // Fetch all relevant conferences at build time
-  const conferences = await getAllConferences('all')
+  const conferences = await getAllConferences('all', true)
 
   return (
-    <Fragment>
-      <span className="inline-flex p-3 rounded-full bg-back-subtle">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+    <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="glass-panel">
+        <div className="section-label text-fore-subtle mb-2">Deadlines.Log</div>
+        <h1 className="font-heading text-3xl sm:text-4xl font-bold tracking-tight text-fore-primary mb-4">
+          Conference Deadlines
+        </h1>
+        <p className="text-sm text-fore-subtle mb-6 max-w-3xl leading-relaxed">
+          Upcoming submission deadlines for ML and CV conferences.
+          Data sourced from the community-maintained{' '}
+          <a
+            href="https://github.com/abhshkdz/ai-deadlines"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-accent hover:underline"
+          >
+            ai-deadlines
+          </a>{' '}
+          repository.
+        </p>
+        <div className="h-px bg-[var(--color-border)] mb-4"></div>
+        <Suspense
+          fallback={
+            <div className="py-8 text-center text-fore-subtle font-mono-label text-sm">
+              Loading deadlines...
+            </div>
+          }
         >
-          <circle cx="12" cy="12" r="10" />
-          <polyline points="12 6 12 12 16 14" />
-        </svg>
-      </span>
-      <h1 className="mt-3 mb-2 text-2xl font-bold tracking-tight text-accent">
-        Conference Deadlines
-      </h1>
-
-      <p className="mb-4 text-fore-subtle">
-        Upcoming submission deadlines for ML and CV conferences.
-        Data sourced from the community-maintained{' '}
-        <a
-          href="https://github.com/abhshkdz/ai-deadlines"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-accent hover:underline"
-        >
-          ai-deadlines
-        </a>{' '}
-        repository.
-      </p>
-
-      <div className="border-t-2 border-dotted border-back-subtle"></div>
-
-      <Suspense
-        fallback={
-          <div className="py-8 text-center text-fore-subtle">
-            Loading deadlines...
-          </div>
-        }
-      >
-        <DeadlinePageContent conferences={conferences} />
-      </Suspense>
-    </Fragment>
+          <DeadlinePageContent conferences={conferences} />
+        </Suspense>
+      </div>
+    </div>
   )
 }

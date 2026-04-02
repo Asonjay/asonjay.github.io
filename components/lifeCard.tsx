@@ -17,13 +17,13 @@ export default function LifeCard({
   link,
 }: LifeCardProps) {
   const CardContent = () => (
-    <div className="group p-6 border border-back-subtle rounded-lg hover:border-accent transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-back-primary h-full">
+    <div className="panel-list-item p-5 h-full hover:!transform-none">
       <div
         className={`inline-flex p-3 rounded-full bg-gradient-to-r ${color} text-white mb-4`}
       >
         {icon}
       </div>
-      <h3 className="text-lg font-semibold mb-2 text-fore-primary group-hover:text-accent transition-colors">
+      <h3 className="text-base font-bold mb-2 text-fore-primary">
         {title}
       </h3>
       <p className="text-sm text-fore-subtle">{description}</p>
@@ -32,12 +32,7 @@ export default function LifeCard({
 
   if (link) {
     return (
-      <a
-        href={link}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="block h-full"
-      >
+      <a href={link} target="_blank" rel="noopener noreferrer" className="block h-full">
         <CardContent />
       </a>
     )

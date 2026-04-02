@@ -24,7 +24,7 @@ export const components = {
         <a
           {...props}
           href={href}
-          className="ml-1 transition-transform duration-75 ease-out origin-left transform scale-0 opacity-0 text-fore-subtle hover:text-accent group-hover:scale-100 group-hover:opacity-100  focus-visible:text-accent"
+          className="ml-1 transition-transform duration-75 ease-out origin-left transform scale-0 opacity-0 text-fore-subtle hover:text-accent group-hover:scale-100 group-hover:opacity-100 focus-visible:text-accent"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -46,18 +46,18 @@ export const components = {
       <Link
         href={href}
         {...props}
-        className="underline text-fore-subtle hover:text-accent  focus-visible:text-accent"
+        className="underline text-fore-subtle hover:text-accent focus-visible:text-accent"
         legacyBehavior={true}
       ></Link>
     )
   },
-  strong: ({ ...props }) => <strong {...props} className="font-semibold" />,
+  strong: ({ ...props }) => <strong {...props} className="font-semibold text-fore-primary" />,
   h2: ({ ...props }) => {
     return (
       <h2
         {...props}
         data-heading
-        className="flex items-baseline mb-8 text-2xl font-bold leading-10 group mt-14 lg:text-3xl text-accent"
+        className="flex items-baseline mb-6 text-2xl font-heading font-bold leading-10 group mt-12 lg:text-3xl text-accent"
       />
     )
   },
@@ -66,18 +66,18 @@ export const components = {
       <h3
         {...props}
         data-heading
-        className="flex items-baseline mb-4 text-2xl font-bold leading-tight group mt-14 text-accent"
+        className="flex items-baseline mb-4 text-xl font-heading font-bold leading-tight group mt-10 text-accent"
       />
     )
   },
   p: props => {
-    return <p {...props} className="mb-4" />
+    return <p {...props} className="mb-4 leading-relaxed" />
   },
   br: props => <br {...props} className="block my-8" />,
   code: ({ children, showLineNumbers, fileName, id }) => {
     return (
       <React.Fragment>
-        {fileName && <div className="w-full code-filename">{fileName}</div>}
+        {fileName && <div className="w-full code-filename font-mono-label text-xs">{fileName}</div>}
         <code
           className={classNames('', {
             'line-numbers': showLineNumbers !== undefined,
@@ -93,13 +93,13 @@ export const components = {
     return <em {...props} className="italic" />
   },
   hr: ({ ...props }) => {
-    return <hr {...props} className="my-10 border-accent" />
+    return <hr {...props} className="my-10 border-[var(--color-border)]" />
   },
   blockquote: ({ ...props }) => {
     return (
       <blockquote
         {...props}
-        className="px-5 py-2 my-6 text-base border-l-2 lg:-ml-6 bg-back-secondary border-accent"
+        className="px-5 py-2 my-6 text-base border-l-2 lg:-ml-6 bg-[var(--color-panel-bg)] backdrop-blur-sm rounded-r-lg border-accent"
       />
     )
   },

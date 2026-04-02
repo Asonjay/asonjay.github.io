@@ -109,122 +109,126 @@ export function DeadlineCard({ conference, compact = false, featured = false }: 
   }
 
   if (compact) {
-    // Small button/chip style for homepage
     const fullDate = deadline.toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
-      year: 'numeric',
     })
 
-    // Border color based on urgency (matches the countdown text color)
-    const borderColor = timeRemaining.total < 0
-      ? 'hover:border-t-gray-400'
-      : timeRemaining.days <= 7
-        ? 'hover:border-t-red-500'
-        : timeRemaining.days <= 30
-          ? 'hover:border-t-yellow-500'
-          : 'hover:border-t-green-500'
-
     const isExpired = timeRemaining.total < 0
+
+    const dotColor = isExpired
+      ? 'bg-gray-400'
+      : timeRemaining.days <= 7
+        ? 'bg-red-500'
+        : timeRemaining.days <= 30
+          ? 'bg-yellow-500'
+          : 'bg-green-500'
 
     return (
       <a
         href={conference.link}
         target="_blank"
         rel="noopener noreferrer"
-        className={`group inline-flex flex-col items-center px-4 py-2 rounded-lg bg-back-secondary transition-all hover:-translate-y-1 hover:shadow-md border-2 border-transparent border-t-4 ${borderColor} w-[140px] ${isExpired ? 'opacity-60' : ''}`}
+        className={`group flex flex-col items-center justify-center rounded-lg border border-[var(--color-border)] transition-colors hover:border-accent px-4 py-3 text-center flex-shrink-0 min-w-[80px] ${isExpired ? 'opacity-40' : ''}`}
+        style={{ background: 'rgba(255,255,255,0.03)' }}
       >
-        <span className="text-base font-bold text-fore-primary group-hover:text-accent transition-colors">
-          {conference.title} {conference.year}
+        <span className="text-xs font-bold text-fore-primary group-hover:text-accent transition-colors leading-tight">
+          {conference.title}
         </span>
-
-        {/* Separator */}
-        <div className="w-full border-t border-fore-subtle opacity-40 my-2" />
-
-        {isExpired ? (
-          <div className={`flex items-baseline gap-1 ${urgencyTextColor}`}>
-            <span className="text-2xl font-bold">--</span>
-          </div>
-        ) : (
-          <div className={`flex items-baseline gap-1 ${urgencyTextColor}`}>
-            <span className="text-2xl font-bold">{timeRemaining.days}d</span>
-            <span className="text-sm font-medium">{timeRemaining.hours}h {timeRemaining.minutes}m</span>
-          </div>
-        )}
-        <span className="text-xs text-fore-subtle mt-1 text-center">
-          {fullDate}
+        <span className="font-mono-label text-[0.6rem] text-fore-subtle">{conference.year}</span>
+        <span className={`font-heading text-lg font-bold mt-1 leading-none ${urgencyTextColor} ${!isExpired ? 'animate-[breathe_2.5s_ease-in-out_infinite]' : ''}`}>
+          {isExpired ? '--' : `${timeRemaining.days}d`}
         </span>
-        {conference.place && (
-          <span className="text-xs text-fore-subtle mt-1 opacity-70 text-center">
-            {conference.place}
-          </span>
-        )}
       </a>
     )
   }
 
+  const isExpiredFull = timeRemaining.total < 0
+
   return (
-    <div className="relative p-5 transition-all bg-back-secondary hover:shadow-lg group">
+    <div className={`relative p-5 transition-all group ${isExpiredFull ? 'opacity-50' : ''}`}>
       {/* Header */}
-      <div className="flex items-start justify-between mb-2">
-        <span
-          className={`px-2.5 py-1 text-xs font-semibold text-white rounded bg-gradient-to-r ${urgencyColor}`}
-        >
-          {conference.title}
-        </span>
-        <div className="text-right">
-          <span className={`text-2xl font-bold ${urgencyTextColor}`}>
-            {timeRemaining.days}
+      <div className="flex items-start justify-between mb-3">
+        <div>
+          <span className="tag-badge tag-badge-accent !text-[0.65rem]">
+            {conference.title} {conference.year}
           </span>
-          <span className="text-xs text-fore-subtle ml-1">days</span>
+        </div>
+        <div className="text-right">
+          {isExpiredFull ? (
+            <span className="font-mono-label text-xs text-fore-subtle">PASSED</span>
+          ) : (
+            <>
+              <span className={`font-heading text-2xl font-bold ${urgencyTextColor}`}>
+                {timeRemaining.days}
+              </span>
+              <span className="font-mono-label text-[0.6rem] text-fore-subtle ml-1">days</span>
+            </>
+          )}
         </div>
       </div>
 
-      {/* Title */}
-      <h3 className="mb-2 text-lg font-medium text-fore-primary group-hover:text-accent transition-colors">
+      {/* Full name */}
+      <h3 className="mb-2 text-base font-semibold text-fore-primary group-hover:text-accent transition-colors">
         {conference.full_name || conference.title}
       </h3>
 
       {/* Details */}
-      <div className="mb-3 text-sm text-fore-subtle">
-        <p>{formattedDate}</p>
-        <p>{conference.place}</p>
-      </div>
-
-      {/* Countdown detail */}
-      <div className="flex items-center gap-4 mb-4 text-xs text-fore-subtle">
-        <span>{timeRemaining.days}d {timeRemaining.hours}h {timeRemaining.minutes}m</span>
-        {conference.hindex && (
-          <span className="px-1.5 py-0.5 rounded bg-back-subtle">
-            h-index: {conference.hindex}
-          </span>
+      <div className="mb-3 space-y-1 font-mono-label text-[0.7rem] text-fore-subtle">
+        <div className="flex items-center gap-1.5">
+          <span className="text-accent">@</span>
+          <span>{formattedDate}</span>
+        </div>
+        {conference.place && (
+          <div className="flex items-center gap-1.5">
+            <span className="text-accent">@</span>
+            <span>{conference.place}</span>
+          </div>
         )}
       </div>
 
+      {/* Countdown detail */}
+      {!isExpiredFull && (
+        <div className="flex items-center gap-3 mb-3">
+          <span className={`font-mono-label text-xs font-bold ${urgencyTextColor}`}>
+            {timeRemaining.days}d {timeRemaining.hours}h {timeRemaining.minutes}m
+          </span>
+          {conference.hindex && (
+            <span className="tag-badge tag-badge-accent !text-[0.55rem]">
+              h-index: {conference.hindex}
+            </span>
+          )}
+        </div>
+      )}
+
       {/* Progress bar */}
-      <div className="w-full h-1 mb-4 overflow-hidden rounded-full bg-back-subtle">
-        <div
-          className={`h-full bg-gradient-to-r ${urgencyColor} transition-all`}
-          style={{
-            width: `${Math.max(0, Math.min(100, (1 - timeRemaining.days / 90) * 100))}%`,
-          }}
-        />
-      </div>
+      {!isExpiredFull && (
+        <div className="w-full h-0.5 mb-3 overflow-hidden rounded-full bg-[var(--color-border)]">
+          <div
+            className={`h-full bg-gradient-to-r ${urgencyColor} transition-all`}
+            style={{
+              width: `${Math.max(0, Math.min(100, (1 - timeRemaining.days / 90) * 100))}%`,
+            }}
+          />
+        </div>
+      )}
 
       {/* Link */}
       <a
         href={conference.link}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-1 px-3 py-1.5 text-sm rounded bg-back-subtle hover:bg-accent hover:text-white transition-colors"
+        className="btn-outline"
       >
-        <External24 className="w-4 h-4" />
-        Conference Site
+        <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" />
+        </svg>
+        SITE
       </a>
 
       {/* Note */}
       {conference.note && (
-        <p className="mt-3 text-xs text-fore-subtle italic">{conference.note}</p>
+        <p className="mt-2 font-mono-label text-[0.65rem] text-fore-subtle italic">{conference.note}</p>
       )}
     </div>
   )

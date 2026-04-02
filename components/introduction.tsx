@@ -9,7 +9,7 @@ export async function Introduction() {
 
   return (
     <div className="relative text-primary">
-      <article className="max-w-3xl min-w-0 leading-tight text-base lg:text-base">
+      <article className="min-w-0 leading-relaxed">
         <Component components={components} />
       </article>
     </div>

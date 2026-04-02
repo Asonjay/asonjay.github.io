@@ -1,34 +1,26 @@
 import { Metadata } from 'next'
-import { Fragment } from 'react'
-import { Contact } from '../../components/contact'
-import { Blog24 } from '../../components/icons'
 import PostList from '../../components/postList'
-import { getAllFrontMatters } from '../../lib/mdx'
 
 export const metadata: Metadata = {
   title: 'Blog',
 }
 
 export default async function Blog() {
-  const posts = await getAllFrontMatters()
   return (
-    <Fragment>
-      <span className="inline-flex p-3 rounded-full bg-back-subtle">
-        <Blog24 />
-      </span>
-      <h1 className="mt-3 mb-2 text-2xl font-bold tracking-tight text-accent">
-        Blog
-      </h1>
-
-      <p className="mb-2 text-fore-subtle">
-        Welcome to my little corner of the internet! Here's where I dump my
-        brain thoughts about research, random discoveries, and whatever else
-        catches my attention. <b>Fair warning</b>: I update this about as
-        frequently as I remember to water my plants - which is to say, when I
-        remember they exist 😅
-      </p>
-      <div className="border-t-2 border-dotted border-back-subtle"></div>
-      <PostList />
-    </Fragment>
+    <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="glass-panel">
+        <div className="section-label text-fore-subtle mb-2">Thoughts.Log</div>
+        <h1 className="font-heading text-3xl sm:text-4xl font-bold tracking-tight text-fore-primary mb-4">
+          Blog
+        </h1>
+        <p className="text-sm text-fore-subtle mb-6 max-w-3xl leading-relaxed">
+          Welcome to my little corner of the internet! Here&apos;s where I dump my
+          brain thoughts about research, random discoveries, and whatever else
+          catches my attention.
+        </p>
+        <div className="h-px bg-[var(--color-border)] mb-4"></div>
+        <PostList />
+      </div>
+    </div>
   )
 }

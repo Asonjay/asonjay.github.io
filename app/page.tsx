@@ -1,266 +1,167 @@
 import Image from 'next/image'
 import React from 'react'
 import Link from 'next/link'
-import { Blob } from '../components/atoms'
 import {
   MailAt24,
   GitHub24,
   Twitter24,
-  Blog24,
   GoogleScholar24,
   LinkedIn24,
-  News24,
-  Papers24,
-  Project24,
 } from '../components/icons'
-import { FileText } from 'lucide-react'
 import PostList from 'components/postList'
 import NewsList from 'components/newsList'
 import PublicationList from 'components/publicationList'
 import ProjectList from 'components/projectList'
-import { DeadlineSectionFull } from 'components/deadlineSection'
+import { DeadlineSection } from 'components/deadlineSection'
 import { getAllConferences } from '../lib/deadlines'
 import Introduction from '../components/introduction'
 import avatar from '../public/images/profile-img.jpeg'
-import { components as mdx } from '../components/mdxComponents'
 import { wenKai } from './fonts'
 
 export default async function Page() {
-  const conferences = await getAllConferences('all', true) // Include expired deadlines
-
+  const conferences = await getAllConferences('all', true)
   return (
-    <div>
-      {/* Introduction Section */}
-      <div className="">
-        <div className="flex flex-col-reverse items-center lg:flex-row lg:justify-between lg:space-x-6">
-          {/* Introduction  */}
-          <div>
-            <p className="max-w-3xl mt-12 mb-2 text-3xl font-semibold lg:mt-0 sm:text-4xl sm:text-left md:text-left lg:text-left">
-              Hi there, I'm Zexin Xu (
-              <span className={wenKai.className}>徐泽鑫</span>
-              )! 👋
-            </p>
-            <div className="text-sm mb-4">
-              <mdx.code showLineNumbers={false} fileName={''} id="">
-                💡 My name is pronounced as "Zeh-Shin She", and I also go by{' '}
-                <b>Jason</b>.
-              </mdx.code>
+    <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      {/* ─── Top Row: Identity + Profile ─── */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* Bio Panel */}
+        <div className="lg:col-span-9 glass-panel">
+          <div className="flex items-center justify-between mb-4">
+            <div className="section-label text-fore-subtle">Identity</div>
+          </div>
+          <h1 className="font-heading text-4xl sm:text-5xl font-bold tracking-tight mb-2 text-fore-primary">
+            Hi there, I&apos;m Zexin Xu (<span className={wenKai.className}>徐泽鑫</span>)! 👋
+          </h1>
+          <div className="font-mono-label text-xs text-fore-subtle mb-4 flex items-center gap-2 bg-[var(--color-back-accent)] border border-[var(--color-border)] rounded-md px-3 py-2 w-fit">
+            <span>💡</span>
+            <span>My name is pronounced as &quot;Zeh-Shin She&quot;, and I also go by <strong className="text-accent">Jason</strong>.</span>
+          </div>
+          <div className="text-fore-primary text-sm sm:text-base leading-relaxed">
+            <Introduction />
+          </div>
+        </div>
+
+        {/* Right column: Profile + Deadlines */}
+        <div className="lg:col-span-3 flex flex-col gap-6">
+          {/* Profile Panel: Avatar + Social */}
+          <div className="glass-panel flex flex-col items-center gap-5">
+            <div className="section-label text-fore-subtle w-full">Profile</div>
+            <div className="relative w-32 h-32 sm:w-36 sm:h-36 lg:w-40 lg:h-40 rounded-2xl avatar-border">
+              <Image
+                src={avatar}
+                alt="Zexin (Jason) Xu"
+                width={256}
+                height={256}
+                quality={100}
+                priority={true}
+                placeholder="blur"
+                className="w-full h-full object-cover rounded-2xl"
+              />
             </div>
-            <div className="relative text-primary">
-              <Introduction />
+            {/* Social links bar */}
+            <div className="flex items-center border border-[var(--color-border)] rounded-xl overflow-hidden">
+              <a href="mailto:zexin.xu@utdallas.edu" aria-label="Email" title="Email" className="p-2.5 hover:bg-[rgba(255,255,255,0.1)] hover:text-accent transition-colors">
+                <MailAt24 className="w-4 h-4" />
+              </a>
+              <a href="https://scholar.google.com/citations?user=NvnoD1kAAAAJ&hl=en" aria-label="Google Scholar" title="Google Scholar" target="_blank" rel="noopener noreferrer" className="p-2.5 hover:bg-[rgba(255,255,255,0.1)] hover:text-accent transition-colors border-l border-[var(--color-border)]">
+                <GoogleScholar24 className="w-4 h-4" />
+              </a>
+              <a href="https://github.com/asonjay" aria-label="GitHub" title="GitHub" target="_blank" rel="noopener noreferrer" className="p-2.5 hover:bg-[rgba(255,255,255,0.1)] hover:text-accent transition-colors border-l border-[var(--color-border)]">
+                <GitHub24 className="w-4 h-4" />
+              </a>
+              <a href="https://x.com/zexin_jason_xu" aria-label="Twitter/X" title="Twitter/X" target="_blank" rel="noopener noreferrer" className="p-2.5 hover:bg-[rgba(255,255,255,0.1)] hover:text-accent transition-colors border-l border-[var(--color-border)]">
+                <Twitter24 className="w-4 h-4" />
+              </a>
+              <a href="https://www.linkedin.com/in/zexin-xu/" aria-label="LinkedIn" title="LinkedIn" target="_blank" rel="noopener noreferrer" className="p-2.5 hover:bg-[rgba(255,255,255,0.1)] hover:text-accent transition-colors border-l border-[var(--color-border)]">
+                <LinkedIn24 className="w-4 h-4" />
+              </a>
             </div>
           </div>
-          {/* Avatar  */}
-          <div>
-            <div className="relative">
-              {/* <Blob /> */}
-              <div className="flex items-center justify-center">
-                <div className="relative">
-                  {/* White border with shadow */}
-                  <div className="w-36 h-36 md:w-44 md:h-44 lg:w-60 lg:h-60 bg-white rounded-full avatar-white-border"></div>
-                  {/* Avatar image */}
-                  <div className="absolute inset-1 w-34 h-34 overflow-hidden rounded-full md:h-42 md:w-42 lg:h-58 lg:w-58 pointer-events-none">
-                    <Image
-                      src={avatar}
-                      alt="My avatar"
-                      width={256}
-                      height={256}
-                      quality={100}
-                      priority={true}
-                      placeholder="blur"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* Social Links  */}
-            <div className="mt-5">
-              <div className="flex flex-row items-center space-x-5 justify-center">
-                <span className="scale-125">
-                  <a
-                    href="mailto:zexin.xu@utdallas.edu"
-                    aria-label="Email zexin.xu@utdallas.edu"
-                    title="Email"
-                    className="focus:text-accent"
-                  >
-                    <MailAt24 className="transition-transform ease-in-out hover:-translate-y-1 hover:text-accent" />
-                  </a>
-                </span>
-                <span className="scale-125">
-                  <a
-                    href="https://scholar.google.com/citations?user=NvnoD1kAAAAJ&hl=en"
-                    aria-label="Visit Google Scholar Profile"
-                    title="Visit Google Scholar Profile"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="focus:text-accent"
-                  >
-                    <GoogleScholar24 className="transition-transform ease-in-out hover:-translate-y-1 hover:text-accent" />
-                  </a>
-                </span>
-                <span className="scale-125">
-                  <a
-                    href="https://github.com/asonjay"
-                    aria-label="Visit GitHub profile"
-                    title="Visit GitHub profile"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="focus:text-accent"
-                  >
-                    <GitHub24 className="transition-transform ease-in-out hover:-translate-y-1 hover:text-accent" />
-                  </a>
-                </span>
-                <span className="scale-125">
-                  <a
-                    href="https://x.com/zexin_jason_xu"
-                    aria-label="Visit Twitter profile"
-                    title="Visit Twitter profile"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="focus:text-accent"
-                  >
-                    <Twitter24 className="transition-transform ease-in-out hover:-translate-y-1 hover:text-accent" />
-                  </a>
-                </span>
-                <span className="scale-125">
-                  <a
-                    href="https://www.linkedin.com/in/zexin-xu/"
-                    aria-label="Visit LinkedIn Profile"
-                    title="Visit LinkedIn Profile"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="focus:text-accent"
-                  >
-                    <LinkedIn24 className="transition-transform ease-in-out hover:-translate-y-1 hover:text-accent" />
-                  </a>
-                </span>
-              </div>
-            </div>
-            {/* CV  */}
-            <div className="mx-1 mt-2 flex items-center justify-center">
+
+          {/* Deadlines Panel */}
+          <div className="glass-panel">
+            <div className="flex items-center justify-between mb-3">
+              <div className="section-label text-fore-subtle">Deadlines</div>
               <Link
-                href="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/asonjay/asonjay.github.io/master/public/cv/Zexin_Xu_CV.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex items-center space-x-2 px-4 py-2 transition-all duration-200"
+                href="/deadlines"
+                className="expand-icon"
+                title="View all deadlines"
               >
-                <FileText
-                  size={26}
-                  className="text-fore-subtle transition-colors duration-200 group-hover:text-accent"
-                />
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium text-fore-primary transition-colors duration-200 group-hover:text-accent mb-[-2px]">
-                    Curriculum Vitae
-                  </span>
-                  <span className="text-xs text-fore-subtle">
-                    Last Updated: 03/18/2026
-                  </span>
-                </div>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+                </svg>
               </Link>
             </div>
+            <DeadlineSection conferences={conferences} limit={50} />
           </div>
         </div>
       </div>
 
-      {/* News Section */}
-      <div className="mt-12">
-        <div className="flex items-center space-x-3">
-          <span className="p-3 rounded-full bg-back-subtle">
-            <News24 />
-          </span>
-          <span className="mt-3 mb-2 uppercase tracking-[.2em] text-accent">
-            <span className="text-xl">N</span>EWS
-          </span>
-        </div>
-        <NewsList />
-      </div>
-
-      {/* Deadlines Section */}
-      <DeadlineSectionFull conferences={conferences} limit={10} />
-
-      {/* Publications Section */}
-      <div className="mt-12">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <span className="p-3 rounded-full bg-back-subtle">
-              <Papers24 />
-            </span>
-            <span className="mt-3 mb-2 uppercase tracking-[.2em] text-accent">
-              <span className="text-xl">S</span>ELECTED{' '}
-              <span className="text-xl">P</span>UBLICATIONS
-            </span>
+      {/* ─── Middle Row: News + Publications ─── */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* News Panel */}
+        <div className="lg:col-span-5 glass-panel">
+          <div className="flex items-center justify-between mb-4">
+            <div className="section-label text-fore-subtle">Latest News</div>
           </div>
-          <Link
-            href="/publications"
-            className="flex items-center space-x-2 text-fore-subtle hover:text-accent transition-transform ease-in-out hover:translate-x-1"
-          >
-            <span className="text-xs uppercase tracking-[.2em]">
-              All Publications
-            </span>
-            <span>→</span>
-          </Link>
+          <NewsList />
         </div>
-        <PublicationList selectedOnly={true} />
+
+        {/* Publications Panel */}
+        <div className="lg:col-span-7 glass-panel">
+          <div className="flex items-center justify-between mb-4">
+            <div className="section-label text-fore-subtle">Selected Publications</div>
+            <Link
+              href="/publications"
+              className="expand-icon"
+              title="View all publications"
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+              </svg>
+            </Link>
+          </div>
+          <PublicationList selectedOnly={true} />
+        </div>
       </div>
 
-      {/* Projects Section */}
-      <div className="mt-12">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <span className="p-3 rounded-full bg-back-subtle">
-              <Project24 />
-            </span>
-            <span className="mt-3 mb-2 uppercase tracking-[.2em] text-accent">
-              <span className="text-xl">S</span>ELECTED{' '}
-              <span className="text-xl">P</span>ROJECTS
-            </span>
+      {/* ─── Bottom Row: Projects + Blog ─── */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* Projects Panel */}
+        <div className="lg:col-span-7 glass-panel">
+          <div className="flex items-center justify-between mb-4">
+            <div className="section-label text-fore-subtle">Projects</div>
+            <Link
+              href="/projects"
+              className="expand-icon"
+              title="View all projects"
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+              </svg>
+            </Link>
           </div>
-          <Link
-            href="/projects"
-            className="flex items-center space-x-2 text-fore-subtle hover:text-accent transition-transform ease-in-out hover:translate-x-1"
-          >
-            <span className="text-xs uppercase tracking-[.2em]">
-              All Projects
-            </span>
-            <span>→</span>
-          </Link>
+          <ProjectList selectedOnly={true} />
         </div>
-        <ProjectList selectedOnly={true} />
+
+        {/* Blog Panel */}
+        <div className="lg:col-span-5 glass-panel">
+          <div className="flex items-center justify-between mb-4">
+            <div className="section-label text-fore-subtle">Blog</div>
+            <Link
+              href="/blog"
+              className="expand-icon"
+              title="View all blog posts"
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+              </svg>
+            </Link>
+          </div>
+          <PostList />
+        </div>
       </div>
 
-      {/* Blogs Section */}
-      <div className="mt-12">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <span className="p-3 rounded-full bg-back-subtle">
-              <Blog24 />
-            </span>
-            <span className="mt-3 mb-2 uppercase tracking-[.2em] text-accent">
-              <span className="text-xl">B</span>LOGS
-            </span>
-          </div>
-          <Link
-            href="/blog"
-            className="flex items-center space-x-2 text-fore-subtle hover:text-accent transition-transform ease-in-out hover:translate-x-1"
-          >
-            <span className="text-xs uppercase tracking-[.2em]">
-              All Blog Posts
-            </span>
-            <span>→</span>
-          </Link>
-        </div>
-        <PostList />
-      </div>
-      {/* <div className="flex items-center mt-32 mb-2 space-x-3">
-        <span className="p-3 rounded-full bg-back-subtle">
-          <Project24 />
-        </span>
-        <span className="mt-3 mb-2 uppercase tracking-[.2em] text-accent">
-          PROJECTS
-        </span>
-      </div> */}
-      {/* <ProjectList bOpenSourceOnly={true} /> */}
-      {/* <Contact /> */}
     </div>
   )
 }

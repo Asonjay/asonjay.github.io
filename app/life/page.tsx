@@ -1,6 +1,5 @@
 // app/life/page.tsx
 import { Metadata } from 'next'
-import { Fragment } from 'react'
 import { Heart, Book, Music, Coffee, Camera, Plane } from 'lucide-react'
 import LifeCard from '../../components/lifeCard'
 
@@ -13,8 +12,7 @@ export default function Life() {
     {
       icon: <Book size={24} />,
       title: 'Reading',
-      description:
-        'I enjoy reading books on technology, philosophy, and science fiction.',
+      description: 'I enjoy reading books on technology, philosophy, and science fiction.',
       color: 'from-blue-500 to-cyan-500',
     },
     {
@@ -51,103 +49,92 @@ export default function Life() {
     },
     {
       title: 'Currently Reading',
-      items: [
-        'Deep Learning',
-        'The Pragmatic Programmer',
-        'Thinking, Fast and Slow',
-      ],
+      items: ['Deep Learning', 'The Pragmatic Programmer', 'Thinking, Fast and Slow'],
       color: 'from-rose-500 to-red-500',
     },
   ]
 
   return (
-    <Fragment>
-      <span className="inline-flex p-3 rounded-full bg-back-subtle">
-        <Heart className="w-6 h-6 text-accent" />
-      </span>
-      <h1 className="mt-3 mb-2 text-2xl font-bold tracking-tight text-accent">
-        Life
-      </h1>
+    <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="glass-panel">
+        <div className="section-label text-fore-subtle mb-2">Life.Log</div>
+        <h1 className="font-heading text-3xl sm:text-4xl font-bold tracking-tight text-fore-primary mb-4">
+          Life
+        </h1>
+        <p className="text-sm text-fore-subtle mb-6 max-w-3xl leading-relaxed">
+          Beyond research and code, here&apos;s a glimpse into my interests, hobbies,
+          and the things that inspire me.
+        </p>
+        <div className="h-px bg-[var(--color-border)] mb-8"></div>
 
-      <p className="mb-2 text-fore-subtle">
-        Beyond research and code, here's a glimpse into my interests, hobbies,
-        and the things that inspire me.
-      </p>
-
-      <div className="border-t-2 border-dotted border-back-subtle mb-8"></div>
-
-      {/* Hobbies Section */}
-      <div className="mb-12">
-        <h2 className="text-xl font-semibold mb-4 text-fore-primary">
-          Hobbies & Interests
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {hobbies.map((hobby, index) => (
-            <LifeCard
-              key={index}
-              icon={hobby.icon}
-              title={hobby.title}
-              description={hobby.description}
-              color={hobby.color}
-            />
-          ))}
+        {/* Hobbies */}
+        <div className="mb-10">
+          <h2 className="font-heading text-xl font-bold mb-4 text-fore-primary">
+            Hobbies &amp; Interests
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {hobbies.map((hobby, index) => (
+              <LifeCard
+                key={index}
+                icon={hobby.icon}
+                title={hobby.title}
+                description={hobby.description}
+                color={hobby.color}
+              />
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* Resources Section */}
-      <div className="mb-12">
-        <h2 className="text-xl font-semibold mb-4 text-fore-primary">
-          Resources & Favorites
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {resources.map((resource, index) => (
-            <div
-              key={index}
-              className="group p-6 border border-back-subtle rounded-lg hover:border-accent transition-all duration-300 hover:shadow-lg bg-back-primary"
-            >
-              <h3
-                className={`text-lg font-semibold mb-3 bg-gradient-to-r ${resource.color} bg-clip-text text-transparent`}
+        {/* Resources */}
+        <div className="mb-10">
+          <h2 className="font-heading text-xl font-bold mb-4 text-fore-primary">
+            Resources &amp; Favorites
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {resources.map((resource, index) => (
+              <div
+                key={index}
+                className="panel-list-item p-5"
               >
-                {resource.title}
-              </h3>
-              <ul className="space-y-2">
-                {resource.items.map((item, idx) => (
-                  <li
-                    key={idx}
-                    className="text-sm text-fore-subtle flex items-center gap-2"
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+                <h3 className={`text-base font-bold mb-3 bg-gradient-to-r ${resource.color} bg-clip-text text-transparent`}>
+                  {resource.title}
+                </h3>
+                <ul className="space-y-2">
+                  {resource.items.map((item, idx) => (
+                    <li key={idx} className="text-sm text-fore-subtle flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* Fun Facts Section */}
-      <div className="mb-12">
-        <h2 className="text-xl font-semibold mb-4 text-fore-primary">
-          Fun Facts
-        </h2>
-        <div className="p-6 border border-back-subtle rounded-lg bg-back-primary">
-          <ul className="space-y-3 text-fore-subtle">
-            <li className="flex items-start gap-3">
-              <span className="text-accent font-bold">→</span>
-              <span>I can solve a Rubik's cube in under 2 minutes</span>
-            </li>
-            <li className="flex items-start gap-3">
-              <span className="text-accent font-bold">→</span>
-              <span>Coffee is my primary debugging tool</span>
-            </li>
-            <li className="flex items-start gap-3">
-              <span className="text-accent font-bold">→</span>
-              <span>I've visited 10+ countries and counting</span>
-            </li>
-          </ul>
+        {/* Fun Facts */}
+        <div>
+          <h2 className="font-heading text-xl font-bold mb-4 text-fore-primary">
+            Fun Facts
+          </h2>
+          <div className="panel-list-item p-5">
+            <ul className="space-y-3 text-fore-subtle">
+              <li className="flex items-start gap-3">
+                <span className="text-accent font-bold">→</span>
+                <span>I can solve a Rubik&apos;s cube in under 2 minutes</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-accent font-bold">→</span>
+                <span>Coffee is my primary debugging tool</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-accent font-bold">→</span>
+                <span>I&apos;ve visited 10+ countries and counting</span>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
-    </Fragment>
+    </div>
   )
 }

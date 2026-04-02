@@ -69,7 +69,7 @@ export function DeadlineSection({ conferences, limit = 10 }: DeadlineSectionProp
       {filteredConferences.length === 0 ? (
         <p className="text-fore-subtle text-sm">No deadlines for this category.</p>
       ) : (
-        <div className="flex flex-wrap gap-3">
+        <div className="flex gap-2 overflow-x-auto custom-scrollbar pb-2">
           {filteredConferences.map(conference => (
             <DeadlineCard
               key={conference.id}
@@ -101,7 +101,7 @@ export function DeadlineSectionWithFilters({ conferences, limit = 10 }: Deadline
       {filteredConferences.length === 0 ? (
         <p className="text-fore-subtle text-sm">No deadlines for this category.</p>
       ) : (
-        <div className="flex flex-wrap gap-3">
+        <div className="flex gap-2 overflow-x-auto custom-scrollbar pb-2">
           {filteredConferences.map(conference => (
             <DeadlineCard
               key={conference.id}

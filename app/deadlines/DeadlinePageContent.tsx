@@ -16,11 +16,8 @@ const FILTERS: { label: string; value: SubjectFilter }[] = [
 
 function matchesSubject(conference: Conference, filter: SubjectFilter): boolean {
   if (filter === 'all') return true
-
   const sub = conference.sub
-  if (Array.isArray(sub)) {
-    return sub.includes(filter)
-  }
+  if (Array.isArray(sub)) return sub.includes(filter)
   return sub === filter
 }
 
@@ -34,17 +31,17 @@ export default function DeadlinePageContent({
   )
 
   return (
-    <div className="mt-6">
+    <div className="mt-4">
       {/* Filter Tabs */}
       <div className="flex flex-wrap gap-2 mb-6">
         {FILTERS.map(filter => (
           <button
             key={filter.value}
             onClick={() => setActiveFilter(filter.value)}
-            className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+            className={`px-3 py-1.5 font-mono-label text-xs uppercase tracking-widest rounded-lg transition-all border ${
               activeFilter === filter.value
-                ? 'bg-accent text-white'
-                : 'bg-back-subtle text-fore-subtle hover:bg-back-secondary hover:text-fore-primary'
+                ? 'text-accent bg-[rgba(255,255,255,0.08)] border-[var(--color-border)]'
+                : 'text-fore-subtle border-transparent hover:text-accent hover:bg-[rgba(255,255,255,0.06)] hover:border-[var(--color-border)]'
             }`}
           >
             {filter.label}
@@ -53,20 +50,21 @@ export default function DeadlinePageContent({
       </div>
 
       {/* Stats */}
-      <p className="mb-4 text-sm text-fore-subtle">
-        {filteredConferences.length} upcoming deadline
-        {filteredConferences.length !== 1 ? 's' : ''}
+      <p className="mb-4 font-mono-label text-xs text-fore-subtle">
+        {filteredConferences.length} deadline{filteredConferences.length !== 1 ? 's' : ''}
       </p>
 
       {/* Conference Grid */}
       {filteredConferences.length === 0 ? (
-        <div className="py-8 text-center text-fore-subtle">
-          No upcoming deadlines found for this category.
+        <div className="py-8 text-center text-fore-subtle font-mono-label text-sm">
+          No deadlines found for this category.
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filteredConferences.map(conference => (
-            <DeadlineCard key={conference.id} conference={conference} />
+            <div key={conference.id} className="panel-list-item !p-0 overflow-hidden">
+              <DeadlineCard conference={conference} />
+            </div>
           ))}
         </div>
       )}

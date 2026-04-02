@@ -2,7 +2,6 @@
 import React, { use } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { FileText, ExternalLink, ChevronRight, Code } from 'lucide-react'
 import { getAllPublications } from '../lib/publications'
 import { Publication } from '../types/publication'
 
@@ -10,19 +9,15 @@ interface PublicationListProps {
   selectedOnly?: boolean
 }
 
-// Note: removed async keyword from component function
 export function PublicationList({
   selectedOnly = false,
 }: PublicationListProps) {
-  // Move the async operation outside the component
   const publications = use(getAllPublications())
 
-  // Filter publications if selectedOnly is true
   const filteredPubs = selectedOnly
     ? publications.filter(pub => pub.selected)
     : publications
 
-  // Group publications by year
   const groupedPubs = filteredPubs.reduce((acc, pub) => {
     if (!acc[pub.year]) {
       acc[pub.year] = []
@@ -31,7 +26,6 @@ export function PublicationList({
     return acc
   }, {} as Record<number, Publication[]>)
 
-  // Sort years in descending order
   const years = Object.keys(groupedPubs)
     .map(Number)
     .sort((a, b) => b - a)
@@ -43,9 +37,7 @@ export function PublicationList({
         <React.Fragment key={index}>
           {index > 0 && ', '}
           {isMe ? (
-            <span className="underline font-bold hover:text-accent transition-colors">
-              {author}
-            </span>
+            <span className="font-bold text-accent">{author}</span>
           ) : (
             <span>{author}</span>
           )}
@@ -56,112 +48,90 @@ export function PublicationList({
 
   return (
     <section>
-      <div className="mt-3">
-        {years.map((year, yearIndex) => (
+      <div className="space-y-4">
+        {years.map((year) => (
           <div key={year}>
-            {yearIndex !== 0 && <hr className="border-back-subtle my-2" />}
-            <div className="grid grid-cols-[1fr_60px] gap-0">
-              <div className="border-back-subtle pb overflow-hidden">
-                {groupedPubs[year].map((pub, index) => (
-                  <li
-                    key={index}
-                    className="group list-none relative overflow-hidden mb-3"
-                  >
-                    <div
-                      className={`pl-2 pb- pr-2 pt-0 transition-transform duration-300 ${
-                        pub.pdf && pub.code
-                          ? 'group-hover:translate-x-[6rem]'
-                          : 'group-hover:translate-x-12'
-                      } relative z-10 bg-back-primary will-change-transform`}
-                    >
-                      <div className="flex gap-4">
-                        {pub.thumbnail && (
-                          <div className="flex-shrink-0 w-[240px]">
-                            <Image
-                              src={pub.thumbnail}
-                              alt={pub.title}
-                              width={400}
-                              height={300}
-                              className="object-cover w-full h-auto"
-                            />
-                          </div>
+            {/* Year separator */}
+            <div className="flex items-center gap-3 mb-4 mt-6 first:mt-0">
+              <span className="font-mono-label text-xs text-fore-subtle tracking-wider">{year}</span>
+              <div className="flex-1 h-px bg-[var(--color-border)]"></div>
+            </div>
+
+            <div className="space-y-3">
+              {groupedPubs[year].map((pub, index) => (
+                <div
+                  key={index}
+                  className="panel-list-item !p-4 group/pub"
+                >
+                  <div className="flex gap-4">
+                    {/* Thumbnail */}
+                    {pub.thumbnail && (
+                      <div className="flex-shrink-0 w-[100px] h-[70px] rounded-md overflow-hidden hidden sm:block">
+                        <Image
+                          src={pub.thumbnail}
+                          alt={pub.title}
+                          width={200}
+                          height={140}
+                          className="object-cover w-full h-full"
+                        />
+                      </div>
+                    )}
+
+                    <div className="flex-1 min-w-0">
+                      {/* Title + badge row */}
+                      <div className="mb-1.5">
+                        <span className="text-base font-semibold text-fore-primary leading-snug group-hover/pub:text-accent transition-colors">
+                          {pub.title}
+                        </span>
+                        {pub.abbr && (
+                          <span className="tag-badge tag-badge-accent whitespace-nowrap !text-[0.65rem] !px-2.5 !py-0.5 ml-2 inline-flex align-middle">
+                            {pub.abbr}
+                          </span>
                         )}
-                        <div className="flex-1">
-                          <div className="mb-1">
-                            <span className="text-lg font-semibold leading-tight cursor-default group-hover:text-accent transition-colors">
-                              {pub.title}
-                              {pub.abbr && (
-                                <>
-                                  {' '}
-                                  <span className="inline-flex items-center px-3 py-1 text-xs font-semibold bg-gradient-to-r from-accent to-teal-600 text-white rounded-full shadow-sm align-middle">
-                                    {pub.abbr}
-                                  </span>
-                                </>
-                              )}
-                            </span>
-                          </div>
-                          <div className="space-y-1 mb-2">
-                            <p className="text-sm text-fore-subtle">
-                              {formatAuthors(pub.authors)}
-                            </p>
-                            <p className="text-sm italic text-fore-subtle font-medium">
-                              {pub.venue}
-                            </p>
-                          </div>
-                        </div>
+                      </div>
+
+                      {/* Authors */}
+                      <div className="text-xs text-fore-subtle mb-1 leading-relaxed">
+                        {formatAuthors(pub.authors)}
+                      </div>
+
+                      {/* Venue */}
+                      <div className="font-mono-label text-[0.7rem] text-fore-subtle mb-2.5 flex items-center gap-1">
+                        <span className="text-accent font-bold">@</span>
+                        <span className="italic">{pub.venue}</span>
+                      </div>
+
+                      {/* Action buttons */}
+                      <div className="flex flex-wrap gap-2">
+                        {pub.pdf && (
+                          <Link href={pub.pdf} target="_blank" className="btn-outline">
+                            <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" />
+                            </svg>
+                            PDF
+                          </Link>
+                        )}
+                        {pub.code && (
+                          <Link href={pub.code} target="_blank" className="btn-outline">
+                            <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" />
+                            </svg>
+                            CODE
+                          </Link>
+                        )}
+                        {pub.url && !pub.pdf && (
+                          <Link href={pub.url} target="_blank" className="btn-outline">
+                            <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" />
+                            </svg>
+                            LINK
+                          </Link>
+                        )}
                       </div>
                     </div>
-                    {/* Hidden action panel revealed on hover */}
-                    <div className="absolute left-0 top-0 bottom-1 z-0">
-                      {pub.pdf && (
-                        <Link
-                          href={pub.pdf}
-                          className="absolute left-0 top-0 bottom-0 flex flex-col items-center justify-center gap-1 w-12 bg-accent text-white hover:brightness-90 transition-all z-10"
-                          target="_blank"
-                          style={{
-                            clipPath:
-                              'polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%)',
-                          }}
-                        >
-                          <FileText size={20} />
-                          <span className="text-xs font-semibold">PDF</span>
-                        </Link>
-                      )}
-                      {pub.code && (
-                        <Link
-                          href={pub.code}
-                          className="absolute left-[2.5rem] top-0 bottom-0 flex flex-col items-center justify-center gap-1 w-12 bg-back-secondary text-fore-primary hover:bg-back-subtle transition-colors z-0 pl-1"
-                          target="_blank"
-                          style={{
-                            clipPath:
-                              'polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%)',
-                          }}
-                        >
-                          <Code size={20} />
-                          <span className="text-xs font-semibold">Code</span>
-                        </Link>
-                      )}
-                      {pub.url && !pub.pdf && !pub.code && (
-                        <Link
-                          href={pub.url}
-                          className="absolute left-0 top-0 bottom-0 flex flex-col items-center justify-center gap-1 w-12 bg-accent text-white hover:brightness-90 transition-all"
-                          target="_blank"
-                          style={{
-                            clipPath:
-                              'polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%)',
-                          }}
-                        >
-                          <ExternalLink size={20} />
-                          <span className="text-xs font-semibold">Link</span>
-                        </Link>
-                      )}
-                    </div>
-                  </li>
-                ))}
-              </div>
-              <div className="text-2xl text-fore-subtle text-right opacity-20 sticky top-4">
-                {year}
-              </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         ))}

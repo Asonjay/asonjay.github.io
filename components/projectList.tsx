@@ -1,60 +1,56 @@
 import { getProjects } from '../lib/mdx'
 import { Project } from '../types/project'
-import { ButtonPop } from '../components/buttonAccent'
 import { GitHub24, External24 } from '../components/icons'
 
 function ProjectCard({ project }: { project: Project }) {
   return (
-    <div className="relative flex flex-col justify-between w-full h-full px-6 py-5 group bg-back-secondary hover:bg-back-secondary">
-      {/* Thumbnail Section */}
-      {/* {project.thumbnail && (
-        <div className="w-full h-32 mb-4 overflow-hidden rounded-lg">
-          <img
-            src={project.thumbnail}
-            alt={project.title}
-            className="w-full h-full object-cover"
-          />
-        </div>
-      )} */}
-
-      {/* Title and Year Section */}
-      <div className="flex justify-between items-start">
-        <h3 className="text-xl font-semibold text-fore-primary group-hover:text-accent">
-          <a href={project.link} target="_blank" rel="noopener noreferrer">
-            <span className="focus:text-accent">{project.title}</span>
-          </a>
+    <div className="panel-list-item h-full">
+      {/* Title and Year */}
+      <div className="flex justify-between items-start mb-1">
+        <h3 className="text-base font-medium text-fore-primary leading-snug">
+          {project.link ? (
+            <a
+              href={project.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-accent transition-colors"
+            >
+              {project.title}
+            </a>
+          ) : (
+            project.title
+          )}
         </h3>
-        <span className="text-md mt-0.5 text-fore-subtle opacity-40">
+        <span className="font-mono-label text-xs text-fore-subtle ml-2 flex-shrink-0">
           {project.year}
         </span>
       </div>
 
-      {/* Tags Section */}
-      <div className="flex flex-wrap mt-2 mb-3">
-        {project.tags?.map(tag => (
-          <span
-            key={tag}
-            className="p-1 mb-1 mr-2 text-xs text-fore-subtle bg-back-subtle"
-          >
-            {tag}
-          </span>
-        ))}
-      </div>
+      {/* Tags */}
+      {project.tags && project.tags.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 mb-2">
+          {project.tags.map(tag => (
+            <span key={tag} className="tag-badge tag-badge-accent">
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
 
       {/* Description */}
-      <p className="text-sm text-fore-subtle mb-4">{project.description}</p>
+      <p className="text-sm text-fore-subtle mb-3 leading-relaxed">{project.description}</p>
 
-      {/* Links Section */}
-      <div className="flex flex-wrap gap-3 mt-auto">
+      {/* Links */}
+      <div className="flex flex-wrap gap-2 mt-auto">
         {project.github && (
           <a
             href={project.github}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-3 py-1 text-sm rounded-md bg-back-subtle hover:bg-accent hover:text-white transition-colors flex items-center gap-1"
+            className="btn-outline"
           >
-            <GitHub24 className="w-4 h-4 gap-1" />
-            GitHub
+            <GitHub24 className="w-3.5 h-3.5" />
+            GITHUB
           </a>
         )}
         {project.url && (
@@ -62,10 +58,10 @@ function ProjectCard({ project }: { project: Project }) {
             href={project.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-3 py-1 text-sm rounded-md bg-back-subtle hover:bg-accent hover:text-white transition-colors flex items-center gap-1"
+            className="btn-outline"
           >
-            <External24 className="w-4 h-4" />
-            Project Page
+            <External24 className="w-3.5 h-3.5" />
+            DEMO
           </a>
         )}
       </div>
@@ -76,6 +72,7 @@ function ProjectCard({ project }: { project: Project }) {
 interface Props {
   selectedOnly?: boolean
 }
+
 const ProjectList = async ({ selectedOnly = false }: Props) => {
   try {
     const projects = await getProjects()
@@ -83,24 +80,20 @@ const ProjectList = async ({ selectedOnly = false }: Props) => {
     if (!projects || projects.length === 0) {
       return (
         <section>
-          <p>No projects found.</p>
+          <p className="text-fore-subtle text-sm">No projects found.</p>
         </section>
       )
     }
 
     const filteredProjects = selectedOnly
-      ? projects.filter(p => {
-          return p.selected === true
-        })
+      ? projects.filter(p => p.selected === true)
       : projects
 
     return (
-      <section className="mb-6 mt-6">
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 max-w-6xl mx-auto">
+      <section>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {filteredProjects.map(project => (
-            <ButtonPop key={project.id || project.title}>
-              <ProjectCard project={project} />
-            </ButtonPop>
+            <ProjectCard key={project.id || project.title} project={project} />
           ))}
         </div>
       </section>
@@ -109,7 +102,7 @@ const ProjectList = async ({ selectedOnly = false }: Props) => {
     console.error('Error loading projects:', error)
     return (
       <section>
-        <p>Error loading projects.</p>
+        <p className="text-fore-subtle text-sm">Error loading projects.</p>
       </section>
     )
   }

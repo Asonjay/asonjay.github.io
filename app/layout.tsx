@@ -30,7 +30,7 @@ const fontFiraCode = Fira_Code({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://asonjay.github.io'),
+  metadataBase: new URL('https://zexinxu.com'),
   title: {
     default: 'Zexin (Jason) Xu',
     template: '%s | Jason Xu',
@@ -39,11 +39,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Zexin (Jason) Xu',
     description: 'PhD Student at The University of Texas at Dallas',
-    url: 'https://asonjay.github.io',
+    url: 'https://zexinxu.com',
     siteName: 'Zexin (Jason) Xu',
     images: [
       {
-        url: 'https://asonjay.github.io/images/JJ-icon.png',
+        url: 'https://zexinxu.com/images/JJ-icon.png',
         width: 512,
         height: 512,
       },
@@ -64,7 +64,7 @@ export const metadata: Metadata = {
     title: 'Zexin (Jason) Xu',
     description: 'PhD Student at The University of Texas at Dallas',
     card: 'summary',
-    images: ['https://asonjay.github.io/images/JJ-icon.png'],
+    images: ['https://zexinxu.com/images/JJ-icon.png'],
   },
   icons: {
     shortcut: '/static/favicon.ico',

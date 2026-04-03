@@ -13,7 +13,7 @@ export function ThemeToggle({ className }: { className?: string }) {
   }, [])
 
   if (!mounted) {
-    return <div className={className} style={{ width: 32, height: 32 }} />
+    return <div className={className} style={{ width: 40, height: 28 }} />
   }
 
   return (
@@ -25,7 +25,7 @@ export function ThemeToggle({ className }: { className?: string }) {
         trackCustomEvent({ eventName: 'toggle-theme' })
       }}
       className={cn(
-        'relative w-8 h-8 rounded-full border border-[var(--color-border)] flex items-center justify-center transition-all duration-300 hover:border-accent hover:shadow-[0_0_12px_var(--color-panel-glow)] group',
+        'relative w-8 h-8 rounded-lg border border-[var(--color-border)] flex items-center justify-center transition-all duration-200 hover:border-accent hover:bg-[var(--color-back-accent)] hover:text-accent group',
         className
       )}
     >

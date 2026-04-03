@@ -69,11 +69,10 @@ export const Twitter24 = ({ className }: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className={classNames('w-5 h-5', className)}
+      className={classNames('w-6 h-6', className)}
       fill="currentColor"
-      viewBox="0 0 24 24"
+      viewBox="-3 -3 30 30"
       role="img"
-      strokeWidth="1"
     >
       <title>X</title>
       <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -129,14 +128,18 @@ export const LinkedIn24 = ({ className }: IconProps) => {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       className={classNames('w-6 h-6', className)}
-      viewBox="0 0 24 24"
-      fill="currentColor"
+      viewBox="-2 -2 28 28"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       role="img"
     >
       <title>LinkedIn</title>
-      <path d="M16 8a6 6 0 0 1 6 6v7h-2v-7a4 4 0 0 0-8 0v7h-2v-7a6 6 0 0 1 6-6z" />
-      <rect x="3" y="9" width="2" height="12" />
-      <circle cx="4" cy="4" r="1.2" />
+      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z" />
+      <rect x="2" y="9" width="4" height="12" />
+      <circle cx="4" cy="4" r="2" />
     </svg>
   )
 }

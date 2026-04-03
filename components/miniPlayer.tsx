@@ -70,13 +70,46 @@ export function MiniPlayer() {
   const [collapsing, setCollapsing] = useState(false)
   const [mounted, setMounted] = useState(false)
   const [hasVisited, setHasVisited] = useState(false)
+  const [showPrompt, setShowPrompt] = useState(false)
+  const [navRight, setNavRight] = useState(0)
 
   const isHome = pathname === '/'
   const track = playlist[currentIndex]
 
+  const measureNav = () => {
+    const nav = document.querySelector('nav[aria-label="Main Navigation"]')
+    if (nav) {
+      const rect = nav.getBoundingClientRect()
+      setNavRight(Math.round(document.documentElement.clientWidth - rect.right))
+    }
+  }
+
   useEffect(() => {
     setMounted(true)
-    setHasVisited(sessionStorage.getItem('musicPlayerVisited') === 'true')
+    const visited = sessionStorage.getItem('musicPlayerVisited') === 'true'
+    setHasVisited(visited)
+
+    // Show prompt for first-time visitors after a delay
+    let promptTimer: ReturnType<typeof setTimeout>
+    if (!visited) {
+      promptTimer = setTimeout(() => {
+        setShowPrompt(true)
+      }, 2000)
+    }
+
+    const handleToggle = () => {
+      measureNav()
+      setExpanded(prev => !prev)
+    }
+    window.addEventListener('toggle-player', handleToggle)
+    measureNav()
+    window.addEventListener('resize', measureNav)
+
+    return () => {
+      window.removeEventListener('toggle-player', handleToggle)
+      window.removeEventListener('resize', measureNav)
+      if (promptTimer) clearTimeout(promptTimer)
+    }
   }, [])
 
   useEffect(() => {
@@ -135,6 +168,7 @@ export function MiniPlayer() {
   }, [])
 
   useEffect(() => {
+    window.dispatchEvent(new CustomEvent('music-track', { detail: playlist[currentIndex].title }))
     if (!widgetRef.current || !isReady) return
     setPosition(0)
     setDuration(0)
@@ -176,8 +210,6 @@ export function MiniPlayer() {
 
   const handleCollapse = () => {
     setCollapsing(true)
-    setHasVisited(true)
-    sessionStorage.setItem('musicPlayerVisited', 'true')
     setTimeout(() => {
       setExpanded(false)
       setCollapsing(false)
@@ -212,56 +244,65 @@ export function MiniPlayer() {
         allow="autoplay"
       />
 
-      {/* Floating player -- visible on all pages */}
-      <div className="fixed bottom-4 right-4 z-50">
-        {!expanded ? (
-          hasVisited ? (
-            /* Minimal icon for returning visitors */
-            <button
-              onClick={() => setExpanded(true)}
-              className="w-11 h-11 rounded-full cursor-pointer border border-[var(--color-border)] backdrop-blur-xl flex items-center justify-center transition-all hover:border-accent hover:scale-110"
-              style={{ background: 'var(--color-panel-bg)' }}
-            >
-              {isPlaying ? (
-                <span className="flex items-end justify-center gap-[2px] w-5 h-5">
-                  <span className="w-[2.5px] h-full bg-accent rounded-sm animate-[barBounce_0.4s_ease-in-out_infinite_alternate]" />
-                  <span className="w-[2.5px] h-2/3 bg-accent rounded-sm animate-[barBounce_0.4s_ease-in-out_infinite_alternate_0.15s]" />
-                  <span className="w-[2.5px] h-1/3 bg-accent rounded-sm animate-[barBounce_0.4s_ease-in-out_infinite_alternate_0.3s]" />
-                </span>
-              ) : (
-                <svg className="w-5 h-5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" />
-                </svg>
-              )}
-            </button>
-          ) : (
-            /* First-visit welcome prompt */
-            <button
-              onClick={() => setExpanded(true)}
-              className="flex items-center gap-3 rounded-2xl cursor-pointer border border-[var(--color-border)] backdrop-blur-xl transition-all hover:border-accent px-5 py-3 animate-[musicHint_0.8s_ease-out_1.5s_both] group"
-              style={{ background: 'var(--color-panel-bg)' }}
-            >
-              <span className="w-9 h-9 rounded-full border border-accent/30 flex items-center justify-center flex-shrink-0 group-hover:border-accent transition-colors group-hover:scale-110 transition-transform">
-                <svg className="w-4 h-4 text-accent animate-[musicNote_3s_ease-in-out_2.3s_infinite]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" />
-                </svg>
-              </span>
-              <div className="flex flex-col items-start">
-                <span className="text-sm text-fore-primary font-medium">Want some music?</span>
-                <span className="font-mono-label text-[0.6rem] text-fore-subtle tracking-wider">CLICK TO PLAY</span>
-              </div>
-            </button>
-          )
-        ) : (
-          /* Expanded player */
+      {/* First-visit music prompt */}
+      {showPrompt && !expanded && (
+        <div className="fixed top-20 z-[200] animate-[playerExpand_0.35s_ease-out_both] origin-top-right" style={{ right: `${navRight}px` }}>
           <div
-            className={`w-80 rounded-2xl border border-[var(--color-border)] backdrop-blur-xl p-4 origin-bottom-right ${collapsing ? 'animate-[playerCollapse_0.3s_ease-in_both]' : 'animate-[playerExpand_0.35s_ease-out_both]'}`}
+            className="music-prompt rounded-2xl border border-[var(--color-border)] p-4 flex items-center gap-3"
+          >
+            <svg className="w-5 h-5 text-accent animate-[musicNote_3s_ease-in-out_infinite] flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" />
+            </svg>
+            <span className="font-mono-label text-xs text-fore-primary tracking-wider">Want some music?</span>
+            <div className="flex items-center gap-1.5 flex-shrink-0">
+              <button
+                onClick={() => {
+                  setShowPrompt(false)
+                  sessionStorage.setItem('musicPlayerVisited', 'true')
+                  setHasVisited(true)
+                  measureNav()
+                  setExpanded(true)
+                }}
+                className="w-7 h-7 rounded-lg border border-[var(--color-border)] flex items-center justify-center text-green-500 hover:border-green-500 hover:bg-green-500/10 transition-all"
+                title="Yes"
+              >
+                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 6L9 17l-5-5" />
+                </svg>
+              </button>
+              <button
+                onClick={() => {
+                  setShowPrompt(false)
+                  sessionStorage.setItem('musicPlayerVisited', 'true')
+                  setHasVisited(true)
+                }}
+                className="w-7 h-7 rounded-lg border border-[var(--color-border)] flex items-center justify-center text-fore-subtle hover:border-[#ff0044] hover:text-[#ff0044] hover:bg-[rgba(255,0,68,0.1)] transition-all"
+                title="No"
+              >
+                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Player dropdown -- anchored below nav */}
+      {expanded && (
+        <div className="fixed top-20 z-50" style={{ right: `${navRight}px` }}>
+          <div
+            className={`w-80 rounded-2xl border border-[var(--color-border)] backdrop-blur-xl p-4 origin-top-right ${collapsing ? 'animate-[playerCollapse_0.3s_ease-in_both]' : 'animate-[playerExpand_0.35s_ease-out_both]'}`}
             style={{ background: 'var(--color-panel-bg)' }}
           >
             {/* Header */}
             <div className="flex items-center justify-between mb-3 animate-[playerFadeIn_0.3s_ease-out_0.1s_both]">
               <div className="section-label text-fore-subtle text-[0.65rem]">Now Playing</div>
-              <button onClick={handleCollapse} className="text-fore-subtle hover:text-fore-primary transition-colors text-sm leading-none">×</button>
+              <button onClick={handleCollapse} className="shrink-icon !w-6 !h-6" title="Collapse player">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M10 14l-7 7" />
+                </svg>
+              </button>
             </div>
 
             {/* Current track */}
@@ -338,8 +379,8 @@ export function MiniPlayer() {
               ))}
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </>
   )
 }

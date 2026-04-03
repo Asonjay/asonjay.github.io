@@ -59,20 +59,20 @@ export default async function Page() {
               />
             </div>
             {/* Social links bar */}
-            <div className="flex items-center border border-[var(--color-border)] rounded-xl overflow-hidden">
-              <a href="mailto:zexin.xu@utdallas.edu" aria-label="Email" title="Email" className="p-2.5 hover:bg-[rgba(255,255,255,0.1)] hover:text-accent transition-colors">
+            <div className="social-group flex items-center rounded-xl overflow-hidden max-w-full">
+              <a href="mailto:zexin.xu@utdallas.edu" aria-label="Email" title="Email" className="social-group-item">
                 <MailAt24 className="w-4 h-4" />
               </a>
-              <a href="https://scholar.google.com/citations?user=NvnoD1kAAAAJ&hl=en" aria-label="Google Scholar" title="Google Scholar" target="_blank" rel="noopener noreferrer" className="p-2.5 hover:bg-[rgba(255,255,255,0.1)] hover:text-accent transition-colors border-l border-[var(--color-border)]">
+              <a href="https://scholar.google.com/citations?user=NvnoD1kAAAAJ&hl=en" aria-label="Google Scholar" title="Google Scholar" target="_blank" rel="noopener noreferrer" className="social-group-item">
                 <GoogleScholar24 className="w-4 h-4" />
               </a>
-              <a href="https://github.com/asonjay" aria-label="GitHub" title="GitHub" target="_blank" rel="noopener noreferrer" className="p-2.5 hover:bg-[rgba(255,255,255,0.1)] hover:text-accent transition-colors border-l border-[var(--color-border)]">
+              <a href="https://github.com/asonjay" aria-label="GitHub" title="GitHub" target="_blank" rel="noopener noreferrer" className="social-group-item">
                 <GitHub24 className="w-4 h-4" />
               </a>
-              <a href="https://x.com/zexin_jason_xu" aria-label="Twitter/X" title="Twitter/X" target="_blank" rel="noopener noreferrer" className="p-2.5 hover:bg-[rgba(255,255,255,0.1)] hover:text-accent transition-colors border-l border-[var(--color-border)]">
+              <a href="https://x.com/zexin_jason_xu" aria-label="Twitter/X" title="Twitter/X" target="_blank" rel="noopener noreferrer" className="social-group-item">
                 <Twitter24 className="w-4 h-4" />
               </a>
-              <a href="https://www.linkedin.com/in/zexin-xu/" aria-label="LinkedIn" title="LinkedIn" target="_blank" rel="noopener noreferrer" className="p-2.5 hover:bg-[rgba(255,255,255,0.1)] hover:text-accent transition-colors border-l border-[var(--color-border)]">
+              <a href="https://www.linkedin.com/in/zexin-xu/" aria-label="LinkedIn" title="LinkedIn" target="_blank" rel="noopener noreferrer" className="social-group-item">
                 <LinkedIn24 className="w-4 h-4" />
               </a>
             </div>

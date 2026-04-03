@@ -27,12 +27,18 @@ const buildDate = (() => {
 export function Header() {
   const path = usePathname()
   const [musicPlaying, setMusicPlaying] = useState(false)
+  const [musicTrack, setMusicTrack] = useState('')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
-    const handler = (e: Event) => setMusicPlaying((e as CustomEvent).detail)
-    window.addEventListener('music-state', handler)
-    return () => window.removeEventListener('music-state', handler)
+    const stateHandler = (e: Event) => setMusicPlaying((e as CustomEvent).detail)
+    const trackHandler = (e: Event) => setMusicTrack((e as CustomEvent).detail)
+    window.addEventListener('music-state', stateHandler)
+    window.addEventListener('music-track', trackHandler)
+    return () => {
+      window.removeEventListener('music-state', stateHandler)
+      window.removeEventListener('music-track', trackHandler)
+    }
   }, [])
 
   // Close mobile menu on route change
@@ -84,6 +90,7 @@ export function Header() {
               />
             </div>
             <span>@ZEXIN_XU</span>
+            <span className="hidden md:inline text-[0.55rem] opacity-50 normal-case tracking-normal">VER.{buildDate}</span>
           </Link>
 
           {/* Center: Nav links (large screens only) */}
@@ -100,7 +107,7 @@ export function Header() {
                     'transition-all duration-200 text-xs tracking-widest px-3 py-1.5 rounded-lg',
                     {
                       'text-accent bg-[rgba(255,255,255,0.08)] backdrop-blur-sm border border-[var(--color-border)] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]': isActive,
-                      'text-fore-subtle hover:text-accent hover:bg-[rgba(255,255,255,0.12)] border border-transparent hover:border-[var(--color-border)]': !isActive,
+                      'text-fore-subtle hover:text-accent hover:bg-[var(--color-back-accent)] border border-transparent hover:border-[var(--color-border)]': !isActive,
                     }
                   )}
                 >
@@ -112,7 +119,7 @@ export function Header() {
               href="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/asonjay/asonjay.github.io/master/public/cv/Zexin_Xu_CV.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="transition-all duration-200 text-xs tracking-widest px-3 py-1.5 rounded-lg text-fore-subtle hover:text-accent hover:bg-[rgba(255,255,255,0.12)] border border-transparent hover:border-[var(--color-border)] flex items-center gap-1.5"
+              className="transition-all duration-200 text-xs tracking-widest px-3 py-1.5 rounded-lg text-fore-subtle hover:text-accent hover:bg-[var(--color-back-accent)] border border-transparent hover:border-[var(--color-border)] flex items-center gap-1.5"
             >
               CV <span className="text-[0.55rem] opacity-50 normal-case tracking-normal">(03.26)</span>
             </a>
@@ -122,14 +129,38 @@ export function Header() {
           <div className="flex items-center gap-2 flex-shrink-0">
             {/* Status (hidden on small) */}
             <span className={`w-1.5 h-1.5 rounded-full animate-[blink_2s_ease-in-out_infinite] transition-colors duration-300 hidden md:block ${musicPlaying ? 'bg-[#ff0044] shadow-[0_0_8px_#ff0044]' : 'bg-accent shadow-[0_0_8px_var(--color-accent)]'}`}></span>
-            <span className="hidden md:inline text-fore-subtle transition-all duration-300">
-              {musicPlaying ? 'VIBING_' : 'ONLINE_'} (VER.{buildDate})
+            <span className="hidden md:inline-block w-[8ch] overflow-hidden text-fore-subtle transition-all duration-300">
+              {musicPlaying ? (
+                <span className="inline-block animate-[marqueeScroll_12s_linear_infinite] whitespace-nowrap">
+                  VIBING_: {musicTrack}
+                </span>
+              ) : (
+                'ONLINE_'
+              )}
             </span>
+            {/* Music toggle */}
+            <button
+              onClick={() => window.dispatchEvent(new CustomEvent('toggle-player'))}
+              className="flex items-center justify-center w-8 h-8 rounded-lg border border-[var(--color-border)] text-accent hover:bg-[var(--color-back-accent)] hover:border-accent transition-all duration-200"
+              title="Toggle music player"
+            >
+              {musicPlaying ? (
+                <span className="flex items-end justify-center gap-[2px] w-3.5 h-3.5">
+                  <span className="w-[2px] h-full bg-accent rounded-sm animate-[barBounce_0.4s_ease-in-out_infinite_alternate]" />
+                  <span className="w-[2px] h-2/3 bg-accent rounded-sm animate-[barBounce_0.4s_ease-in-out_infinite_alternate_0.15s]" />
+                  <span className="w-[2px] h-1/3 bg-accent rounded-sm animate-[barBounce_0.4s_ease-in-out_infinite_alternate_0.3s]" />
+                </span>
+              ) : (
+                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" />
+                </svg>
+              )}
+            </button>
             <ThemeToggle />
             {/* Hamburger menu button (below lg) */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg hover:bg-[rgba(255,255,255,0.1)] transition-colors"
+              className="lg:hidden flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg hover:bg-[var(--color-back-accent)] hover:text-accent transition-colors"
             >
               <span className="text-[0.65rem]">{mobileMenuOpen ? 'CLOSE' : 'MENU'}</span>
               {mobileMenuOpen ? (
@@ -146,11 +177,11 @@ export function Header() {
         </nav>
 
         {/* Mobile dropdown menu */}
-        {mobileMenuOpen && (
-          <div
-            className="lg:hidden mt-2 rounded-xl border border-[var(--color-border)] backdrop-blur-xl overflow-hidden"
-            style={{ background: 'var(--color-panel-bg)' }}
-          >
+        <div
+          className={`lg:hidden mt-2 rounded-xl border border-[var(--color-border)] backdrop-blur-xl overflow-hidden grid transition-all duration-300 ease-out ${mobileMenuOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0 border-transparent'}`}
+          style={{ background: mobileMenuOpen ? 'var(--color-panel-bg)' : 'transparent' }}
+        >
+          <div className="overflow-hidden">
             <div className="flex flex-col py-2">
               {routes.map(route => {
                 const isActive = route.exact === true
@@ -164,7 +195,7 @@ export function Header() {
                       'px-5 py-3 font-mono-label text-xs uppercase tracking-widest transition-colors',
                       {
                         'text-accent bg-[rgba(255,255,255,0.06)]': isActive,
-                        'text-fore-subtle hover:text-accent hover:bg-[rgba(255,255,255,0.04)]': !isActive,
+                        'text-fore-subtle hover:text-accent hover:bg-[var(--color-back-accent)]': !isActive,
                       }
                     )}
                   >
@@ -176,13 +207,13 @@ export function Header() {
                 href="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/asonjay/asonjay.github.io/master/public/cv/Zexin_Xu_CV.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-5 py-3 font-mono-label text-xs uppercase tracking-widest text-fore-subtle hover:text-accent hover:bg-[rgba(255,255,255,0.04)] transition-colors flex items-center gap-1.5"
+                className="px-5 py-3 font-mono-label text-xs uppercase tracking-widest text-fore-subtle hover:text-accent hover:bg-[var(--color-back-accent)] transition-colors flex items-center gap-1.5"
               >
                 CV <span className="text-[0.55rem] opacity-50 normal-case tracking-normal">(03.26)</span>
               </a>
             </div>
           </div>
-        )}
+        </div>
       </div>
     </header>
   )

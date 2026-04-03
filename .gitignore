@@ -81,3 +81,6 @@ out
 CLAUDE.md
 
 .vscode
+
+# Deadline cache
+.deadline-cache.json

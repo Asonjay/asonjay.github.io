@@ -270,12 +270,39 @@ function deduplicateByTitle(conferences: Conference[]): Conference[] {
   return result
 }
 
+const CACHE_PATH = path.join(process.cwd(), '.deadline-cache.json')
+const CACHE_MAX_AGE = 24 * 60 * 60 * 1000 // 24 hours
+
+async function getCachedOrFetchConferences(): Promise<Conference[]> {
+  // Try reading from cache
+  try {
+    if (fs.existsSync(CACHE_PATH)) {
+      const stat = fs.statSync(CACHE_PATH)
+      const age = Date.now() - stat.mtimeMs
+      if (age < CACHE_MAX_AGE) {
+        const cached = JSON.parse(fs.readFileSync(CACHE_PATH, 'utf8'))
+        return cached as Conference[]
+      }
+    }
+  } catch { /* cache miss, fetch fresh */ }
+
+  // Fetch fresh
+  const external = await fetchExternalConferences()
+
+  // Write cache
+  try {
+    fs.writeFileSync(CACHE_PATH, JSON.stringify(external, null, 2))
+  } catch { /* ignore write errors */ }
+
+  return external
+}
+
 export async function getAllConferences(
   filter: SubjectFilter = 'all',
   includeExpired: boolean = false
 ): Promise<Conference[]> {
   const [external, local] = await Promise.all([
-    fetchExternalConferences(),
+    getCachedOrFetchConferences(),
     getLocalConferences(),
   ])
 

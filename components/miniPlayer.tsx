@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { usePathname } from 'next/navigation'
 
 declare global {
   interface Window {
@@ -54,7 +53,6 @@ function loadSCApi(): Promise<void> {
 }
 
 export function MiniPlayer() {
-  const pathname = usePathname()
   const iframeRef = useRef<HTMLIFrameElement>(null)
   const widgetRef = useRef<any>(null)
   const initedRef = useRef(false)
@@ -73,7 +71,6 @@ export function MiniPlayer() {
   const [showPrompt, setShowPrompt] = useState(false)
   const [navRight, setNavRight] = useState(0)
 
-  const isHome = pathname === '/'
   const track = playlist[currentIndex]
 
   const measureNav = () => {

@@ -113,10 +113,7 @@ export function MiniPlayer() {
     if (initedRef.current) return
     initedRef.current = true
 
-    let cancelled = false
-
     const onReady = (widget: any) => {
-      if (cancelled) return
       setIsReady(true)
       widget.setVolume(80)
       widget.getCurrentSound((sound: any) => {
@@ -126,8 +123,8 @@ export function MiniPlayer() {
     }
 
     const tryConnect = async () => {
-      try { await loadSCApi() } catch { if (!cancelled) setError(true); return }
-      if (cancelled || !iframeRef.current) return
+      try { await loadSCApi() } catch { setError(true); return }
+      if (!iframeRef.current) return
 
       const widget = window.SC.Widget(iframeRef.current)
       widgetRef.current = widget
@@ -135,33 +132,29 @@ export function MiniPlayer() {
       widget.bind(window.SC.Widget.Events.READY, () => onReady(widget))
       // Fallback probe in case READY already fired
       setTimeout(() => {
-        if (cancelled) return
         widget.getVolume(() => onReady(widget))
       }, 1500)
 
       widget.bind(window.SC.Widget.Events.PLAY, () => {
-        if (cancelled) return
         setIsPlaying(true)
         window.dispatchEvent(new CustomEvent('music-state', { detail: true }))
       })
       widget.bind(window.SC.Widget.Events.PAUSE, () => {
-        if (cancelled) return
         setIsPlaying(false)
         window.dispatchEvent(new CustomEvent('music-state', { detail: false }))
       })
-      widget.bind(window.SC.Widget.Events.PLAY_PROGRESS, (e: any) => !cancelled && setPosition(e.currentPosition))
+      widget.bind(window.SC.Widget.Events.PLAY_PROGRESS, (e: any) => setPosition(e.currentPosition))
       widget.bind(window.SC.Widget.Events.FINISH, () => {
-        if (cancelled) return
         setIsPlaying(false)
         window.dispatchEvent(new CustomEvent('music-state', { detail: false }))
         setPosition(0)
         setCurrentIndex(prev => (prev + 1) % playlist.length)
       })
-      widget.bind(window.SC.Widget.Events.ERROR, () => !cancelled && setError(true))
+      widget.bind(window.SC.Widget.Events.ERROR, () => setError(true))
     }
 
     tryConnect()
-    return () => { cancelled = true }
+    // No cleanup — widget and iframe persist for the lifetime of the app
   }, [])
 
   useEffect(() => {

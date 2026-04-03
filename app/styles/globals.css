@@ -8,9 +8,9 @@
   --color-fore-secondary: #374151;
   --color-fore-subtle: #6b7280;
 
-  --color-back-primary: #fafafa;
-  --color-back-secondary: rgba(255, 255, 255, 0.6);
-  --color-back-subtle: #f0f0f5;
+  --color-back-primary: #f5f0e8;
+  --color-back-secondary: rgba(250, 245, 237, 0.6);
+  --color-back-subtle: #ebe5d5;
 
   --color-accent: #0078ff;
   --color-accent-secondary: #00b4d8;
@@ -290,6 +290,10 @@
   z-index: 1;
   pointer-events: none;
   opacity: 0.4;
+}
+
+.light .tech-grid {
+  opacity: 0.15;
 }
 
 /* ─── Glass Panel ─── */
@@ -627,8 +631,16 @@
 }
 
 @keyframes breathe {
-  0%, 100% { text-shadow: 0 0 2px transparent; }
-  50% { text-shadow: 0 0 6px currentColor, 0 0 12px currentColor; }
+  0%, 100% { filter: saturate(1) brightness(1); }
+  50% { filter: saturate(1.25) brightness(1.1); }
+}
+
+.deadline-glow {
+  animation: breathe 2.5s ease-in-out infinite;
+}
+
+.light .deadline-glow {
+  animation: none;
 }
 
 @keyframes barBounce {

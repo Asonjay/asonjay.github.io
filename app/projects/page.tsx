@@ -12,7 +12,7 @@ export default async function Projects() {
     <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div className="glass-panel">
         <div className="flex items-center justify-between mb-2">
-          <div className="section-label">Open_Source.Log</div>
+          <div className="section-label text-fore-subtle">Open_Source.Log</div>
           <Link href="/" className="shrink-icon" title="Back to home">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M10 14l-7 7" />

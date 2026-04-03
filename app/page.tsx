@@ -98,7 +98,7 @@ export default async function Page() {
         {/* News Panel */}
         <div className="lg:col-span-5 glass-panel">
           <div className="flex items-center justify-between mb-4">
-            <div className="section-label text-fore-subtle">Latest News</div>
+            <div className="section-label text-fore-subtle">Latest_News</div>
           </div>
           <NewsList />
         </div>
@@ -106,7 +106,7 @@ export default async function Page() {
         {/* Publications Panel */}
         <div className="lg:col-span-7 glass-panel">
           <div className="flex items-center justify-between mb-4">
-            <div className="section-label text-fore-subtle">Selected Publications</div>
+            <div className="section-label text-fore-subtle">Selected_Publications</div>
             <Link href="/publications" className="expand-icon" title="View all publications">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />

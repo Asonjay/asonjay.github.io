@@ -136,7 +136,7 @@ export function DeadlineCard({ conference, compact = false, featured = false }: 
           {conference.title}
         </span>
         <span className="font-mono-label text-[0.6rem] text-fore-subtle">{conference.year}</span>
-        <span className={`font-heading text-xl font-bold mt-1 leading-none ${urgencyTextColor} ${!isExpired ? 'animate-[breathe_2.5s_ease-in-out_infinite]' : ''}`}>
+        <span className={`font-heading text-xl font-bold mt-1 leading-none ${urgencyTextColor} ${!isExpired ? 'deadline-glow' : ''}`}>
           {isExpired ? '--' : `${timeRemaining.days}d`}
         </span>
       </a>

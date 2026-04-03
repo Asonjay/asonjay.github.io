@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import Link from 'next/link'
 import PostList from '../../components/postList'
 
 export const metadata: Metadata = {
@@ -9,7 +10,14 @@ export default async function Blog() {
   return (
     <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div className="glass-panel">
-        <div className="section-label text-fore-subtle mb-2">Thoughts.Log</div>
+        <div className="flex items-center justify-between mb-2">
+          <div className="section-label">Thoughts.Log</div>
+          <Link href="/" className="shrink-icon" title="Back to home">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M10 14l-7 7" />
+            </svg>
+          </Link>
+        </div>
         <h1 className="font-heading text-3xl sm:text-4xl font-bold tracking-tight text-fore-primary mb-4">
           Blog
         </h1>

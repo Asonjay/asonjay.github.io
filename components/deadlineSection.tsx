@@ -64,12 +64,12 @@ export function DeadlineSection({ conferences, limit = 10 }: DeadlineSectionProp
     .slice(0, limit)
 
   return (
-    <div>
+    <div className="flex-1 flex flex-col min-h-0">
       {/* Deadline cards */}
       {filteredConferences.length === 0 ? (
         <p className="text-fore-subtle text-sm">No deadlines for this category.</p>
       ) : (
-        <div className="flex gap-2 overflow-x-auto custom-scrollbar pb-2">
+        <div className="flex-1 flex gap-2 overflow-x-auto custom-scrollbar pb-2 items-stretch">
           {filteredConferences.map(conference => (
             <DeadlineCard
               key={conference.id}

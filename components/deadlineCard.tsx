@@ -129,14 +129,14 @@ export function DeadlineCard({ conference, compact = false, featured = false }: 
         href={conference.link}
         target="_blank"
         rel="noopener noreferrer"
-        className={`group flex flex-col items-center justify-center rounded-lg border border-[var(--color-border)] transition-colors hover:border-accent px-4 py-3 text-center flex-shrink-0 min-w-[80px] ${isExpired ? 'opacity-40' : ''}`}
+        className={`group flex flex-col items-center justify-center rounded-lg border border-[var(--color-border)] transition-colors hover:border-accent px-4 py-3 text-center flex-shrink-0 min-w-[80px] h-full ${isExpired ? 'opacity-40' : ''}`}
         style={{ background: 'rgba(255,255,255,0.03)' }}
       >
         <span className="text-xs font-bold text-fore-primary group-hover:text-accent transition-colors leading-tight">
           {conference.title}
         </span>
         <span className="font-mono-label text-[0.6rem] text-fore-subtle">{conference.year}</span>
-        <span className={`font-heading text-lg font-bold mt-1 leading-none ${urgencyTextColor} ${!isExpired ? 'animate-[breathe_2.5s_ease-in-out_infinite]' : ''}`}>
+        <span className={`font-heading text-xl font-bold mt-1 leading-none ${urgencyTextColor} ${!isExpired ? 'animate-[breathe_2.5s_ease-in-out_infinite]' : ''}`}>
           {isExpired ? '--' : `${timeRemaining.days}d`}
         </span>
       </a>

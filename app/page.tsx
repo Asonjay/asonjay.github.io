@@ -25,7 +25,7 @@ export default async function Page() {
       {/* ─── Top Row: Identity + Profile ─── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Bio Panel */}
-        <div className="lg:col-span-9 glass-panel">
+        <div className="lg:col-span-9 glass-panel flex flex-col">
           <div className="flex items-center justify-between mb-4">
             <div className="section-label text-fore-subtle">Identity</div>
           </div>
@@ -79,14 +79,10 @@ export default async function Page() {
           </div>
 
           {/* Deadlines Panel */}
-          <div className="glass-panel">
+          <div className="glass-panel flex-1 flex flex-col">
             <div className="flex items-center justify-between mb-3">
               <div className="section-label text-fore-subtle">Deadlines</div>
-              <Link
-                href="/deadlines"
-                className="expand-icon"
-                title="View all deadlines"
-              >
+              <Link href="/deadlines" className="expand-icon" title="View all deadlines">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
                 </svg>
@@ -111,11 +107,7 @@ export default async function Page() {
         <div className="lg:col-span-7 glass-panel">
           <div className="flex items-center justify-between mb-4">
             <div className="section-label text-fore-subtle">Selected Publications</div>
-            <Link
-              href="/publications"
-              className="expand-icon"
-              title="View all publications"
-            >
+            <Link href="/publications" className="expand-icon" title="View all publications">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
               </svg>
@@ -131,11 +123,7 @@ export default async function Page() {
         <div className="lg:col-span-7 glass-panel">
           <div className="flex items-center justify-between mb-4">
             <div className="section-label text-fore-subtle">Projects</div>
-            <Link
-              href="/projects"
-              className="expand-icon"
-              title="View all projects"
-            >
+            <Link href="/projects" className="expand-icon" title="View all projects">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
               </svg>
@@ -148,11 +136,7 @@ export default async function Page() {
         <div className="lg:col-span-5 glass-panel">
           <div className="flex items-center justify-between mb-4">
             <div className="section-label text-fore-subtle">Blog</div>
-            <Link
-              href="/blog"
-              className="expand-icon"
-              title="View all blog posts"
-            >
+            <Link href="/blog" className="expand-icon" title="View all blog posts">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
               </svg>

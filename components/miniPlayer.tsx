@@ -10,13 +10,24 @@ declare global {
   }
 }
 
-const playlist = [
+const tracks = [
   { title: 'Dose', artist: 'Teddy Swims', url: 'https://soundcloud.com/teddyswims/dose' },
   { title: 'Lose Control', artist: 'Teddy Swims', url: 'https://soundcloud.com/teddyswims/lose-control' },
   { title: 'Less Than Zero', artist: 'The Weeknd', url: 'https://soundcloud.com/theweeknd/the-weeknd-less-than-zero' },
   { title: "Halley's Comet", artist: 'Billie Eilish', url: 'https://soundcloud.com/billieeilish/halleys-comet' },
   { title: 'Evangeline', artist: 'Stephen Sanchez', url: 'https://soundcloud.com/stephensanchezofficial/evangeline' },
 ]
+
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr]
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]]
+  }
+  return a
+}
+
+const playlist = shuffle(tracks)
 
 function loadSCApi(): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -55,13 +66,18 @@ export function MiniPlayer() {
   const [duration, setDuration] = useState(0)
   const [position, setPosition] = useState(0)
   const [error, setError] = useState(false)
-  const [expanded, setExpanded] = useState(true)
+  const [expanded, setExpanded] = useState(false)
+  const [collapsing, setCollapsing] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const [hasVisited, setHasVisited] = useState(false)
 
   const isHome = pathname === '/'
   const track = playlist[currentIndex]
 
-  useEffect(() => { setMounted(true) }, [])
+  useEffect(() => {
+    setMounted(true)
+    setHasVisited(sessionStorage.getItem('musicPlayerVisited') === 'true')
+  }, [])
 
   useEffect(() => {
     if (initedRef.current) return
@@ -158,6 +174,15 @@ export function MiniPlayer() {
     })
   }, [currentIndex])
 
+  const handleCollapse = () => {
+    setCollapsing(true)
+    setHasVisited(true)
+    sessionStorage.setItem('musicPlayerVisited', 'true')
+    setTimeout(() => {
+      setExpanded(false)
+      setCollapsing(false)
+    }, 300)
+  }
   const handleToggle = () => widgetRef.current?.toggle()
   const handlePrev = () => setCurrentIndex((currentIndex - 1 + playlist.length) % playlist.length)
   const handleNext = () => setCurrentIndex((currentIndex + 1) % playlist.length)
@@ -190,41 +215,57 @@ export function MiniPlayer() {
       {/* Floating player -- visible on all pages */}
       <div className="fixed bottom-4 right-4 z-50">
         {!expanded ? (
-          /* Floating music button */
-          <button
-            onClick={() => setExpanded(true)}
-            className="flex items-center gap-3 rounded-full cursor-pointer border border-[var(--color-border)] backdrop-blur-xl transition-all hover:border-accent pl-5 pr-6 py-3"
-            style={{ background: 'var(--color-panel-bg)' }}
-          >
-            {isPlaying ? (
-              <span className="flex items-end gap-[3px] w-5 h-5 flex-shrink-0">
-                <span className="w-[3px] h-full bg-accent rounded-sm animate-[barBounce_0.4s_ease-in-out_infinite_alternate]" />
-                <span className="w-[3px] h-2/3 bg-accent rounded-sm animate-[barBounce_0.4s_ease-in-out_infinite_alternate_0.15s]" />
-                <span className="w-[3px] h-1/3 bg-accent rounded-sm animate-[barBounce_0.4s_ease-in-out_infinite_alternate_0.3s]" />
+          hasVisited ? (
+            /* Minimal icon for returning visitors */
+            <button
+              onClick={() => setExpanded(true)}
+              className="w-11 h-11 rounded-full cursor-pointer border border-[var(--color-border)] backdrop-blur-xl flex items-center justify-center transition-all hover:border-accent hover:scale-110"
+              style={{ background: 'var(--color-panel-bg)' }}
+            >
+              {isPlaying ? (
+                <span className="flex items-end justify-center gap-[2px] w-5 h-5">
+                  <span className="w-[2.5px] h-full bg-accent rounded-sm animate-[barBounce_0.4s_ease-in-out_infinite_alternate]" />
+                  <span className="w-[2.5px] h-2/3 bg-accent rounded-sm animate-[barBounce_0.4s_ease-in-out_infinite_alternate_0.15s]" />
+                  <span className="w-[2.5px] h-1/3 bg-accent rounded-sm animate-[barBounce_0.4s_ease-in-out_infinite_alternate_0.3s]" />
+                </span>
+              ) : (
+                <svg className="w-5 h-5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" />
+                </svg>
+              )}
+            </button>
+          ) : (
+            /* First-visit welcome prompt */
+            <button
+              onClick={() => setExpanded(true)}
+              className="flex items-center gap-3 rounded-2xl cursor-pointer border border-[var(--color-border)] backdrop-blur-xl transition-all hover:border-accent px-5 py-3 animate-[musicHint_0.8s_ease-out_1.5s_both] group"
+              style={{ background: 'var(--color-panel-bg)' }}
+            >
+              <span className="w-9 h-9 rounded-full border border-accent/30 flex items-center justify-center flex-shrink-0 group-hover:border-accent transition-colors group-hover:scale-110 transition-transform">
+                <svg className="w-4 h-4 text-accent animate-[musicNote_3s_ease-in-out_2.3s_infinite]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" />
+                </svg>
               </span>
-            ) : (
-              <svg className="w-5 h-5 text-accent flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" />
-              </svg>
-            )}
-            <span className="font-mono-label text-xs text-fore-subtle tracking-wider uppercase">
-              {isPlaying ? 'NOW PLAYING' : 'MUSIC?'}
-            </span>
-          </button>
+              <div className="flex flex-col items-start">
+                <span className="text-sm text-fore-primary font-medium">Want some music?</span>
+                <span className="font-mono-label text-[0.6rem] text-fore-subtle tracking-wider">CLICK TO PLAY</span>
+              </div>
+            </button>
+          )
         ) : (
           /* Expanded player */
           <div
-            className="w-80 rounded-2xl border border-[var(--color-border)] backdrop-blur-xl p-4"
+            className={`w-80 rounded-2xl border border-[var(--color-border)] backdrop-blur-xl p-4 origin-bottom-right ${collapsing ? 'animate-[playerCollapse_0.3s_ease-in_both]' : 'animate-[playerExpand_0.35s_ease-out_both]'}`}
             style={{ background: 'var(--color-panel-bg)' }}
           >
             {/* Header */}
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center justify-between mb-3 animate-[playerFadeIn_0.3s_ease-out_0.1s_both]">
               <div className="section-label text-fore-subtle text-[0.65rem]">Now Playing</div>
-              <button onClick={() => setExpanded(false)} className="text-fore-subtle hover:text-fore-primary transition-colors text-sm leading-none">×</button>
+              <button onClick={handleCollapse} className="text-fore-subtle hover:text-fore-primary transition-colors text-sm leading-none">×</button>
             </div>
 
             {/* Current track */}
-            <div className="flex items-center gap-3 mb-3">
+            <div className="flex items-center gap-3 mb-3 animate-[playerFadeIn_0.3s_ease-out_0.15s_both]">
               {artworkUrl ? (
                 <img src={artworkUrl} alt={track.title} className="w-12 h-12 rounded-lg object-cover flex-shrink-0" />
               ) : (
@@ -241,7 +282,7 @@ export function MiniPlayer() {
             </div>
 
             {/* Progress bar */}
-            <div onClick={handleSeek} className="h-1 rounded-full bg-[var(--color-border)] cursor-pointer group mb-1">
+            <div onClick={handleSeek} className="h-1 rounded-full bg-[var(--color-border)] cursor-pointer group mb-1 animate-[playerFadeIn_0.3s_ease-out_0.2s_both]">
               <div className="h-full rounded-full bg-accent transition-[width] duration-200 relative" style={{ width: `${progress}%` }}>
                 <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-accent opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
@@ -252,7 +293,7 @@ export function MiniPlayer() {
             </div>
 
             {/* Controls */}
-            <div className="flex items-center justify-center gap-4 mb-3">
+            <div className="flex items-center justify-center gap-4 mb-3 animate-[playerFadeIn_0.3s_ease-out_0.25s_both]">
               <button onClick={handlePrev} className="w-7 h-7 flex items-center justify-center text-fore-subtle hover:text-accent transition-colors">
                 <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" /></svg>
               </button>
@@ -269,7 +310,7 @@ export function MiniPlayer() {
             </div>
 
             {/* Track list */}
-            <div className="space-y-0.5 max-h-[120px] overflow-y-auto custom-scrollbar">
+            <div className="space-y-0.5 max-h-[120px] overflow-y-auto custom-scrollbar animate-[playerFadeIn_0.3s_ease-out_0.3s_both]">
               {playlist.map((t, i) => (
                 <button
                   key={i}

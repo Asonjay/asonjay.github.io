@@ -91,7 +91,7 @@ export function MiniPlayer() {
     if (!visited) {
       promptTimer = setTimeout(() => {
         setShowPrompt(true)
-      }, 2000)
+      }, 1000)
     }
 
     const handleToggle = () => {

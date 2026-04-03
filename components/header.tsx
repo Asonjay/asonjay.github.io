@@ -53,7 +53,9 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full">
       {/* Blur backdrop */}
       <div className="absolute inset-0 h-[calc(100%+20px)] backdrop-blur-md bg-[var(--color-back-primary)]/80 [mask-image:linear-gradient(black_70%,transparent)] [-webkit-mask-image:linear-gradient(black_70%,transparent)] pointer-events-none" />
-      <div className="relative max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+      {/* Fake dot grid to match background */}
+      <div className="header-dots absolute inset-0 h-[calc(100%+20px)] pointer-events-none [mask-image:linear-gradient(black_70%,transparent)] [-webkit-mask-image:linear-gradient(black_70%,transparent)]" />
+      <div className="relative z-10 max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
         <nav
           className="glass-panel !py-3 !px-4 lg:!px-5 !rounded-xl flex items-center justify-between font-mono-label text-xs text-fore-subtle uppercase tracking-widest !transform-none hover:!transform-none hover:!shadow-none hover:!border-[var(--color-border)]"
           aria-label="Main Navigation"

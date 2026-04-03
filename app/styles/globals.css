@@ -296,6 +296,22 @@
   opacity: 0.15;
 }
 
+.header-dots {
+  background-image: radial-gradient(
+    circle,
+    var(--color-fore-subtle) 0.8px,
+    transparent 0.8px
+  );
+  background-size: 20px 20px;
+  background-position: top left;
+  opacity: 0.4;
+  z-index: 1;
+}
+
+.light .header-dots {
+  opacity: 0.15;
+}
+
 /* ─── Glass Panel ─── */
 
 .glass-panel {

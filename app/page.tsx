@@ -29,7 +29,7 @@ export default async function Page() {
           <div className="flex items-center justify-between mb-4">
             <div className="section-label text-fore-subtle">Identity</div>
           </div>
-          <h1 className="font-heading text-4xl sm:text-5xl font-bold tracking-tight mb-2 text-fore-primary">
+          <h1 className="font-heading text-4xl sm:text-[2.75rem] font-bold tracking-tight mb-2 text-fore-primary">
             Hi there, I&apos;m Zexin Xu (<span className={wenKai.className}>徐泽鑫</span>)! 👋
           </h1>
           <div className="font-mono-label text-xs text-fore-subtle mb-4 flex items-center gap-2 bg-[var(--color-back-accent)] border border-[var(--color-border)] rounded-md px-3 py-2 w-fit">

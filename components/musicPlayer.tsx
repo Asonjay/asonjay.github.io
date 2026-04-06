@@ -13,6 +13,7 @@ const playlist = [
   { title: "Halley's Comet", artist: 'Billie Eilish' },
   { title: 'Evangeline', artist: 'Stephen Sanchez' },
   { title: 'Jupiter to Mars', artist: 'Rocco' },
+  { title: '是你', artist: '张靓颖 ft. 王赫野' },
 ]
 
 export function HomeMusicPlayer() {

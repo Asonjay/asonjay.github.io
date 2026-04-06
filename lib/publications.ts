@@ -12,6 +12,22 @@ export async function getAllPublications(): Promise<Publication[]> {
   return parseBibTeX(bibContent)
 }
 
+const CUSTOM_FIELDS = new Set([
+  'selected', 'abbr', 'bibtex_show', 'field', 'thumbnail', 'pdf', 'code',
+])
+
+function buildRawBibtex(type: string, citationKey: string, fields: string): string {
+  const fieldRegex = /(\w+)\s*=\s*\{([^}]*)\}/g
+  const cleanFields: string[] = []
+  let m
+  while ((m = fieldRegex.exec(fields)) !== null) {
+    if (!CUSTOM_FIELDS.has(m[1].toLowerCase())) {
+      cleanFields.push(`  ${m[1]} = {${m[2]}}`)
+    }
+  }
+  return `@${type}{${citationKey},\n${cleanFields.join(',\n')}\n}`
+}
+
 function parseBibTeX(content: string): Publication[] {
   const entries: Publication[] = []
   const entryRegex = /@(\w+)\s*\{([^,]*),([^@]*)\}/g
@@ -25,6 +41,8 @@ function parseBibTeX(content: string): Publication[] {
       type.toLowerCase() === 'article' ||
       type.toLowerCase() === 'inproceedings' ||
       type.toLowerCase() === 'inbook' ||
+      type.toLowerCase() === 'incollection' ||
+      type.toLowerCase() === 'phdthesis' ||
       type.toLowerCase() === 'misc'
     ) {
       const publication: Partial<Publication> = {}
@@ -76,10 +94,14 @@ function parseBibTeX(content: string): Publication[] {
           case 'thumbnail':
             publication.thumbnail = fieldValue.trim()
             break
+          case 'field':
+            publication.field = fieldValue.trim()
+            break
         }
       }
 
       if (publication.title && publication.authors && publication.year) {
+        publication.bibtex = buildRawBibtex(type, citationKey, fields)
         entries.push(publication as Publication)
       }
     }

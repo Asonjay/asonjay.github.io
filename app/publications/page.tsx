@@ -1,13 +1,15 @@
 // app/publications/page.tsx
 import { Metadata } from 'next'
 import Link from 'next/link'
-import PublicationList from '../../components/publicationList'
+import { getAllPublications } from '../../lib/publications'
+import PublicationFilter from '../../components/publicationFilter'
 
 export const metadata: Metadata = {
   title: 'Publications',
 }
 
-export default function Publications() {
+export default async function Publications() {
+  const publications = await getAllPublications()
   return (
     <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div className="glass-panel">
@@ -31,7 +33,7 @@ export default function Publications() {
           technology.
         </p>
         <div className="h-px bg-[var(--color-border)] mb-4"></div>
-        <PublicationList selectedOnly={false} />
+        <PublicationFilter publications={publications} />
       </div>
     </div>
   )

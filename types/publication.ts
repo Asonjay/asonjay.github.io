@@ -11,4 +11,6 @@ export type Publication = {
   abbr?: string
   selected?: boolean
   thumbnail?: string
+  field?: string
+  bibtex?: string
 }

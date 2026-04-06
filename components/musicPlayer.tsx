@@ -12,6 +12,7 @@ const playlist = [
   { title: 'Less Than Zero', artist: 'The Weeknd' },
   { title: "Halley's Comet", artist: 'Billie Eilish' },
   { title: 'Evangeline', artist: 'Stephen Sanchez' },
+  { title: 'Jupiter to Mars', artist: 'Rocco' },
 ]
 
 export function HomeMusicPlayer() {

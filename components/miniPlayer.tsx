@@ -15,6 +15,7 @@ const tracks = [
   { title: 'Less Than Zero', artist: 'The Weeknd', url: 'https://soundcloud.com/theweeknd/the-weeknd-less-than-zero' },
   { title: "Halley's Comet", artist: 'Billie Eilish', url: 'https://soundcloud.com/billieeilish/halleys-comet' },
   { title: 'Evangeline', artist: 'Stephen Sanchez', url: 'https://soundcloud.com/stephensanchezofficial/evangeline' },
+  { title: 'Jupiter to Mars', artist: 'Rocco', url: 'https://soundcloud.com/rocco-george-261635892/jupiter-to-mars' },
 ]
 
 function shuffle<T>(arr: T[]): T[] {

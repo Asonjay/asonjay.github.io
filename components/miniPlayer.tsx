@@ -11,7 +11,7 @@ declare global {
 
 const tracks = [
   { title: 'Dose', artist: 'Teddy Swims', url: 'https://soundcloud.com/teddyswims/dose' },
-  { title: 'Lose Control', artist: 'Teddy Swims', url: 'https://soundcloud.com/teddyswims/lose-control' },
+  { title: 'Bad Dream', artist: 'Teddy Swims', url: 'https://soundcloud.com/teddyswims/bad-dream' },
   { title: 'Less Than Zero', artist: 'The Weeknd', url: 'https://soundcloud.com/theweeknd/the-weeknd-less-than-zero' },
   { title: "Halley's Comet", artist: 'Billie Eilish', url: 'https://soundcloud.com/billieeilish/halleys-comet' },
   { title: 'Evangeline', artist: 'Stephen Sanchez', url: 'https://soundcloud.com/stephensanchezofficial/evangeline' },

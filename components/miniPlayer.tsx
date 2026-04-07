@@ -65,7 +65,10 @@ export function MiniPlayer() {
   const [artworkUrl, setArtworkUrl] = useState('')
   const [duration, setDuration] = useState(0)
   const [position, setPosition] = useState(0)
+  const [progress, setProgress] = useState(0)
+  const durationRef = useRef(0)
   const [error, setError] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [expanded, setExpanded] = useState(false)
   const [collapsing, setCollapsing] = useState(false)
   const [mounted, setMounted] = useState(false)
@@ -117,11 +120,12 @@ export function MiniPlayer() {
 
     const onReady = (widget: any) => {
       setIsReady(true)
+      setIsLoading(false)
       widget.setVolume(80)
       widget.getCurrentSound((sound: any) => {
         if (sound?.artwork_url) setArtworkUrl(sound.artwork_url.replace('-large', '-t300x300'))
       })
-      widget.getDuration((ms: number) => setDuration(ms))
+      widget.getDuration((ms: number) => { setDuration(ms); durationRef.current = ms })
     }
 
     const tryConnect = async () => {
@@ -139,13 +143,20 @@ export function MiniPlayer() {
 
       widget.bind(window.SC.Widget.Events.PLAY, () => {
         setIsPlaying(true)
+        setIsLoading(false)
         window.dispatchEvent(new CustomEvent('music-state', { detail: true }))
       })
       widget.bind(window.SC.Widget.Events.PAUSE, () => {
         setIsPlaying(false)
         window.dispatchEvent(new CustomEvent('music-state', { detail: false }))
       })
-      widget.bind(window.SC.Widget.Events.PLAY_PROGRESS, (e: any) => setPosition(e.currentPosition))
+      widget.bind(window.SC.Widget.Events.PLAY_PROGRESS, (e: any) => {
+        setPosition(e.currentPosition)
+        setProgress(e.relativePosition * 100)
+        if (durationRef.current === 0) {
+          widget.getDuration((ms: number) => { if (ms > 0) { setDuration(ms); durationRef.current = ms } })
+        }
+      })
       widget.bind(window.SC.Widget.Events.FINISH, () => {
         setIsPlaying(false)
         window.dispatchEvent(new CustomEvent('music-state', { detail: false }))
@@ -164,8 +175,11 @@ export function MiniPlayer() {
     if (!widgetRef.current || !isReady) return
     setPosition(0)
     setDuration(0)
+    setProgress(0)
+    durationRef.current = 0
     setArtworkUrl('')
     setError(false)
+    setIsLoading(true)
 
     const w = widgetRef.current
     w.load(playlist[currentIndex].url, {
@@ -175,11 +189,12 @@ export function MiniPlayer() {
         w.getCurrentSound((sound: any) => {
           if (sound?.artwork_url) setArtworkUrl(sound.artwork_url.replace('-large', '-t300x300'))
         })
-        w.getDuration((ms: number) => setDuration(ms))
+        w.getDuration((ms: number) => { if (ms > 0) { setDuration(ms); durationRef.current = ms } })
 
         // Re-bind events since widget.load() destroys them
         w.bind(window.SC.Widget.Events.PLAY, () => {
           setIsPlaying(true)
+          setIsLoading(false)
           window.dispatchEvent(new CustomEvent('music-state', { detail: true }))
         })
         w.bind(window.SC.Widget.Events.PAUSE, () => {
@@ -188,6 +203,10 @@ export function MiniPlayer() {
         })
         w.bind(window.SC.Widget.Events.PLAY_PROGRESS, (e: any) => {
           setPosition(e.currentPosition)
+          setProgress(e.relativePosition * 100)
+          if (durationRef.current === 0) {
+            w.getDuration((ms: number) => { if (ms > 0) { setDuration(ms); durationRef.current = ms } })
+          }
         })
         w.bind(window.SC.Widget.Events.FINISH, () => {
           setIsPlaying(false)
@@ -195,7 +214,7 @@ export function MiniPlayer() {
           setPosition(0)
           setCurrentIndex(prev => (prev + 1) % playlist.length)
         })
-        w.bind(window.SC.Widget.Events.ERROR, () => setError(true))
+        w.bind(window.SC.Widget.Events.ERROR, () => { setError(true); setIsLoading(false) })
       },
     })
   }, [currentIndex])
@@ -207,7 +226,10 @@ export function MiniPlayer() {
       setCollapsing(false)
     }, 300)
   }
-  const handleToggle = () => widgetRef.current?.toggle()
+  const handleToggle = () => {
+    if (!isPlaying) setIsLoading(true)
+    widgetRef.current?.toggle()
+  }
   const handlePrev = () => setCurrentIndex((currentIndex - 1 + playlist.length) % playlist.length)
   const handleNext = () => setCurrentIndex((currentIndex + 1) % playlist.length)
   const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -216,7 +238,6 @@ export function MiniPlayer() {
     widgetRef.current.seekTo(((e.clientX - rect.left) / rect.width) * duration)
   }
 
-  const progress = duration > 0 ? (position / duration) * 100 : 0
   const formatTime = (ms: number) => {
     const s = Math.floor(ms / 1000)
     return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
@@ -315,9 +336,15 @@ export function MiniPlayer() {
             </div>
 
             {/* Progress bar */}
-            <div onClick={handleSeek} className="h-1 rounded-full bg-[var(--color-border)] cursor-pointer group mb-1 animate-[playerFadeIn_0.3s_ease-out_0.2s_both]">
-              <div className="h-full rounded-full bg-accent transition-[width] duration-200 relative" style={{ width: `${progress}%` }}>
-                <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-accent opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div onClick={handleSeek} className="relative py-1.5 cursor-pointer group animate-[playerFadeIn_0.3s_ease-out_0.2s_both]">
+              <div className="h-1 rounded-full bg-[var(--color-border)] overflow-hidden">
+                {isLoading && !isPlaying ? (
+                  <div className="h-full w-1/3 rounded-full bg-accent/60 animate-[progressIndeterminate_1.2s_ease-in-out_infinite]" />
+                ) : (
+                  <div className="h-full rounded-full bg-accent transition-[width] duration-75 relative" style={{ width: `${progress}%` }}>
+                    <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-accent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </div>
+                )}
               </div>
             </div>
             <div className="flex justify-between mb-3">
@@ -330,8 +357,12 @@ export function MiniPlayer() {
               <button onClick={handlePrev} className="w-7 h-7 flex items-center justify-center text-fore-subtle hover:text-accent transition-colors">
                 <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" /></svg>
               </button>
-              <button onClick={handleToggle} disabled={!isReady || error} className="w-10 h-10 rounded-full border border-[var(--color-border)] flex items-center justify-center hover:border-accent hover:text-accent transition-colors disabled:opacity-30">
-                {isPlaying ? (
+              <button onClick={handleToggle} disabled={!isReady || error || isLoading} className="w-10 h-10 rounded-full border border-[var(--color-border)] flex items-center justify-center hover:border-accent hover:text-accent transition-colors disabled:opacity-30">
+                {isLoading && !isPlaying ? (
+                  <svg className="w-4 h-4 animate-spin text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M12 2a10 10 0 0 1 10 10" strokeLinecap="round" />
+                  </svg>
+                ) : isPlaying ? (
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" /><rect x="14" y="4" width="4" height="16" /></svg>
                 ) : (
                   <svg className="w-4 h-4 ml-0.5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
@@ -355,7 +386,11 @@ export function MiniPlayer() {
                   }`}
                 >
                   <div className="flex items-center gap-2 min-w-0">
-                    {i === currentIndex && isPlaying ? (
+                    {i === currentIndex && isLoading && !isPlaying ? (
+                      <svg className="w-3 h-3 animate-spin text-accent flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                        <path d="M12 2a10 10 0 0 1 10 10" strokeLinecap="round" />
+                      </svg>
+                    ) : i === currentIndex && isPlaying ? (
                       <span className="flex items-end gap-[2px] w-3 h-3 flex-shrink-0">
                         <span className="w-[2px] h-full bg-accent animate-[barBounce_0.4s_ease-in-out_infinite_alternate]" />
                         <span className="w-[2px] h-2/3 bg-accent animate-[barBounce_0.4s_ease-in-out_infinite_alternate_0.15s]" />

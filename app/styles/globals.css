@@ -776,6 +776,15 @@
   }
 }
 
+@keyframes progressIndeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}
+
 /* ─── Header icon swap ─── */
 
 .light .icon-dark {

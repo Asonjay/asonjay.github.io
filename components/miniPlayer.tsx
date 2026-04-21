@@ -17,6 +17,7 @@ const tracks = [
   { title: 'Evangeline', artist: 'Stephen Sanchez', url: 'https://soundcloud.com/stephensanchezofficial/evangeline' },
   { title: 'Jupiter to Mars', artist: 'Rocco', url: 'https://soundcloud.com/rocco-george-261635892/jupiter-to-mars' },
   { title: '是你', artist: '张靓颖 ft. 王赫野', url: 'https://soundcloud.com/mtmercury2/itsyou' },
+  { title: 'Sign of the Times', artist: 'Harry Styles', url: 'https://soundcloud.com/harrystyles/sign-of-the-times' },
 ]
 
 function shuffle<T>(arr: T[]): T[] {

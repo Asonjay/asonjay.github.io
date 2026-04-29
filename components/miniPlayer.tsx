@@ -68,6 +68,7 @@ export function MiniPlayer() {
   const [position, setPosition] = useState(0)
   const [progress, setProgress] = useState(0)
   const durationRef = useRef(0)
+  const loadingFromTrackChangeRef = useRef(false)
   const [error, setError] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [expanded, setExpanded] = useState(false)
@@ -164,12 +165,34 @@ export function MiniPlayer() {
         setPosition(0)
         setCurrentIndex(prev => (prev + 1) % playlist.length)
       })
-      widget.bind(window.SC.Widget.Events.ERROR, () => setError(true))
+      widget.bind(window.SC.Widget.Events.ERROR, () => {
+        console.warn('[MiniPlayer] SoundCloud ERROR on initial track:', playlist[0].url)
+        setIsLoading(false)
+        setCurrentIndex(prev => (prev + 1) % playlist.length)
+      })
     }
 
     tryConnect()
     // No cleanup — widget and iframe persist for the lifetime of the app
   }, [])
+
+  // Watchdog: clear stuck loading state if PLAY event doesn't arrive in time.
+  // Why: SoundCloud's PLAY event is unreliable (autoplay policy, removed tracks,
+  // widget glitches) — without this, isLoading sticks forever and disables the button.
+  // When the load was triggered by a track change (not a play-button toggle), assume
+  // the track is dead and auto-skip to the next one.
+  useEffect(() => {
+    if (!isLoading) return
+    const timer = setTimeout(() => {
+      if (loadingFromTrackChangeRef.current) {
+        console.warn('[MiniPlayer] Track timed out — likely unavailable, skipping:', playlist[currentIndex].url)
+        loadingFromTrackChangeRef.current = false
+        setCurrentIndex(prev => (prev + 1) % playlist.length)
+      }
+      setIsLoading(false)
+    }, 8000)
+    return () => clearTimeout(timer)
+  }, [isLoading, currentIndex])
 
   useEffect(() => {
     window.dispatchEvent(new CustomEvent('music-track', { detail: playlist[currentIndex].title }))
@@ -181,6 +204,7 @@ export function MiniPlayer() {
     setArtworkUrl('')
     setError(false)
     setIsLoading(true)
+    loadingFromTrackChangeRef.current = true
 
     const w = widgetRef.current
     w.load(playlist[currentIndex].url, {
@@ -196,6 +220,7 @@ export function MiniPlayer() {
         w.bind(window.SC.Widget.Events.PLAY, () => {
           setIsPlaying(true)
           setIsLoading(false)
+          loadingFromTrackChangeRef.current = false
           window.dispatchEvent(new CustomEvent('music-state', { detail: true }))
         })
         w.bind(window.SC.Widget.Events.PAUSE, () => {
@@ -215,7 +240,11 @@ export function MiniPlayer() {
           setPosition(0)
           setCurrentIndex(prev => (prev + 1) % playlist.length)
         })
-        w.bind(window.SC.Widget.Events.ERROR, () => { setError(true); setIsLoading(false) })
+        w.bind(window.SC.Widget.Events.ERROR, () => {
+          console.warn('[MiniPlayer] SoundCloud ERROR — track unavailable, skipping:', playlist[currentIndex].url)
+          setIsLoading(false)
+          setCurrentIndex(prev => (prev + 1) % playlist.length)
+        })
       },
     })
   }, [currentIndex])
@@ -228,8 +257,14 @@ export function MiniPlayer() {
     }, 300)
   }
   const handleToggle = () => {
-    if (!isPlaying) setIsLoading(true)
-    widgetRef.current?.toggle()
+    const w = widgetRef.current
+    if (!w) return
+    if (isPlaying) {
+      w.pause()
+    } else {
+      setIsLoading(true)
+      w.play()
+    }
   }
   const handlePrev = () => setCurrentIndex((currentIndex - 1 + playlist.length) % playlist.length)
   const handleNext = () => setCurrentIndex((currentIndex + 1) % playlist.length)
@@ -358,7 +393,7 @@ export function MiniPlayer() {
               <button onClick={handlePrev} className="w-7 h-7 flex items-center justify-center text-fore-subtle hover:text-accent transition-colors">
                 <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" /></svg>
               </button>
-              <button onClick={handleToggle} disabled={!isReady || error || isLoading} className="w-10 h-10 rounded-full border border-[var(--color-border)] flex items-center justify-center hover:border-accent hover:text-accent transition-colors disabled:opacity-30">
+              <button onClick={handleToggle} disabled={!isReady || error} className="w-10 h-10 rounded-full border border-[var(--color-border)] flex items-center justify-center hover:border-accent hover:text-accent transition-colors disabled:opacity-30">
                 {isLoading && !isPlaying ? (
                   <svg className="w-4 h-4 animate-spin text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                     <path d="M12 2a10 10 0 0 1 10 10" strokeLinecap="round" />

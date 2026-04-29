@@ -10,6 +10,13 @@ const nextConfig = {
     mdxRs: true,
   },
   basePath: '',
+  env: {
+    // Pinned at build time so server-rendered HTML and client JS agree.
+    // Without this, header/footer call new Date() in both environments and
+    // diverge once the build is older than the viewing date, which throws
+    // React hydration errors (#418/#423/#425).
+    NEXT_PUBLIC_BUILD_DATE: process.env.NEXT_PUBLIC_BUILD_DATE || new Date().toISOString(),
+  },
 }
 
 module.exports = nextConfig

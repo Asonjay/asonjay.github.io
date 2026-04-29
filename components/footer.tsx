@@ -9,13 +9,20 @@ import {
   LinkedIn24,
 } from './icons'
 
-const buildDate =
-  process.env.NEXT_PUBLIC_BUILD_DATE ||
-  new Date().toLocaleDateString('en-US', {
+// Parse the build-time-injected ISO timestamp once.
+// Why: previously this ran new Date() at module load on both server and
+// client, producing different strings and causing hydration mismatch.
+// timeZone is pinned to UTC so server (often UTC) and client (any TZ) agree.
+const buildDate = (() => {
+  const raw = process.env.NEXT_PUBLIC_BUILD_DATE
+  const d = raw ? new Date(raw) : new Date()
+  return d.toLocaleDateString('en-US', {
     month: 'long',
     day: 'numeric',
     year: 'numeric',
+    timeZone: 'UTC',
   })
+})()
 
 export function Footer() {
   return (

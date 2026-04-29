@@ -10,18 +10,12 @@ import classNames from 'classnames'
 import JJIcon from '../public/images/JJ-icon.png'
 import JJIconLight from '../public/images/JJ-icon-light.png'
 
+// UTC methods are used so server (often UTC) and client (any TZ) produce
+// the same MMDDYY string, avoiding hydration mismatch.
 const buildDate = (() => {
   const raw = process.env.NEXT_PUBLIC_BUILD_DATE
-  if (!raw) {
-    const d = new Date()
-    return `${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}${String(d.getFullYear()).slice(2)}`
-  }
-  try {
-    const d = new Date(raw)
-    return `${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}${String(d.getFullYear()).slice(2)}`
-  } catch {
-    return raw
-  }
+  const d = raw ? new Date(raw) : new Date()
+  return `${String(d.getUTCMonth() + 1).padStart(2, '0')}${String(d.getUTCDate()).padStart(2, '0')}${String(d.getUTCFullYear()).slice(2)}`
 })()
 
 export function Header() {

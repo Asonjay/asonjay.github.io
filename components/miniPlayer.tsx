@@ -68,7 +68,6 @@ export function MiniPlayer() {
   const [position, setPosition] = useState(0)
   const [progress, setProgress] = useState(0)
   const durationRef = useRef(0)
-  const loadingFromTrackChangeRef = useRef(false)
   const [error, setError] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [expanded, setExpanded] = useState(false)
@@ -116,6 +115,43 @@ export function MiniPlayer() {
     }
   }, [])
 
+  // Bind playback events on the widget. Unbinds first so this can be called
+  // multiple times (e.g. after every widget.load) without accumulating handlers.
+  // SoundCloud's bind() is additive — without the unbind, every track switch
+  // would pile on another PLAY/FINISH/etc. listener and FINISH would advance
+  // currentIndex multiple times.
+  const bindWidgetEvents = (w: any) => {
+    const E = window.SC.Widget.Events
+    w.unbind(E.PLAY); w.unbind(E.PAUSE); w.unbind(E.PLAY_PROGRESS); w.unbind(E.FINISH); w.unbind(E.ERROR)
+    w.bind(E.PLAY, () => {
+      setIsPlaying(true)
+      setIsLoading(false)
+      window.dispatchEvent(new CustomEvent('music-state', { detail: true }))
+    })
+    w.bind(E.PAUSE, () => {
+      setIsPlaying(false)
+      window.dispatchEvent(new CustomEvent('music-state', { detail: false }))
+    })
+    w.bind(E.PLAY_PROGRESS, (e: any) => {
+      setPosition(e.currentPosition)
+      setProgress(e.relativePosition * 100)
+      if (durationRef.current === 0) {
+        w.getDuration((ms: number) => { if (ms > 0) { setDuration(ms); durationRef.current = ms } })
+      }
+    })
+    w.bind(E.FINISH, () => {
+      setIsPlaying(false)
+      window.dispatchEvent(new CustomEvent('music-state', { detail: false }))
+      setPosition(0)
+      setCurrentIndex(prev => (prev + 1) % playlist.length)
+    })
+    w.bind(E.ERROR, () => {
+      console.warn('[MiniPlayer] SoundCloud ERROR')
+      setError(true)
+      setIsLoading(false)
+    })
+  }
+
   useEffect(() => {
     if (initedRef.current) return
     initedRef.current = true
@@ -143,33 +179,7 @@ export function MiniPlayer() {
         widget.getVolume(() => onReady(widget))
       }, 1500)
 
-      widget.bind(window.SC.Widget.Events.PLAY, () => {
-        setIsPlaying(true)
-        setIsLoading(false)
-        window.dispatchEvent(new CustomEvent('music-state', { detail: true }))
-      })
-      widget.bind(window.SC.Widget.Events.PAUSE, () => {
-        setIsPlaying(false)
-        window.dispatchEvent(new CustomEvent('music-state', { detail: false }))
-      })
-      widget.bind(window.SC.Widget.Events.PLAY_PROGRESS, (e: any) => {
-        setPosition(e.currentPosition)
-        setProgress(e.relativePosition * 100)
-        if (durationRef.current === 0) {
-          widget.getDuration((ms: number) => { if (ms > 0) { setDuration(ms); durationRef.current = ms } })
-        }
-      })
-      widget.bind(window.SC.Widget.Events.FINISH, () => {
-        setIsPlaying(false)
-        window.dispatchEvent(new CustomEvent('music-state', { detail: false }))
-        setPosition(0)
-        setCurrentIndex(prev => (prev + 1) % playlist.length)
-      })
-      widget.bind(window.SC.Widget.Events.ERROR, () => {
-        console.warn('[MiniPlayer] SoundCloud ERROR on initial track:', playlist[0].url)
-        setIsLoading(false)
-        setCurrentIndex(prev => (prev + 1) % playlist.length)
-      })
+      bindWidgetEvents(widget)
     }
 
     tryConnect()
@@ -177,22 +187,13 @@ export function MiniPlayer() {
   }, [])
 
   // Watchdog: clear stuck loading state if PLAY event doesn't arrive in time.
-  // Why: SoundCloud's PLAY event is unreliable (autoplay policy, removed tracks,
-  // widget glitches) — without this, isLoading sticks forever and disables the button.
-  // When the load was triggered by a track change (not a play-button toggle), assume
-  // the track is dead and auto-skip to the next one.
+  // Why: SoundCloud's PLAY event is unreliable — without this, isLoading sticks
+  // forever and the spinner spins indefinitely.
   useEffect(() => {
     if (!isLoading) return
-    const timer = setTimeout(() => {
-      if (loadingFromTrackChangeRef.current) {
-        console.warn('[MiniPlayer] Track timed out — likely unavailable, skipping:', playlist[currentIndex].url)
-        loadingFromTrackChangeRef.current = false
-        setCurrentIndex(prev => (prev + 1) % playlist.length)
-      }
-      setIsLoading(false)
-    }, 8000)
+    const timer = setTimeout(() => setIsLoading(false), 8000)
     return () => clearTimeout(timer)
-  }, [isLoading, currentIndex])
+  }, [isLoading])
 
   useEffect(() => {
     window.dispatchEvent(new CustomEvent('music-track', { detail: playlist[currentIndex].title }))
@@ -204,7 +205,6 @@ export function MiniPlayer() {
     setArtworkUrl('')
     setError(false)
     setIsLoading(true)
-    loadingFromTrackChangeRef.current = true
 
     const w = widgetRef.current
     w.load(playlist[currentIndex].url, {
@@ -215,36 +215,10 @@ export function MiniPlayer() {
           if (sound?.artwork_url) setArtworkUrl(sound.artwork_url.replace('-large', '-t300x300'))
         })
         w.getDuration((ms: number) => { if (ms > 0) { setDuration(ms); durationRef.current = ms } })
-
-        // Re-bind events since widget.load() destroys them
-        w.bind(window.SC.Widget.Events.PLAY, () => {
-          setIsPlaying(true)
-          setIsLoading(false)
-          loadingFromTrackChangeRef.current = false
-          window.dispatchEvent(new CustomEvent('music-state', { detail: true }))
-        })
-        w.bind(window.SC.Widget.Events.PAUSE, () => {
-          setIsPlaying(false)
-          window.dispatchEvent(new CustomEvent('music-state', { detail: false }))
-        })
-        w.bind(window.SC.Widget.Events.PLAY_PROGRESS, (e: any) => {
-          setPosition(e.currentPosition)
-          setProgress(e.relativePosition * 100)
-          if (durationRef.current === 0) {
-            w.getDuration((ms: number) => { if (ms > 0) { setDuration(ms); durationRef.current = ms } })
-          }
-        })
-        w.bind(window.SC.Widget.Events.FINISH, () => {
-          setIsPlaying(false)
-          window.dispatchEvent(new CustomEvent('music-state', { detail: false }))
-          setPosition(0)
-          setCurrentIndex(prev => (prev + 1) % playlist.length)
-        })
-        w.bind(window.SC.Widget.Events.ERROR, () => {
-          console.warn('[MiniPlayer] SoundCloud ERROR — track unavailable, skipping:', playlist[currentIndex].url)
-          setIsLoading(false)
-          setCurrentIndex(prev => (prev + 1) % playlist.length)
-        })
+        bindWidgetEvents(w)
+        // auto_play is unreliable after the initial gesture window — call play()
+        // explicitly. The iframe inherits media activation from the prior click.
+        w.play()
       },
     })
   }, [currentIndex])
@@ -289,8 +263,8 @@ export function MiniPlayer() {
       <iframe
         ref={iframeRef}
         src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(playlist[0].url)}&auto_play=false`}
-        style={{ position: 'fixed', width: 1, height: 1, opacity: 0, top: 0, left: 0, pointerEvents: 'none' }}
-        allow="autoplay"
+        style={{ position: 'fixed', width: 320, height: 120, opacity: 0, top: -9999, left: -9999, pointerEvents: 'none' }}
+        allow="autoplay; encrypted-media"
       />
 
       {/* First-visit music prompt */}

@@ -223,10 +223,40 @@
   pointer-events: none;
 }
 
+:root {
+  --mouse-x: 50vw;
+  --mouse-y: 50vh;
+  --mouse-x-norm: 0;
+  --mouse-y-norm: 0;
+}
+
+.bg-video {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: -2;
+  pointer-events: none;
+}
+
+.bg-video-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.light .bg-video-overlay {
+  background: rgba(255, 255, 255, 0.7);
+}
+
 .orb {
   position: absolute;
   filter: blur(80px);
   will-change: transform;
+  transition: transform 0.4s ease-out;
 }
 
 .orb-1 {
@@ -234,6 +264,7 @@
   height: 50vw;
   border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
   animation: orb-drift-1 40s infinite ease-in-out;
+  transform: translate(calc(var(--mouse-x-norm) * 30px), calc(var(--mouse-y-norm) * 30px));
 }
 
 .orb-2 {
@@ -241,6 +272,7 @@
   height: 55vw;
   border-radius: 60% 40% 30% 70% / 50% 60% 40% 50%;
   animation: orb-drift-2 50s infinite ease-in-out;
+  transform: translate(calc(var(--mouse-x-norm) * -40px), calc(var(--mouse-y-norm) * -40px));
 }
 
 .orb-3 {
@@ -248,6 +280,14 @@
   height: 40vw;
   border-radius: 50% 60% 40% 70% / 60% 40% 70% 30%;
   animation: orb-drift-3 45s infinite ease-in-out;
+  transform: translate(calc(var(--mouse-x-norm) * 25px), calc(var(--mouse-y-norm) * -25px));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orb {
+    transition: none;
+    transform: none !important;
+  }
 }
 
 /* Dark mode: vivid orbs */

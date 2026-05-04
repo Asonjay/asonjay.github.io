@@ -26,8 +26,8 @@ module.exports = {
       },
       fontFamily: {
         sans: [
-          'var(--font-inter)',
-          'Inter',
+          'var(--font-barlow)',
+          'Barlow',
           'ui-sans-serif',
           'system-ui',
           '-apple-system',

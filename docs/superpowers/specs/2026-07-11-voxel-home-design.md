@@ -260,7 +260,11 @@ professional enough for an academic personal site):
   types on with a typewriter effect (~20ms/char, skippable, disabled under
   prefers-reduced-motion); buttons have 2px press-down displacement.
 - **Components** (`components/game/ui/kit/`): `PixelPanel`, `Nameplate`, `PixelButton`,
-  `KeyHint` (keyboard cap look), `TypewriterText`, `PixelDivider`, `IconSlot` (hotbar cell).
+  `KeyHint` (keyboard cap look), `TypewriterText`, `PixelDivider`, `IconSlot` (hotbar cell),
+  `icons.tsx` (pixel-style inline SVG station/control icons).
+- **Iconography rule (Jason, round-3): avoid emoji throughout the game UI.** All icons are
+  inline SVG: new pixel-style SVGs for stations/controls; social glyphs reuse the existing
+  `components/icons.tsx` set. Emoji may appear only inside authored MDX content itself.
 - Every overlay element (HUD, hotbar, panels, joystick, toasts, loading screen) uses the
   kit. Zero `glass-panel` classes inside the game.
 
@@ -269,16 +273,17 @@ professional enough for an academic personal site):
 A persistent kit-styled hotbar centered at the bottom (desktop):
 
 ```
-[🪪][📄][📰][🎮][📚][🎵][🖼️][✉️][🗓️][🗑️] │ [▶︎ music] [☀/☾] │ [GitHub][Scholar][X][in][@] [CV]
-     station slots (auto-walk + interact)        controls             social links + CV
+[about][desk][news][tv][shelf][music][photos][mail][cal][trash] │ [play][sun/moon] │ [gh][sc][x][in][@] [CV]
+        station slots (auto-walk + interact)                          controls          social links + CV
 ```
+(labels illustrative — every cell renders a pixel-style inline SVG icon, no emoji)
 
 - **Station slots** (10: about wall, desk, board, TV, shelf, jukebox, photos, mailbox,
   calendar, trash):
   click/tap → character **auto-walks** (A*, §7.3) to the station anchor → plays its
   contextual animation → panel opens. Hovering shows the station name (kit tooltip);
-  the currently-in-range station's slot is highlighted. Icons are inline SVG or emoji-glyph
-  in an `IconSlot` — visually consistent, no icon-font dependency.
+  the currently-in-range station's slot is highlighted. Icons are inline SVG only (kit
+  `icons.tsx`) — no emoji, no icon-font dependency.
 - **Music control**: play/pause of the current track. Implementation: reuse the MiniPlayer
   audio mechanism — extract its playback core into a shared hook if feasible; fallback =
   the button opens the Music panel (decided during F5 with the actual MiniPlayer code in

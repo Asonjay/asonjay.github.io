@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { Conference, SubjectFilter } from '../../types/deadline'
-import { DeadlineCard } from '../../components/deadlineCard'
+import { Conference, SubjectFilter } from 'types/deadline'
+import { DeadlineCard } from 'components/deadlineCard'
 
 interface DeadlinePageContentProps {
   conferences: Conference[]

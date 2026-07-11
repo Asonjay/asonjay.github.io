@@ -1,8 +1,8 @@
 // app/publications/page.tsx
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { getAllPublications } from '../../lib/publications'
-import PublicationFilter from '../../components/publicationFilter'
+import { getAllPublications } from 'lib/publications'
+import PublicationFilter from 'components/publicationFilter'
 
 export const metadata: Metadata = {
   title: 'Publications',

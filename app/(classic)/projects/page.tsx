@@ -1,7 +1,7 @@
 // app/projects/page.tsx
 import { Metadata } from 'next'
 import Link from 'next/link'
-import ProjectList from '../../components/projectList'
+import ProjectList from 'components/projectList'
 
 export const metadata: Metadata = {
   title: 'Projects',

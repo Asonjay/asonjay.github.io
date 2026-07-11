@@ -4,9 +4,9 @@ import { getMDXComponent } from 'mdx-bundler/client'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { Fragment } from 'react'
-import { components } from '../../../components/mdxComponents'
-import { QuickNav } from '../../../components/quickNav'
-import { getAllFrontMatters, getMdxBySlug } from '../../../lib/mdx'
+import { components } from 'components/mdxComponents'
+import { QuickNav } from 'components/quickNav'
+import { getAllFrontMatters, getMdxBySlug } from 'lib/mdx'
 
 export async function generateStaticParams() {
   const posts = await getAllFrontMatters()

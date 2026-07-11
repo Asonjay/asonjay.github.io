@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import PostList from '../../components/postList'
+import PostList from 'components/postList'
 
 export const metadata: Metadata = {
   title: 'Blog',

@@ -7,14 +7,14 @@ import {
   Twitter24,
   GoogleScholar24,
   LinkedIn24,
-} from '../components/icons'
+} from 'components/icons'
 import PostList from 'components/postList'
 import NewsList from 'components/newsList'
 import PublicationList from 'components/publicationList'
 import ProjectList from 'components/projectList'
-import Introduction from '../components/introduction'
-import avatar from '../public/images/profile-img.jpeg'
-import { wenKai } from './fonts'
+import Introduction from 'components/introduction'
+import avatar from 'public/images/profile-img.jpeg'
+import { wenKai } from 'app/fonts'
 
 export default async function Page() {
   return (

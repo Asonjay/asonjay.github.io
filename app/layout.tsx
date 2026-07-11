@@ -1,11 +1,7 @@
 import { Metadata } from 'next'
 import { Barlow, Fira_Code, Space_Grotesk, Space_Mono } from 'next/font/google'
 import { Analytics } from '../components/analytics'
-import { Footer } from '../components/footer'
-import { Header } from '../components/header'
-import { MiniPlayer } from '../components/miniPlayer'
-import { MouseTracker } from '../components/mouseTracker'
-import { BackgroundVideo } from '../components/backgroundVideo'
+import { pixelFont } from './fonts'
 import './styles/codeblock.css'
 import './styles/globals.css'
 
@@ -82,30 +78,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${fontBarlow.variable} ${fontSpaceGrotesk.variable} ${fontSpaceMono.variable} ${fontFiraCode.variable} font-sans min-h-screen relative`}
+        className={`${fontBarlow.variable} ${fontSpaceGrotesk.variable} ${fontSpaceMono.variable} ${fontFiraCode.variable} ${pixelFont.variable} font-sans min-h-screen relative`}
       >
-        {/* Background video */}
-        <BackgroundVideo src="/videos/background.mp4" speed={0.5} />
-        <div className="bg-video-overlay" aria-hidden="true" />
-        {/* Ambient Background */}
-        <MouseTracker />
-        <div className="ambient-bg">
-          <div className="orb orb-1"></div>
-          <div className="orb orb-2"></div>
-          <div className="orb orb-3"></div>
-        </div>
-        <div className="tech-grid"></div>
-
-
-        {/* Content */}
-        <div className="page-content flex flex-col min-h-screen">
-          <Header />
-          <main className="flex-grow">
-            {children}
-          </main>
-          <Footer />
-        </div>
-        <MiniPlayer />
+        {children}
         <Analytics />
       </body>
     </html>

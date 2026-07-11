@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { Suspense } from 'react'
-import { getAllConferences } from '../../lib/deadlines'
+import { getAllConferences } from 'lib/deadlines'
 import DeadlinePageContent from './DeadlinePageContent'
 
 export const metadata: Metadata = {

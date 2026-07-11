@@ -77,7 +77,7 @@ export function Feedback({ post }: Props) {
           )}
           {!state.submitting && state.errors.length > 0 && (
             <p className="mt-3 font-medium text-center text-pink-500">
-              I'm having errors sending your feedback. Alternatively, you can
+              I&apos;m having errors sending your feedback. Alternatively, you can
               reach me out on Twitter:{' '}
               <ExtLink link="https://twitter.com/jeffjadulco">
                 @jeffjadulco

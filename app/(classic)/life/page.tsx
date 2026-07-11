@@ -1,7 +1,7 @@
 // app/life/page.tsx
 import { Metadata } from 'next'
 import { Heart, Book, Music, Coffee, Camera, Plane } from 'lucide-react'
-import LifeCard from '../../components/lifeCard'
+import LifeCard from 'components/lifeCard'
 
 export const metadata: Metadata = {
   title: 'Life',

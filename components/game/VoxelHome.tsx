@@ -1,5 +1,6 @@
 'use client'
 import { Canvas } from '@react-three/fiber'
+import type { WorldData } from '../../types/world'
 import { World } from './scene/World'
 import { Player } from './scene/Player'
 import { CameraRig } from './scene/CameraRig'
@@ -7,9 +8,10 @@ import { Systems } from './scene/Systems'
 import { FootstepDust } from './scene/FootstepDust'
 import { StaticMerge } from './scene/StaticMerge'
 import { NameplateBubble } from './ui/NameplateBubble'
+import { PanelHost } from './ui/PanelHost'
 import { useInput } from './systems/useInput'
 
-export default function VoxelHome() {
+export default function VoxelHome({ data }: { data: WorldData }) {
   useInput()
   return (
     <div style={{ position: 'absolute', inset: 0 }}>
@@ -42,6 +44,7 @@ export default function VoxelHome() {
         <StaticMerge />
       </Canvas>
       <NameplateBubble />
+      <PanelHost data={data} />
     </div>
   )
 }

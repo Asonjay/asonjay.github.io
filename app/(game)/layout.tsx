@@ -1,3 +1,5 @@
+import '../../components/game/ui/kit/tokens.css'
+
 export default function GameLayout({
   children,
 }: {

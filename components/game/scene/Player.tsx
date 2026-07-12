@@ -54,15 +54,19 @@ export function Player() {
   const rig = useRef<PlayerRig | null>(null)
 
   // Contextual-emote controller: E/Enter near a station plays its emote (the
-  // panel opens at 60%, wired by the frame loop); Esc closes an open panel/emote.
+  // panel opens at 60%, wired by the frame loop); Esc cancels an in-flight emote
+  // (PanelHost owns Esc once a panel is actually open).
   // Under reduced motion the emote is skipped and the panel opens immediately.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const k = e.key.toLowerCase()
       const g = useGameStore.getState()
       if (k === 'escape') {
-        if (g.openPanelId !== null || g.activeEmote !== null) {
-          g.openPanel(null)
+        // PanelHost owns Escape while a panel is open — stand down so one press
+        // is one close. Before a panel opens (emote still playing toward its
+        // 60% mark), Esc still cancels the in-flight emote.
+        if (g.openPanelId !== null) return
+        if (g.activeEmote !== null) {
           g.setActiveEmote(null)
           s.current.emoteTime = 0
           s.current.firedPanel = false

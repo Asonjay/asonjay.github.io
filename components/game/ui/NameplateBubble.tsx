@@ -1,11 +1,13 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import { nameplateRef } from '../systems/store'
+import { Nameplate } from './kit/Nameplate'
+import { KeyHint } from './kit/KeyHint'
 
-// Screen-space hint that floats above the nearby station: display name + an "E"
-// key cap. Position/opacity are driven straight from nameplateRef via rAF (no
-// per-frame React state); only the label changes trigger a re-render. Plain
-// styled div for now — Task 3's UI kit re-skins it.
+// Screen-space hint that floats above the nearby station: the station name plate
+// + an "E" key cap, both from the UI kit. Position/opacity are driven straight
+// from nameplateRef via rAF (no per-frame React state); only the label change
+// triggers a re-render.
 const LABELS: Record<string, string> = {
   about: 'About',
   publications: 'Publications',
@@ -19,8 +21,6 @@ const LABELS: Record<string, string> = {
   classic: 'Classic Site',
   lamp: 'Lamp',
 }
-
-const pixelFont = "'Press Start 2P', ui-monospace, 'Courier New', monospace"
 
 export function NameplateBubble() {
   const el = useRef<HTMLDivElement>(null)
@@ -65,36 +65,9 @@ export function NameplateBubble() {
       }}
     >
       {id && (
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8,
-            padding: '6px 8px',
-            borderRadius: 6,
-            background: 'rgba(11, 14, 26, 0.86)',
-            border: '2px solid rgba(124, 154, 255, 0.9)',
-            boxShadow: '0 4px 14px rgba(0, 0, 0, 0.45)',
-            color: '#f4f2ff',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          <span style={{ fontFamily: pixelFont, fontSize: 10, letterSpacing: 0.5 }}>
-            {LABELS[id] ?? id}
-          </span>
-          <span
-            style={{
-              fontFamily: pixelFont,
-              fontSize: 9,
-              lineHeight: 1,
-              padding: '3px 5px',
-              borderRadius: 3,
-              background: 'rgba(124, 154, 255, 0.2)',
-              border: '1px solid rgba(124, 154, 255, 0.9)',
-            }}
-          >
-            E
-          </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <Nameplate>{LABELS[id] ?? id}</Nameplate>
+          <KeyHint>E</KeyHint>
         </div>
       )}
     </div>

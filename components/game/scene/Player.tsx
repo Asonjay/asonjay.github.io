@@ -78,6 +78,8 @@ export function Player() {
     firedToggle: false,
     pendingStation: null as string | null,
     wasEmoting: false,
+    // Last interactRequests count we've acted on (touch button / tap-to-interact).
+    lastInteractReq: 0,
     // Auto-walk: the path object currently being followed, and the index of the
     // waypoint being steered toward.
     autoRef: null as GameState['autoWalk'],
@@ -125,6 +127,19 @@ export function Player() {
     const dt = Math.min(rawDelta, DELTA_CLAMP)
     const st = s.current
     const g = useGameStore.getState()
+
+    // Touch interact button / tap-to-interact bump interactRequests; consume each
+    // bump here and run the same contextual interaction the E key does, guarded
+    // identically (ignored while a panel is open or an emote is already playing).
+    // Update the seen count unconditionally so a bump made mid-emote is dropped,
+    // not queued — matching E, which does nothing while an emote plays.
+    if (g.interactRequests !== st.lastInteractReq) {
+      st.lastInteractReq = g.interactRequests
+      if (g.openPanelId === null && g.activeEmote === null) {
+        const near = g.nearbyStationId
+        if (near && STATION_EMOTE[near]) startInteract(g, st, near)
+      }
+    }
 
     // Assemble the rig once all refs are live.
     if (

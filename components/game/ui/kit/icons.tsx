@@ -170,3 +170,18 @@ export const IconExternalLink = (p: IconProps) => (
     <rect x="13" y="1" width="2" height="5" />
   </Glyph>
 )
+
+export const IconExclaim = (p: IconProps) => (
+  <Glyph {...p}>
+    <rect x="6" y="2" width="4" height="7" />
+    <rect x="6" y="11" width="4" height="3" />
+  </Glyph>
+)
+
+export const IconMenu = (p: IconProps) => (
+  <Glyph {...p}>
+    <rect x="2" y="3" width="12" height="2" />
+    <rect x="2" y="7" width="12" height="2" />
+    <rect x="2" y="11" width="12" height="2" />
+  </Glyph>
+)

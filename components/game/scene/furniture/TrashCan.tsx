@@ -41,7 +41,7 @@ export function TrashCan() {
   })
 
   return (
-    <group>
+    <group userData={{ stationId: 'classic' }}>
       {panels}
       <Voxel position={[CX, 0.03, CZ]} size={[0.8, 0.06, 0.8]} color={PALETTE.slate} />
 

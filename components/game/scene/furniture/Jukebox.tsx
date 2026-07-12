@@ -12,7 +12,7 @@ export function Jukebox() {
   const grill = useStationHighlight('music', PALETTE.slate, '#ff7cc0')
 
   return (
-    <group>
+    <group userData={{ stationId: 'music' }}>
       {/* body + stepped "rounded" crown */}
       <Voxel position={[CX, 0.9, CZ]} size={[1.4, 1.8, 1.0]} color={PALETTE.woodDark} />
       <Voxel position={[CX, 1.9, CZ]} size={[1.5, 0.3, 1.1]} color={PALETTE.brass} />

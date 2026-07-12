@@ -20,7 +20,7 @@ export function PhotoWall() {
   const glow = useStationHighlight('life', PALETTE.brass, '#ffd27a')
 
   return (
-    <group>
+    <group userData={{ stationId: 'life' }}>
       {/* bed: frame, mattress, pillow, folded blanket */}
       <Voxel position={[BX, 0.25, BZ]} size={[2.2, 0.5, 2.6]} color={PALETTE.woodDark} />
       <Voxel position={[BX, 0.6, BZ]} size={[2.0, 0.3, 2.4]} color={PALETTE.fabricWhite} />

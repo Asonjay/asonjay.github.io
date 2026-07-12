@@ -17,7 +17,7 @@ export function Mailbox() {
   useReactiveProp({ ref: flag, axis: 'z', emoteOpen: 'mailbox', restOpen: 1.35, k: 70, c: 7 })
 
   return (
-    <group>
+    <group userData={{ stationId: 'contact' }}>
       {/* post + body + rounded lid */}
       <Voxel position={[CX, 0.65, CZ]} size={[0.2, 1.3, 0.2]} color={PALETTE.woodDark} />
       <Voxel position={[CX, 1.5, CZ]} size={[0.7, 0.5, 0.9]} color={PALETTE.metal} />

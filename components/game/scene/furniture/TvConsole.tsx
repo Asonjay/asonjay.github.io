@@ -12,7 +12,7 @@ export function TvConsole() {
   const screen = useStationHighlight('projects', PALETTE.slate, '#78d0ff')
 
   return (
-    <group>
+    <group userData={{ stationId: 'projects' }}>
       {/* TV: frame + emissive screen on the -X wall, facing +x */}
       <Voxel position={[WALL_X, 2.55, 0]} size={[0.14, 1.8, 2.7]} color={PALETTE.woodDark} />
       <mesh position={[WALL_X + 0.09, 2.55, 0]} material={screen} userData={{ dynamic: true }}>

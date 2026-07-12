@@ -20,7 +20,7 @@ export function NoticeBoard() {
   const fresh = useStationHighlight('news', PALETTE.paper, '#fff1c2')
 
   return (
-    <group>
+    <group userData={{ stationId: 'news' }}>
       {/* frame + cork */}
       <Voxel position={[CX, 2.4, WALL_Z]} size={[1.9, 1.7, 0.1]} color={PALETTE.woodDark} />
       <Voxel position={[CX, 2.4, WALL_Z + 0.04]} size={[1.7, 1.5, 0.05]} color={PALETTE.cork} />

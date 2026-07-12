@@ -9,15 +9,26 @@ import { Systems } from './scene/Systems'
 import { FootstepDust } from './scene/FootstepDust'
 import { StaticMerge } from './scene/StaticMerge'
 import { Lighting } from './scene/Lighting'
+import { TapInteract } from './scene/TapInteract'
 import { NameplateBubble } from './ui/NameplateBubble'
 import { PanelHost } from './ui/PanelHost'
 import { Hotbar } from './ui/Hotbar'
+import { HotbarSheet } from './ui/HotbarSheet'
+import { Joystick } from './ui/Joystick'
+import { InteractButton } from './ui/InteractButton'
 import { useInput } from './systems/useInput'
+import { useIsTouch } from './systems/useIsTouch'
 import { useGameStore } from './systems/store'
 import { useDarkMode } from '../../hooks/useDarkMode'
 
+// Stable dpr ranges (module-level so a theme re-render never hands the Canvas a
+// fresh array). Touch GPUs get a lower cap than desktop.
+const DPR_TOUCH: [number, number] = [1, 1.75]
+const DPR_DESKTOP: [number, number] = [1, 2]
+
 export default function VoxelHome({ data }: { data: WorldData }) {
   useInput()
+  const isTouch = useIsTouch()
 
   // Site theme is the source of truth for day/night (localStorage `dark-mode` +
   // .dark/.light on <html>). Read it here, outside the canvas, and pass it in as
@@ -43,7 +54,8 @@ export default function VoxelHome({ data }: { data: WorldData }) {
     <div style={{ position: 'absolute', inset: 0 }}>
       <Canvas
         orthographic
-        dpr={[1, 2]}
+        // Cap the pixel ratio lower on touch GPUs (mobile) than on desktop.
+        dpr={isTouch ? DPR_TOUCH : DPR_DESKTOP}
         gl={{ antialias: true, powerPreference: 'high-performance' }}
         shadows
       >
@@ -53,6 +65,8 @@ export default function VoxelHome({ data }: { data: WorldData }) {
         <Systems />
         <FootstepDust />
         <CameraRig />
+        {/* Tap/click the scene to interact — reads the store, no scene state. */}
+        <TapInteract />
         {/* Runs last so its effect fires after furniture has mounted. */}
         <StaticMerge />
       </Canvas>
@@ -60,8 +74,17 @@ export default function VoxelHome({ data }: { data: WorldData }) {
       <PanelHost data={data} />
       {/* Hotbar lives outside the Canvas: it owns the DOM theme toggle and passes
           it in so VoxelHome stays the single useDarkMode owner (keeping the site
-          theme, 3D lighting, lamp and the sun/moon icon all in sync). */}
+          theme, 3D lighting, lamp and the sun/moon icon all in sync). The desktop
+          Hotbar and the touch chrome are mutually exclusive (each self-gates on
+          useIsTouch), so only one set renders. */}
       <Hotbar
+        data={data}
+        isDark={Boolean(isDark)}
+        onToggleTheme={() => setIsDark(!isDark)}
+      />
+      <Joystick />
+      <InteractButton />
+      <HotbarSheet
         data={data}
         isDark={Boolean(isDark)}
         onToggleTheme={() => setIsDark(!isDark)}

@@ -32,7 +32,7 @@ export function Bookshelf() {
   }
 
   return (
-    <group>
+    <group userData={{ stationId: 'blog' }}>
       {/* carcass: back, sides, shelves */}
       <Voxel position={[CX - 0.24, 2.0, CZ]} size={[0.12, 4.0, 2.9]} color={PALETTE.woodDark} />
       <Voxel position={[CX, 2.0, CZ - 1.45]} size={[0.5, 4.0, 0.1]} color={PALETTE.woodDark} />

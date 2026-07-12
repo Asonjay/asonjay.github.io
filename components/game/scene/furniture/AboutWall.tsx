@@ -18,7 +18,7 @@ export function AboutWall() {
   const diploma = useStationHighlight('about', PALETTE.paper, '#fff1c2')
 
   return (
-    <group>
+    <group userData={{ stationId: 'about' }}>
       {POSTERS.map(([x, w, h, c], i) => (
         <group key={i}>
           <Voxel position={[x, Y, WALL_Z]} size={[w, h, 0.1]} color={PALETTE.woodDark} />

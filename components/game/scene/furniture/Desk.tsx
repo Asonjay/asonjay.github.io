@@ -23,7 +23,7 @@ export function Desk() {
   })
 
   return (
-    <group>
+    <group userData={{ stationId: 'publications' }}>
       {/* desk top + legs */}
       <Voxel position={[CX, TOP_Y + 0.075, CZ]} size={[3.0, 0.15, 1.3]} color={PALETTE.woodLight} />
       {[

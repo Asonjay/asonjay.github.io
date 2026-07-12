@@ -12,7 +12,7 @@ export function WallCalendar() {
   const today = useStationHighlight('deadlines', PALETTE.fabricRed, '#ff8f6b')
 
   return (
-    <group>
+    <group userData={{ stationId: 'deadlines' }}>
       {/* board + header */}
       <Voxel position={[CX, 2.4, WALL_Z]} size={[1.6, 1.9, 0.08]} color={PALETTE.paper} />
       <Voxel position={[CX, 3.05, WALL_Z + 0.03]} size={[1.5, 0.35, 0.05]} color={PALETTE.fabricRed} />

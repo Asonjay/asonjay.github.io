@@ -35,13 +35,8 @@ export function PixelPanel({
 
   return (
     <div
-      className="gp-pop"
-      style={{
-        position: 'relative',
-        width: '100%',
-        maxWidth: '42rem',
-        boxShadow: '0 12px 44px -10px var(--gp-glow)',
-      }}
+      className="gp-pop gp-panel-surface"
+      style={{ boxShadow: '0 12px 44px -10px var(--gp-glow)' }}
     >
       <div style={{ position: 'absolute', top: -12, left: 14, zIndex: 2 }}>
         <Nameplate id={titleId}>{title}</Nameplate>
@@ -83,17 +78,7 @@ export function PixelPanel({
         className="gp-surface gp-corners"
         style={{ outline: 'none' }}
       >
-        <div
-          style={{
-            padding: '24px 20px 20px',
-            maxHeight: '78vh',
-            overflowY: 'auto',
-            fontSize: 14.5,
-            lineHeight: 1.6,
-          }}
-        >
-          {children}
-        </div>
+        <div className="gp-panel-body">{children}</div>
       </div>
     </div>
   )

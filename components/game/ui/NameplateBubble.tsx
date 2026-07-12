@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import { nameplateRef } from '../systems/store'
+import { useIsTouch } from '../systems/useIsTouch'
 import { Nameplate } from './kit/Nameplate'
 import { KeyHint } from './kit/KeyHint'
 
@@ -26,6 +27,7 @@ export function NameplateBubble() {
   const el = useRef<HTMLDivElement>(null)
   const [id, setId] = useState<string | null>(null)
   const lastId = useRef<string | null>(null)
+  const isTouch = useIsTouch()
 
   useEffect(() => {
     let raf = 0
@@ -67,7 +69,7 @@ export function NameplateBubble() {
       {id && (
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <Nameplate>{LABELS[id] ?? id}</Nameplate>
-          <KeyHint>E</KeyHint>
+          <KeyHint>{isTouch ? 'TAP' : 'E'}</KeyHint>
         </div>
       )}
     </div>

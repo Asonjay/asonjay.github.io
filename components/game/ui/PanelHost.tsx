@@ -69,24 +69,8 @@ export function PanelHost({ data }: { data: WorldData }) {
   const title = TITLES[openId] ?? openId
 
   return (
-    <div
-      className="gp-backdrop"
-      onClick={() => openPanel(null)}
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 50,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 24,
-        background: 'rgba(0, 0, 0, 0.45)',
-      }}
-    >
-      <div
-        onClick={e => e.stopPropagation()}
-        style={{ width: '100%', maxWidth: '42rem', display: 'flex', justifyContent: 'center' }}
-      >
+    <div className="gp-backdrop gp-panel-backdrop" onClick={() => openPanel(null)}>
+      <div className="gp-panel-shell" onClick={e => e.stopPropagation()}>
         <PixelPanel title={title} onClose={() => openPanel(null)}>
           <Panel data={data} />
         </PixelPanel>

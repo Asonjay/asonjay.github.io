@@ -1,64 +1,14 @@
 'use client'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import type { ComponentType } from 'react'
 import type { WorldData } from '../../../types/world'
-import { useGameStore, playerPosRef } from '../systems/store'
-import { STATIONS, makeGrid } from '../systems/worldLayout'
-import { findPath } from '../systems/pathfinding'
+import { useGameStore } from '../systems/store'
+import { walkToStation } from '../systems/walkTo'
+import { useIsTouch } from '../systems/useIsTouch'
+import { STATION_SLOTS, SOCIAL_GLYPH } from './stationSlots'
 import { IconSlot } from './kit/IconSlot'
 import { PixelButton } from './kit/PixelButton'
 import { PixelDivider } from './kit/PixelDivider'
-import {
-  IconIdCard,
-  IconDesk,
-  IconNewspaper,
-  IconGamepad,
-  IconBook,
-  IconNote,
-  IconPhoto,
-  IconEnvelope,
-  IconCalendar,
-  IconTrash,
-  IconPlay,
-  IconSun,
-  IconMoon,
-  IconExternalLink,
-} from './kit/icons'
-import {
-  MailAt24,
-  GoogleScholar24,
-  GitHub24,
-  Twitter24,
-  LinkedIn24,
-} from '../../icons'
-
-type Glyph = ComponentType<{ className?: string }>
-
-// The ten station shortcuts, left-to-right, with their number hotkeys. Order and
-// hotkeys are the F5 contract; icons mirror each station's in-world furniture so
-// the bar reads as a map of the room.
-const STATION_SLOTS: { id: string; label: string; hotkey: string; Icon: Glyph }[] = [
-  { id: 'about', label: 'About', hotkey: '1', Icon: IconIdCard },
-  { id: 'publications', label: 'Publications', hotkey: '2', Icon: IconDesk },
-  { id: 'news', label: 'News', hotkey: '3', Icon: IconNewspaper },
-  { id: 'projects', label: 'Projects', hotkey: '4', Icon: IconGamepad },
-  { id: 'blog', label: 'Blog', hotkey: '5', Icon: IconBook },
-  { id: 'music', label: 'Music', hotkey: '6', Icon: IconNote },
-  { id: 'life', label: 'Life', hotkey: '7', Icon: IconPhoto },
-  { id: 'contact', label: 'Contact', hotkey: '8', Icon: IconEnvelope },
-  { id: 'deadlines', label: 'Deadlines', hotkey: '9', Icon: IconCalendar },
-  { id: 'classic', label: 'Classic Site', hotkey: '0', Icon: IconTrash },
-]
-
-// WorldData social `icon` keys -> the classic SVG glyphs (reused per the global
-// constraint — socials are the one place the game does not draw new kit icons).
-const SOCIAL_GLYPH: Record<string, Glyph> = {
-  email: MailAt24,
-  scholar: GoogleScholar24,
-  github: GitHub24,
-  twitter: Twitter24,
-  linkedin: LinkedIn24,
-}
+import { IconPlay, IconSun, IconMoon, IconExternalLink } from './kit/icons'
 
 // One station shortcut. Subscribes to only its own "nearby" flag so walking past
 // stations re-renders just the entering/leaving slot, never the whole bar.
@@ -94,6 +44,7 @@ export function Hotbar({
   isDark: boolean
   onToggleTheme: () => void
 }) {
+  const isTouch = useIsTouch()
   const [shakeId, setShakeId] = useState<string | null>(null)
   const shakeTimer = useRef<ReturnType<typeof setTimeout>>()
 
@@ -109,20 +60,11 @@ export function Hotbar({
     if (shakeTimer.current) clearTimeout(shakeTimer.current)
   }, [])
 
-  // Path to a station and hand the route to the player; any open panel is closed
-  // first so a shortcut can interrupt/switch.
+  // Path to a station and hand the route to the player (shared walk helper); the
+  // slot shakes when there's no route.
   const walkTo = useCallback(
     (id: string) => {
-      const station = STATIONS.find((s) => s.id === id)
-      if (!station) return
-      const g = useGameStore.getState()
-      if (g.openPanelId !== null) g.openPanel(null)
-      const path = findPath(makeGrid(), playerPosRef.current, station.anchor)
-      if (!path) {
-        shake(id)
-        return
-      }
-      g.setAutoWalk({ targetStationId: id, path })
+      if (!walkToStation(id)) shake(id)
     },
     [shake]
   )
@@ -144,9 +86,11 @@ export function Hotbar({
   const openMusic = useCallback(() => useGameStore.getState().openPanel('music'), [])
 
   // Number-key hotkeys 1–9,0. Ignored on auto-repeat and while typing in a field
-  // (none exist in-game, but guard anyway). Listener is added once and removed on
-  // unmount.
+  // (none exist in-game, but guard anyway). Bound only on the desktop (non-touch)
+  // condition that shows the bar — touch devices use the HotbarSheet menu, and a
+  // hidden bar must not swallow number keys.
   useEffect(() => {
+    if (isTouch) return
     const onKey = (e: KeyboardEvent) => {
       if (e.repeat) return
       const t = e.target
@@ -160,11 +104,16 @@ export function Hotbar({
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [activate])
+  }, [activate, isTouch])
+
+  // Touch devices get the mobile chrome (Joystick / InteractButton / HotbarSheet)
+  // instead of this bar; the number-key listener above is already stood down.
+  if (isTouch) return null
 
   return (
     <div
-      // Desktop only for now; the mobile sheet is Task 6.
+      // Desktop bar. Hidden below md (and stood down entirely on touch, above);
+      // touch/small screens get the HotbarSheet menu instead.
       className="hidden md:block"
       style={{ position: 'fixed', left: '50%', bottom: 16, transform: 'translateX(-50%)', zIndex: 30 }}
     >

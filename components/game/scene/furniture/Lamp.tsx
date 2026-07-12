@@ -31,7 +31,7 @@ export function Lamp() {
   })
 
   return (
-    <group>
+    <group userData={{ stationId: 'lamp' }}>
       {/* base + pole */}
       <Voxel position={[CX, 0.06, CZ]} size={[0.44, 0.12, 0.44]} color={PALETTE.metal} />
       <Voxel position={[CX, 1.3, CZ]} size={[0.12, 2.5, 0.12]} color={PALETTE.metal} />

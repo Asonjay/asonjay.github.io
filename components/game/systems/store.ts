@@ -14,6 +14,11 @@ export type GameState = {
   // once per increment. No theme value is stored here (source of truth stays
   // useDarkMode / localStorage `dark-mode`).
   themeToggleRequests: number
+  // Transient signal: the touch interact button and tap-to-interact can't run
+  // the keyboard path, so they bump this counter; Player consumes each bump in
+  // its frame loop and runs the same contextual interaction the E key does
+  // against the current nearby station. Mirrors themeToggleRequests.
+  interactRequests: number
   setMoveVector(v: { x: number; z: number }): void
   setAutoWalk(a: GameState['autoWalk']): void
   setNearbyStation(id: string | null): void
@@ -21,6 +26,7 @@ export type GameState = {
   setActiveEmote(id: string | null): void
   markWelcomeSeen(): void
   requestThemeToggle(): void
+  requestInteract(): void
 }
 
 export const useGameStore = create<GameState>((set) => ({
@@ -32,6 +38,7 @@ export const useGameStore = create<GameState>((set) => ({
   openPanelId: null,
   hasSeenWelcome: false,
   themeToggleRequests: 0,
+  interactRequests: 0,
   setMoveVector: (v) => set({ moveVector: v }),
   setAutoWalk: (a) => set({ autoWalk: a }),
   setNearbyStation: (id) => set({ nearbyStationId: id }),
@@ -39,6 +46,7 @@ export const useGameStore = create<GameState>((set) => ({
   setActiveEmote: (id) => set({ activeEmote: id }),
   markWelcomeSeen: () => set({ hasSeenWelcome: true }),
   requestThemeToggle: () => set((s) => ({ themeToggleRequests: s.themeToggleRequests + 1 })),
+  requestInteract: () => set((s) => ({ interactRequests: s.interactRequests + 1 })),
 }))
 
 // Transient player position: read/written every frame without triggering

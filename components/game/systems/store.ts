@@ -9,12 +9,18 @@ export type GameState = {
   nearbyStationId: string | null
   openPanelId: string | null
   hasSeenWelcome: boolean
+  // Transient signal: the in-canvas lamp station can't touch the DOM theme hook,
+  // so it bumps this counter; a VoxelHome-level effect flips the real site theme
+  // once per increment. No theme value is stored here (source of truth stays
+  // useDarkMode / localStorage `dark-mode`).
+  themeToggleRequests: number
   setMoveVector(v: { x: number; z: number }): void
   setAutoWalk(a: GameState['autoWalk']): void
   setNearbyStation(id: string | null): void
   openPanel(id: string | null): void
   setActiveEmote(id: string | null): void
   markWelcomeSeen(): void
+  requestThemeToggle(): void
 }
 
 export const useGameStore = create<GameState>((set) => ({
@@ -25,12 +31,14 @@ export const useGameStore = create<GameState>((set) => ({
   nearbyStationId: null,
   openPanelId: null,
   hasSeenWelcome: false,
+  themeToggleRequests: 0,
   setMoveVector: (v) => set({ moveVector: v }),
   setAutoWalk: (a) => set({ autoWalk: a }),
   setNearbyStation: (id) => set({ nearbyStationId: id }),
   openPanel: (id) => set({ openPanelId: id }),
   setActiveEmote: (id) => set({ activeEmote: id }),
   markWelcomeSeen: () => set({ hasSeenWelcome: true }),
+  requestThemeToggle: () => set((s) => ({ themeToggleRequests: s.themeToggleRequests + 1 })),
 }))
 
 // Transient player position: read/written every frame without triggering

@@ -36,11 +36,11 @@ export function Lamp() {
       <Voxel position={[CX, 0.06, CZ]} size={[0.44, 0.12, 0.44]} color={PALETTE.metal} />
       <Voxel position={[CX, 1.3, CZ]} size={[0.12, 2.5, 0.12]} color={PALETTE.metal} />
 
-      {/* shade (highlight) + decorative point light */}
+      {/* shade (highlight). The floor lamp's point light lives in scene/Lighting
+          so day/night can drive it (off by day, warm by night). */}
       <mesh position={[CX, 2.7, CZ]} material={shade} userData={{ dynamic: true }} castShadow>
         <boxGeometry args={[0.75, 0.55, 0.75]} />
       </mesh>
-      <pointLight position={[CX, 2.5, CZ]} intensity={0.35} distance={6} color="#ffe0a0" />
 
       {/* pull cord (stretches on the emote), pivot at the shade underside */}
       <group ref={cord} position={[CX + 0.28, 2.42, CZ]} userData={{ dynamic: true }}>

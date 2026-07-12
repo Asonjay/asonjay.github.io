@@ -1,4 +1,5 @@
 'use client'
+import { useEffect, useRef } from 'react'
 import { Canvas } from '@react-three/fiber'
 import type { WorldData } from '../../types/world'
 import { World } from './scene/World'
@@ -7,12 +8,36 @@ import { CameraRig } from './scene/CameraRig'
 import { Systems } from './scene/Systems'
 import { FootstepDust } from './scene/FootstepDust'
 import { StaticMerge } from './scene/StaticMerge'
+import { Lighting } from './scene/Lighting'
 import { NameplateBubble } from './ui/NameplateBubble'
 import { PanelHost } from './ui/PanelHost'
 import { useInput } from './systems/useInput'
+import { useGameStore } from './systems/store'
+import { useDarkMode } from '../../hooks/useDarkMode'
 
 export default function VoxelHome({ data }: { data: WorldData }) {
   useInput()
+
+  // Site theme is the source of truth for day/night (localStorage `dark-mode` +
+  // .dark/.light on <html>). Read it here, outside the canvas, and pass it in as
+  // a prop — hooks/context don't cross the R3F <Canvas> boundary.
+  const [isDark, setIsDark] = useDarkMode()
+
+  // Lamp -> theme bridge. The in-canvas lamp station bumps a request counter in
+  // the store (it can't call the DOM hook); flip the real theme once per bump.
+  // Refs keep the subscription registered once and free of stale closures.
+  const isDarkRef = useRef(isDark)
+  isDarkRef.current = isDark
+  const setIsDarkRef = useRef(setIsDark)
+  setIsDarkRef.current = setIsDark
+  useEffect(() => {
+    return useGameStore.subscribe((state, prev) => {
+      if (state.themeToggleRequests !== prev.themeToggleRequests) {
+        setIsDarkRef.current(!isDarkRef.current)
+      }
+    })
+  }, [])
+
   return (
     <div style={{ position: 'absolute', inset: 0 }}>
       <Canvas
@@ -21,20 +46,7 @@ export default function VoxelHome({ data }: { data: WorldData }) {
         gl={{ antialias: true, powerPreference: 'high-performance' }}
         shadows
       >
-        <color attach="background" args={['#0b0e1a']} />
-        <ambientLight intensity={0.6} />
-        <directionalLight
-          position={[12, 20, 8]}
-          intensity={0.8}
-          castShadow
-          shadow-mapSize={[2048, 2048]}
-          shadow-camera-left={-20}
-          shadow-camera-right={20}
-          shadow-camera-top={20}
-          shadow-camera-bottom={-20}
-          shadow-camera-near={0.5}
-          shadow-camera-far={80}
-        />
+        <Lighting isDark={Boolean(isDark)} />
         <World />
         <Player />
         <Systems />

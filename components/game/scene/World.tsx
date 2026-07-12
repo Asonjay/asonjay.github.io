@@ -73,13 +73,14 @@ export function World() {
     <group>
       <CheckerFloor />
 
-      {/* west wall — full backdrop */}
-      <mesh position={[ROOM.minX - VIS_T / 2, fullH / 2, midZ]} castShadow receiveShadow>
+      {/* west + south full backdrop walls. They receive furniture shadows but do
+          NOT cast: the F4 sun streams in from beyond the -Z (window) wall, so a
+          casting shell would slab-shadow the room interior. Only props cast. */}
+      <mesh position={[ROOM.minX - VIS_T / 2, fullH / 2, midZ]} receiveShadow>
         <boxGeometry args={[VIS_T, fullH, spanZ]} />
         <meshStandardMaterial color={WALL_COLOR} />
       </mesh>
-      {/* south wall — full backdrop */}
-      <mesh position={[midX, fullH / 2, ROOM.minZ - VIS_T / 2]} castShadow receiveShadow>
+      <mesh position={[midX, fullH / 2, ROOM.minZ - VIS_T / 2]} receiveShadow>
         <boxGeometry args={[spanX, fullH, VIS_T]} />
         <meshStandardMaterial color={WALL_COLOR} />
       </mesh>

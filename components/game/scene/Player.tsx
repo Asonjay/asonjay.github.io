@@ -48,6 +48,7 @@ export function Player() {
     prevSin: 0,
     emoteTime: 0,
     firedPanel: false,
+    firedToggle: false,
     pendingStation: null as string | null,
     wasEmoting: false,
   })
@@ -70,6 +71,7 @@ export function Player() {
           g.setActiveEmote(null)
           s.current.emoteTime = 0
           s.current.firedPanel = false
+          s.current.firedToggle = false
           s.current.pendingStation = null
         }
         return
@@ -81,12 +83,16 @@ export function Player() {
       const emote = STATION_EMOTE[near]
       if (!emote) return
       if (reducedMotionRef.current) {
-        if (near !== 'lamp') g.openPanel(near)
+        // Skip the emote but still perform its action: the lamp toggles the
+        // theme, every other station opens its panel.
+        if (near === 'lamp') g.requestThemeToggle()
+        else g.openPanel(near)
         return
       }
       s.current.pendingStation = near
       s.current.emoteTime = 0
       s.current.firedPanel = false
+      s.current.firedToggle = false
       g.setActiveEmote(emote)
     }
     window.addEventListener('keydown', onKey)
@@ -136,6 +142,12 @@ export function Player() {
       resetRig(rig.current, st.facing)
       clip.pose(t, rig.current)
 
+      // Lamp: no panel — flip the site day/night theme at the cord's yank (50%).
+      if (!st.firedToggle && st.pendingStation === 'lamp' && t >= 0.5) {
+        st.firedToggle = true
+        g.requestThemeToggle()
+      }
+
       if (!st.firedPanel && t >= 0.6) {
         st.firedPanel = true
         if (st.pendingStation && st.pendingStation !== 'lamp') g.openPanel(st.pendingStation)
@@ -146,6 +158,7 @@ export function Player() {
         g.setActiveEmote(null)
         st.emoteTime = 0
         st.firedPanel = false
+        st.firedToggle = false
         st.pendingStation = null
       }
 

@@ -237,12 +237,16 @@ describe('interactions', () => {
   it('returns the station in range', () => {
     expect(make().nearestInRange(0.5, 0.5)).toBe('desk')
   })
-  it('returns the NEAREST when overlapping', () => {
-    expect(make().nearestInRange(1.9, 0)).toBe('shelf')  // 1.1 to shelf vs 1.9 to desk, both ≤1.6
+  it('returns the nearest when multiple stations are in range', () => {
+    const r = make()
+    expect(r.nearestInRange(1.4, 0)).toBe('desk')   // desk 1.4, shelf 1.6 — both in range, desk nearer
+    expect(r.nearestInRange(1.55, 0)).toBe('shelf') // desk 1.55, shelf 1.45 — shelf nearer
   })
   it('boundary is inclusive', () => {
-    expect(make().nearestInRange(1.6, 0)).toBe('desk')
+    expect(make().nearestInRange(-1.6, 0)).toBe('desk')  // exactly at radius; shelf far out of range
   })
+  // (2026-07-11 controller fix: original test #3/#4 had wrong arithmetic that contradicted
+  // nearest-wins semantics; corrected during Task 2 execution — see progress ledger.)
 })
 ```
 

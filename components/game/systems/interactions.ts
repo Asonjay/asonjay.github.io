@@ -5,11 +5,9 @@ export type Station = { id: string; x: number; z: number; radius: number }
 
 export type StationRegistry = {
   add(s: Station): void
-  // Nearest station whose radius contains the point; null if none in range.
-  // Scan is in insertion order and returns the first station within its
-  // (inclusive) radius — so a point on an earlier station's boundary resolves
-  // to that station even when a later one is marginally closer. Keep close
-  // stations ordered by priority; see tests/game/interactions.test.ts.
+  // The nearest station (by distance) whose radius contains the point, or null
+  // if none is in range. Boundary is inclusive (dist <= radius). Exact ties
+  // resolve to the earlier-registered station.
   nearestInRange(px: number, pz: number): string | null
   get(id: string): Station | undefined
   all(): readonly Station[]
@@ -24,12 +22,19 @@ export function createStationRegistry(): StationRegistry {
       byId.set(s.id, s)
     },
     nearestInRange(px, pz) {
+      let bestId: string | null = null
+      let bestD2 = Infinity
       for (const s of list) {
         const dx = px - s.x
         const dz = pz - s.z
-        if (dx * dx + dz * dz <= s.radius * s.radius) return s.id
+        const d2 = dx * dx + dz * dz
+        // Strict `<` so equal distances keep the earlier-registered station.
+        if (d2 <= s.radius * s.radius && d2 < bestD2) {
+          bestD2 = d2
+          bestId = s.id
+        }
       }
-      return null
+      return bestId
     },
     get(id) {
       return byId.get(id)

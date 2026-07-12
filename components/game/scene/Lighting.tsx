@@ -1,5 +1,5 @@
 'use client'
-import { useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import { reducedMotionRef } from '../systems/reducedMotion'
@@ -93,7 +93,13 @@ function dampColor(c: THREE.Color, target: THREE.Color, dt: number, snap: boolea
   c.b = damp(c.b, target.b, LAMBDA, dt)
 }
 
-export function Lighting({ isDark }: { isDark: boolean }) {
+export function Lighting({
+  isDark,
+  shadowMapSize,
+}: {
+  isDark: boolean
+  shadowMapSize?: number
+}) {
   const scene = useThree((s) => s.scene)
 
   const hemi = useRef<THREE.HemisphereLight>(null)
@@ -113,11 +119,25 @@ export function Lighting({ isDark }: { isDark: boolean }) {
   // initial props are stable for the component's life.
   const mount = useRef<Mode>(isDark ? NIGHT : DAY).current
 
-  // Higher-res shadows on desktop, lighter on touch devices. Evaluated once.
-  const shadowSize = useMemo(
+  // Higher-res shadows on desktop, lighter on touch devices. Evaluated once; the
+  // optional shadowMapSize prop (perf governor) overrides it when supplied.
+  const defaultShadow = useMemo(
     () => (typeof navigator !== 'undefined' && navigator.maxTouchPoints > 0 ? 1024 : 2048),
     []
   )
+  const shadowSize = shadowMapSize ?? defaultShadow
+
+  // Three allocates the shadow render target once, so a runtime tier change won't
+  // take effect from the shadow-mapSize prop alone: dispose the existing map and
+  // null it so WebGLShadowMap rebuilds it at the new resolution on the next shadow
+  // pass. Done here (not by remounting the light) so the crossfade state survives.
+  useEffect(() => {
+    const light = sun.current
+    if (!light) return
+    light.shadow.mapSize.set(shadowSize, shadowSize)
+    light.shadow.map?.dispose()
+    light.shadow.map = null
+  }, [shadowSize])
 
   // Neon strip material — emissive slat above the TV. Only its emissiveIntensity
   // animates (day 0.1 -> night 1.0); toneMapped off so the accent glow stays

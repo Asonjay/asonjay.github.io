@@ -45,6 +45,16 @@ export function Hotbar({
   onToggleTheme: () => void
 }) {
   const isTouch = useIsTouch()
+  // Whether the viewport is md-up (Tailwind md = 768px), tracked live so the
+  // number-key listener below can stand down whenever the bar itself is hidden.
+  // The bar's visibility is `!isTouch && >=md` (touch -> null return; <md ->
+  // `hidden md:block`), so the hotkeys must require BOTH conditions — otherwise a
+  // non-touch window narrower than md keeps a ghost listener driving auto-walk
+  // while the bar is invisible.
+  const [isMdUp, setIsMdUp] = useState(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return true
+    return window.matchMedia('(min-width: 768px)').matches
+  })
   const [shakeId, setShakeId] = useState<string | null>(null)
   const shakeTimer = useRef<ReturnType<typeof setTimeout>>()
 
@@ -58,6 +68,16 @@ export function Hotbar({
 
   useEffect(() => () => {
     if (shakeTimer.current) clearTimeout(shakeTimer.current)
+  }, [])
+
+  // Keep isMdUp in sync with live window resizes across the md boundary.
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return
+    const mq = window.matchMedia('(min-width: 768px)')
+    const onChange = () => setIsMdUp(mq.matches)
+    onChange()
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
   }, [])
 
   // Path to a station and hand the route to the player (shared walk helper); the
@@ -86,11 +106,11 @@ export function Hotbar({
   const openMusic = useCallback(() => useGameStore.getState().openPanel('music'), [])
 
   // Number-key hotkeys 1–9,0. Ignored on auto-repeat and while typing in a field
-  // (none exist in-game, but guard anyway). Bound only on the desktop (non-touch)
-  // condition that shows the bar — touch devices use the HotbarSheet menu, and a
-  // hidden bar must not swallow number keys.
+  // (none exist in-game, but guard anyway). Bound only when the bar is actually
+  // shown — non-touch AND md-up — so a hidden bar (touch, or a window below md)
+  // never swallows number keys.
   useEffect(() => {
-    if (isTouch) return
+    if (isTouch || !isMdUp) return
     const onKey = (e: KeyboardEvent) => {
       if (e.repeat) return
       const t = e.target
@@ -104,7 +124,7 @@ export function Hotbar({
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [activate, isTouch])
+  }, [activate, isTouch, isMdUp])
 
   // Touch devices get the mobile chrome (Joystick / InteractButton / HotbarSheet)
   // instead of this bar; the number-key listener above is already stood down.

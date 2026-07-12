@@ -2,6 +2,18 @@
 import { useLayoutEffect, useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { ROOM } from '../systems/worldLayout'
+import { AboutWall } from './furniture/AboutWall'
+import { Desk } from './furniture/Desk'
+import { WallCalendar } from './furniture/WallCalendar'
+import { NoticeBoard } from './furniture/NoticeBoard'
+import { PhotoWall } from './furniture/PhotoWall'
+import { TvConsole } from './furniture/TvConsole'
+import { Lamp } from './furniture/Lamp'
+import { Bookshelf } from './furniture/Bookshelf'
+import { Jukebox } from './furniture/Jukebox'
+import { Mailbox } from './furniture/Mailbox'
+import { TrashCan } from './furniture/TrashCan'
+import { SmallProps } from './furniture/SmallProps'
 
 const TILE_A = '#3a3f57'
 const TILE_B = '#333750'
@@ -81,6 +93,20 @@ export function World() {
         <boxGeometry args={[spanX, KNEE_H, VIS_T]} />
         <meshStandardMaterial color={WALL_COLOR} />
       </mesh>
+
+      {/* Stations & decor. Footprints/colliders live in worldLayout.ts. */}
+      <AboutWall />
+      <Desk />
+      <WallCalendar />
+      <NoticeBoard />
+      <PhotoWall />
+      <TvConsole />
+      <Lamp />
+      <Bookshelf />
+      <Jukebox />
+      <Mailbox />
+      <TrashCan />
+      <SmallProps />
     </group>
   )
 }

@@ -4,6 +4,7 @@ import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { useGameStore, playerPosRef } from '../systems/store'
 import { worldColliders, SPAWN } from '../systems/worldLayout'
+import { reducedMotionRef } from '../systems/reducedMotion'
 import {
   MOVE_SPEED,
   ACCEL_LAMBDA,
@@ -16,44 +17,155 @@ import {
   PLAYER_RADIUS,
   PLAYER_COLORS,
 } from '../systems/playerConfig'
+import {
+  EMOTES,
+  STATION_EMOTE,
+  HELD_EMOTES,
+  resetRig,
+  type EmoteId,
+  type PlayerRig,
+} from './emotes'
+import { footstepDust } from './FootstepDust'
 
 const damp = THREE.MathUtils.damp
 
 export function Player() {
   const group = useRef<THREE.Group>(null!)
   const body = useRef<THREE.Group>(null!)
+  const head = useRef<THREE.Group>(null!)
   const legL = useRef<THREE.Group>(null!)
   const legR = useRef<THREE.Group>(null!)
   const armL = useRef<THREE.Group>(null!)
   const armR = useRef<THREE.Group>(null!)
 
   // Per-instance mutable state — no per-frame allocation.
-  const s = useRef({ vx: 0, vz: 0, facing: 0, phase: 0, prevSpeed: 0 })
-  const reduce = useRef(false)
+  const s = useRef({
+    vx: 0,
+    vz: 0,
+    facing: 0,
+    phase: 0,
+    prevSpeed: 0,
+    prevSin: 0,
+    emoteTime: 0,
+    firedPanel: false,
+    pendingStation: null as string | null,
+    wasEmoting: false,
+  })
+  const rig = useRef<PlayerRig | null>(null)
 
+  // Contextual-emote controller: E/Enter near a station plays its emote (the
+  // panel opens at 60%, wired by the frame loop); Esc closes an open panel/emote.
+  // Under reduced motion the emote is skipped and the panel opens immediately.
   useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
-    reduce.current = mq.matches
-    const onChange = () => {
-      reduce.current = mq.matches
+    const onKey = (e: KeyboardEvent) => {
+      const k = e.key.toLowerCase()
+      const g = useGameStore.getState()
+      if (k === 'escape') {
+        if (g.openPanelId !== null || g.activeEmote !== null) {
+          g.openPanel(null)
+          g.setActiveEmote(null)
+          s.current.emoteTime = 0
+          s.current.firedPanel = false
+          s.current.pendingStation = null
+        }
+        return
+      }
+      if (k !== 'e' && k !== 'enter') return
+      if (g.openPanelId !== null || g.activeEmote !== null) return
+      const near = g.nearbyStationId
+      if (!near) return
+      const emote = STATION_EMOTE[near]
+      if (!emote) return
+      if (reducedMotionRef.current) {
+        if (near !== 'lamp') g.openPanel(near)
+        return
+      }
+      s.current.pendingStation = near
+      s.current.emoteTime = 0
+      s.current.firedPanel = false
+      g.setActiveEmote(emote)
     }
-    mq.addEventListener('change', onChange)
-    return () => mq.removeEventListener('change', onChange)
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
   }, [])
 
   useFrame((_, rawDelta) => {
     const dt = Math.min(rawDelta, DELTA_CLAMP)
     const st = s.current
-    const mv = useGameStore.getState().moveVector
+    const g = useGameStore.getState()
 
-    // Velocity: damp toward target (accelerate) or zero (decelerate).
+    // Assemble the rig once all refs are live.
+    if (
+      !rig.current &&
+      group.current &&
+      body.current &&
+      head.current &&
+      armL.current &&
+      armR.current &&
+      legL.current &&
+      legR.current
+    ) {
+      rig.current = {
+        root: group.current,
+        body: body.current,
+        head: head.current,
+        armL: armL.current,
+        armR: armR.current,
+        legL: legL.current,
+        legR: legR.current,
+      }
+    }
+
+    const pos = playerPosRef.current
+    const emote = g.activeEmote as EmoteId | null
+
+    // --- Emote branch: freeze locomotion and play the pose clip. ---
+    if (emote && rig.current && EMOTES[emote]) {
+      st.vx = 0
+      st.vz = 0
+      const clip = EMOTES[emote]
+      st.emoteTime += dt
+      const held = HELD_EMOTES.has(emote)
+      const u = st.emoteTime / clip.duration
+      const t = u > 1 ? 1 : u
+
+      resetRig(rig.current, st.facing)
+      clip.pose(t, rig.current)
+
+      if (!st.firedPanel && t >= 0.6) {
+        st.firedPanel = true
+        if (st.pendingStation && st.pendingStation !== 'lamp') g.openPanel(st.pendingStation)
+      }
+
+      if (t >= 1 && (!held || g.openPanelId === null)) {
+        st.facing = rig.current.root.rotation.y
+        g.setActiveEmote(null)
+        st.emoteTime = 0
+        st.firedPanel = false
+        st.pendingStation = null
+      }
+
+      if (group.current) group.current.position.set(pos.x, 0, pos.z)
+      st.wasEmoting = true
+      st.prevSpeed = 0
+      st.prevSin = 0
+      return
+    }
+
+    // Returning from an emote: reset every posed channel to neutral once.
+    if (st.wasEmoting) {
+      if (rig.current) resetRig(rig.current, st.facing)
+      st.wasEmoting = false
+    }
+
+    // --- Locomotion. ---
+    const mv = g.moveVector
     const moving = mv.x !== 0 || mv.z !== 0
     const lambda = moving ? ACCEL_LAMBDA : DECEL_LAMBDA
     st.vx = damp(st.vx, mv.x * MOVE_SPEED, lambda, dt)
     st.vz = damp(st.vz, mv.z * MOVE_SPEED, lambda, dt)
 
     // Axis-separated collision, X then Z — lets the player slide along walls.
-    const pos = playerPosRef.current
     const nextX = pos.x + st.vx * dt
     if (worldColliders.canMoveTo(nextX, pos.z, PLAYER_RADIUS)) pos.x = nextX
     else st.vx = 0
@@ -77,8 +189,20 @@ export function Player() {
     const swing = Math.sin(st.phase) * 0.5 * speedRatio
     const swingOpp = Math.sin(st.phase + Math.PI) * 0.5 * speedRatio
 
+    // Footstep dust on stride zero-crossings (each foot plant) while moving.
+    const sinP = Math.sin(st.phase)
+    if (
+      !reducedMotionRef.current &&
+      speed > 1.2 &&
+      st.prevSin !== 0 &&
+      Math.sign(sinP) !== Math.sign(st.prevSin)
+    ) {
+      footstepDust.emit?.(pos.x, pos.z)
+    }
+    st.prevSin = sinP
+
     const accel = Math.abs(speed - st.prevSpeed) / Math.max(dt, 1e-4)
-    const rm = reduce.current
+    const rm = reducedMotionRef.current
 
     if (group.current) {
       group.current.position.set(pos.x, 0, pos.z)
@@ -148,19 +272,21 @@ export function Player() {
           </mesh>
         </group>
 
-        {/* head, hair, glasses */}
-        <mesh position={[0, 1.5, 0]} castShadow>
-          <boxGeometry args={[0.42, 0.42, 0.42]} />
-          <meshStandardMaterial color={PLAYER_COLORS.skin} />
-        </mesh>
-        <mesh position={[0, 1.67, -0.02]} castShadow>
-          <boxGeometry args={[0.46, 0.2, 0.46]} />
-          <meshStandardMaterial color={PLAYER_COLORS.hair} />
-        </mesh>
-        <mesh position={[0, 1.52, 0.22]}>
-          <boxGeometry args={[0.52, 0.08, 0.05]} />
-          <meshStandardMaterial color={PLAYER_COLORS.glasses} />
-        </mesh>
+        {/* head group (pivot at neck) — hair, glasses ride along for emotes */}
+        <group ref={head} position={[0, 1.32, 0]}>
+          <mesh position={[0, 0.18, 0]} castShadow>
+            <boxGeometry args={[0.42, 0.42, 0.42]} />
+            <meshStandardMaterial color={PLAYER_COLORS.skin} />
+          </mesh>
+          <mesh position={[0, 0.35, -0.02]} castShadow>
+            <boxGeometry args={[0.46, 0.2, 0.46]} />
+            <meshStandardMaterial color={PLAYER_COLORS.hair} />
+          </mesh>
+          <mesh position={[0, 0.2, 0.22]}>
+            <boxGeometry args={[0.52, 0.08, 0.05]} />
+            <meshStandardMaterial color={PLAYER_COLORS.glasses} />
+          </mesh>
+        </group>
       </group>
     </group>
   )

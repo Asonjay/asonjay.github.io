@@ -407,3 +407,16 @@ open a draft PR at the end. Never push to master.
   is the plan.
 - **Low-end phones**: huge headroom (≤60 draw calls); if needed later, disable shadows via
   DPR heuristic (defer until observed).
+
+
+## Iteration 2 — playtest round 1 (2026-07-12)
+
+Feedback (Jason): (1) lag on large screens; (2) enclosed-room format undersells info-browsing; (3) pixel-RPG UI too strong (menu bar, buttons, pixel font).
+
+Decisions (AskUserQuestion, options + previews):
+
+- **Perf (Task R2-8):** pixel-budget dpr governor (budget 4.6M px, floor 0.75) + fps-adaptive dpr back up to device cap + shadow-tier drop under load + `?debug=1` stats overlay. `powerPreference: high-performance` was already set; root cause is uncapped fill-rate scaling with screen area (4K ≈ 4× 1080p fragment work).
+- **World (Task R2-10): 书房+小庭院 hybrid** (chosen over gallery re-theme / floating island / wayfinding-only). Room keeps footprint and backdrop walls; courtyard extends on an open side through a door gap (≥2 cells): grass + path + picket fence; mailbox and trash can move outdoors; new bench / flower beds / tree / lamppost (night point light lives in the furniture component). Indoor = work/research, outdoor = life/contact. All systems (stations, A*, panels, hotbar) unchanged.
+- **UI (Task R2-9):** pixel style retired → **warm rounded-modern**: 12px-radius near-solid cards, soft shadows, Barlow-only (Press Start 2P removed entirely), icons redrawn as 20×20 round-cap strokes, renames PixelPanel/PixelButton/PixelDivider → UiPanel/UiButton/UiDivider. Token architecture (`.game-ui`, `--gp-*`, day/night variants) unchanged.
+
+Execution: sequential SDD (8 → 9 → 10), opus implementer + opus task-reviewer per task, lead gates (vitest/lint per task; consolidated build at the end). Briefs: `.superpowers/sdd/task-{8,9,10}-brief.md`.

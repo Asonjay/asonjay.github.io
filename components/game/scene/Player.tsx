@@ -13,6 +13,7 @@ import {
   STRIDE_FREQ,
   BOB_AMPLITUDE,
   LEAN_MAX,
+  DUST_SPEED_MIN,
   DELTA_CLAMP,
   PLAYER_RADIUS,
   WAYPOINT_POP,
@@ -43,6 +44,9 @@ type InteractState = {
 // panel at 60% / toggles the lamp theme at 50%); under reduced motion it skips
 // the emote and performs the action immediately.
 function startInteract(g: GameState, st: InteractState, stationId: string) {
+  // Committing to a station cancels any auto-walk in flight — pressing E mid-walk
+  // interacts here-and-now instead of resuming toward the old target afterward.
+  if (g.autoWalk !== null) g.setAutoWalk(null)
   const emote = STATION_EMOTE[stationId]
   if (!emote || reducedMotionRef.current) {
     if (stationId === 'lamp') g.requestThemeToggle()
@@ -280,7 +284,7 @@ export function Player() {
     const sinP = Math.sin(st.phase)
     if (
       !reducedMotionRef.current &&
-      speed > 1.2 &&
+      speed > DUST_SPEED_MIN &&
       st.prevSin !== 0 &&
       Math.sign(sinP) !== Math.sign(st.prevSin)
     ) {

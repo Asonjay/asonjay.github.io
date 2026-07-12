@@ -2,13 +2,16 @@
 import { useLayoutEffect, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
-import { playerPosRef } from '../systems/store'
+import { playerPosRef, useGameStore } from '../systems/store'
+import { reducedMotionRef } from '../systems/reducedMotion'
 import { SPAWN } from '../systems/worldLayout'
 import {
   VIEWSIZE_LANDSCAPE,
   VIEWSIZE_PORTRAIT,
   CAM_POS_LAMBDA,
   CAM_TARGET_LAMBDA,
+  PANEL_DOLLY,
+  PANEL_DOLLY_LAMBDA,
   DELTA_CLAMP,
 } from '../systems/playerConfig'
 
@@ -22,6 +25,10 @@ export function CameraRig() {
   const width = useThree((s) => s.size.width)
   const height = useThree((s) => s.size.height)
   const lookAt = useRef(new THREE.Vector3(SPAWN.x, 0, SPAWN.z))
+  // Resting ortho zoom, captured once before the dolly first runs. The resize
+  // effect drives the frustum via top/bottom/left/right and never touches zoom,
+  // so this base stays valid across resizes.
+  const baseZoom = useRef<number | null>(null)
 
   // Ortho frustum from viewport aspect: vertical half-height is VIEWSIZE, width
   // scales with aspect. Re-run on resize.
@@ -48,6 +55,20 @@ export function CameraRig() {
     lookAt.current.x = damp(lookAt.current.x, p.x, CAM_TARGET_LAMBDA, dt)
     lookAt.current.z = damp(lookAt.current.z, p.z, CAM_TARGET_LAMBDA, dt)
     camera.lookAt(lookAt.current)
+
+    // Panel-open dolly (spec §4.4): ease the ortho zoom IN ~5% while a panel is
+    // open (factor 1/PANEL_DOLLY), back out when it closes. Transient store read
+    // — no subscription, no per-frame allocation. Snap under reduced motion.
+    if (baseZoom.current === null) baseZoom.current = camera.zoom
+    const openPanelId = useGameStore.getState().openPanelId
+    const targetZoom = baseZoom.current * (openPanelId ? 1 / PANEL_DOLLY : 1)
+    const nextZoom = reducedMotionRef.current
+      ? targetZoom
+      : damp(camera.zoom, targetZoom, PANEL_DOLLY_LAMBDA, dt)
+    if (Math.abs(nextZoom - camera.zoom) > 1e-4) {
+      camera.zoom = nextZoom
+      camera.updateProjectionMatrix()
+    }
   })
 
   return null

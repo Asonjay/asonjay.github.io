@@ -54,7 +54,12 @@ export function StaticMerge() {
       merged.push(mesh)
     })
 
-    for (const m of originals) m.visible = false
+    // Hidden originals are static and already baked into the merge, so stop the
+    // renderer recomputing their matrices every frame.
+    for (const m of originals) {
+      m.visible = false
+      m.matrixAutoUpdate = false
+    }
 
     let raf = 0
     if (process.env.NODE_ENV !== 'production') {
@@ -72,7 +77,10 @@ export function StaticMerge() {
         scene.remove(m)
         m.geometry.dispose()
       }
-      for (const m of originals) (m.visible = true)
+      for (const m of originals) {
+        m.visible = true
+        m.matrixAutoUpdate = true
+      }
     }
   }, [scene, gl])
 

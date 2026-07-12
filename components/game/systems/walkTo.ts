@@ -14,6 +14,9 @@ export function walkToStation(id: string): boolean {
   if (!station) return false
   const g = useGameStore.getState()
   if (g.openPanelId !== null) g.openPanel(null)
+  // Cancel any in-flight emote so a shortcut retargets cleanly — otherwise the
+  // emote's frame loop would still fire the old station's panel at its 60% mark.
+  if (g.activeEmote !== null) g.setActiveEmote(null)
   const path = findPath(makeGrid(), playerPosRef.current, station.anchor)
   if (!path) return false
   g.setAutoWalk({ targetStationId: id, path })

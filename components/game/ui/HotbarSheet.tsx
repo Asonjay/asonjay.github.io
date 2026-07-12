@@ -26,6 +26,7 @@ export function HotbarSheet({
   onToggleTheme: () => void
 }) {
   const isTouch = useIsTouch()
+  const openPanelId = useGameStore((s) => s.openPanelId)
   const [open, setOpen] = useState(false)
   const sheetRef = useRef<HTMLDivElement>(null)
 
@@ -58,6 +59,9 @@ export function HotbarSheet({
   }
 
   if (!open) {
+    // A panel's backdrop covers the button; hide it so it can't be tapped
+    // through, mirroring InteractButton.
+    if (openPanelId) return null
     return (
       <button
         type="button"

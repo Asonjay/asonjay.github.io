@@ -25,7 +25,19 @@ export function useInput() {
       const x = right - fwd
       const z = -right - fwd
       const len = Math.hypot(x, z)
+      // Any real movement input takes over from (and cancels) an active auto-walk.
+      if (len > 0 && store.autoWalk) store.setAutoWalk(null)
       store.setMoveVector(len > 0 ? { x: x / len, z: z / len } : { x: 0, z: 0 })
+    }
+
+    // Losing focus mid-keypress (alt-tab, minimize) never delivers the keyup, so
+    // clear all held keys and stop the player rather than letting it walk on.
+    const clearKeys = () => {
+      pressed.clear()
+      useGameStore.getState().setMoveVector({ x: 0, z: 0 })
+    }
+    const onVisibility = () => {
+      if (document.visibilityState === 'hidden') clearKeys()
     }
 
     const onDown = (e: KeyboardEvent) => {
@@ -43,9 +55,13 @@ export function useInput() {
 
     window.addEventListener('keydown', onDown)
     window.addEventListener('keyup', onUp)
+    window.addEventListener('blur', clearKeys)
+    document.addEventListener('visibilitychange', onVisibility)
     return () => {
       window.removeEventListener('keydown', onDown)
       window.removeEventListener('keyup', onUp)
+      window.removeEventListener('blur', clearKeys)
+      document.removeEventListener('visibilitychange', onVisibility)
     }
   }, [])
 }

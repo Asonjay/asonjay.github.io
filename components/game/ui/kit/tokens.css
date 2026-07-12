@@ -96,6 +96,35 @@ html.light .game-ui {
   }
 }
 
+/* Hotbar slot "no path" feedback: a short horizontal shake. Decorative — off
+ * under reduced motion (the click/hotkey simply does nothing). */
+@keyframes gp-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-3px);
+  }
+  40% {
+    transform: translateX(3px);
+  }
+  60% {
+    transform: translateX(-2px);
+  }
+  80% {
+    transform: translateX(2px);
+  }
+}
+.gp-shake {
+  animation: gp-shake 200ms ease both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .gp-shake {
+    animation: none;
+  }
+}
+
 .gp-link {
   color: var(--gp-accent);
   text-decoration: none;

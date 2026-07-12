@@ -14,6 +14,7 @@ export const BOB_AMPLITUDE = 0.05 // vertical bob
 export const LEAN_MAX = 0.08 // rad forward body lean at full speed
 export const DELTA_CLAMP = 1 / 30 // max dt (frame-rate independence)
 export const PLAYER_RADIUS = 0.35 // collision half-size
+export const WAYPOINT_POP = 0.3 // auto-walk: pop a path waypoint once within this range
 export const VIEWSIZE_LANDSCAPE = 12 // ortho half-height
 export const VIEWSIZE_PORTRAIT = 15 // ortho half-height when aspect < 1
 

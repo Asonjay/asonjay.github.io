@@ -11,6 +11,7 @@ import { StaticMerge } from './scene/StaticMerge'
 import { Lighting } from './scene/Lighting'
 import { NameplateBubble } from './ui/NameplateBubble'
 import { PanelHost } from './ui/PanelHost'
+import { Hotbar } from './ui/Hotbar'
 import { useInput } from './systems/useInput'
 import { useGameStore } from './systems/store'
 import { useDarkMode } from '../../hooks/useDarkMode'
@@ -57,6 +58,14 @@ export default function VoxelHome({ data }: { data: WorldData }) {
       </Canvas>
       <NameplateBubble />
       <PanelHost data={data} />
+      {/* Hotbar lives outside the Canvas: it owns the DOM theme toggle and passes
+          it in so VoxelHome stays the single useDarkMode owner (keeping the site
+          theme, 3D lighting, lamp and the sun/moon icon all in sync). */}
+      <Hotbar
+        data={data}
+        isDark={Boolean(isDark)}
+        onToggleTheme={() => setIsDark(!isDark)}
+      />
     </div>
   )
 }

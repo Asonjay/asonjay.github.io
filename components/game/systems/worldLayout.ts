@@ -1,4 +1,6 @@
 import { createColliderRegistry, type AABB } from './collision'
+import { PLAYER_RADIUS } from './playerConfig'
+import type { GridSpec } from './pathfinding'
 
 // Single source of truth for geometry-affecting data. World.tsx renders meshes
 // from this module; it never owns collision state (see worldColliders below).
@@ -67,6 +69,20 @@ export const worldColliders = (() => {
   for (const b of COLLIDERS) r.add(b)
   return r
 })()
+
+// Impure adapter that exposes the world's colliders as a pathfinding GridSpec:
+// one 1-unit cell per integer coordinate across the ROOM bounds, a cell blocked
+// iff the player (PLAYER_RADIUS) cannot stand at its center. Called on demand by
+// the hotbar's auto-walk — never inside a frame loop.
+export function makeGrid(): GridSpec {
+  return {
+    minX: ROOM.minX,
+    minZ: ROOM.minZ,
+    maxX: ROOM.maxX,
+    maxZ: ROOM.maxZ,
+    blocked: (cx, cz) => !worldColliders.canMoveTo(cx + 0.5, cz + 0.5, PLAYER_RADIUS),
+  }
+}
 
 // Dev-only: every station anchor must be reachable (not inside a collider) so
 // the player can actually stand there. Fires once on import in the browser.

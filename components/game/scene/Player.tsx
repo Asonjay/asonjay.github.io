@@ -2,7 +2,7 @@
 import { useEffect, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
-import { useGameStore, playerPosRef } from '../systems/store'
+import { useGameStore, playerPosRef, type GameState } from '../systems/store'
 import { worldColliders, SPAWN } from '../systems/worldLayout'
 import { reducedMotionRef } from '../systems/reducedMotion'
 import {
@@ -15,6 +15,7 @@ import {
   LEAN_MAX,
   DELTA_CLAMP,
   PLAYER_RADIUS,
+  WAYPOINT_POP,
   PLAYER_COLORS,
 } from '../systems/playerConfig'
 import {
@@ -28,6 +29,32 @@ import {
 import { footstepDust } from './FootstepDust'
 
 const damp = THREE.MathUtils.damp
+
+// The transient interaction fields the frame loop advances while an emote plays.
+type InteractState = {
+  pendingStation: string | null
+  emoteTime: number
+  firedPanel: boolean
+  firedToggle: boolean
+}
+
+// Single entry point for the contextual interaction, shared by the E/Enter key
+// and by auto-walk arrival. Starts the station's emote (the frame loop opens the
+// panel at 60% / toggles the lamp theme at 50%); under reduced motion it skips
+// the emote and performs the action immediately.
+function startInteract(g: GameState, st: InteractState, stationId: string) {
+  const emote = STATION_EMOTE[stationId]
+  if (!emote || reducedMotionRef.current) {
+    if (stationId === 'lamp') g.requestThemeToggle()
+    else g.openPanel(stationId)
+    return
+  }
+  st.pendingStation = stationId
+  st.emoteTime = 0
+  st.firedPanel = false
+  st.firedToggle = false
+  g.setActiveEmote(emote)
+}
 
 export function Player() {
   const group = useRef<THREE.Group>(null!)
@@ -51,6 +78,10 @@ export function Player() {
     firedToggle: false,
     pendingStation: null as string | null,
     wasEmoting: false,
+    // Auto-walk: the path object currently being followed, and the index of the
+    // waypoint being steered toward.
+    autoRef: null as GameState['autoWalk'],
+    wpIndex: 0,
   })
   const rig = useRef<PlayerRig | null>(null)
 
@@ -64,9 +95,13 @@ export function Player() {
       const g = useGameStore.getState()
       if (k === 'escape') {
         // PanelHost owns Escape while a panel is open — stand down so one press
-        // is one close. Before a panel opens (emote still playing toward its
-        // 60% mark), Esc still cancels the in-flight emote.
+        // is one close. Otherwise Esc cancels an in-flight auto-walk, then an
+        // in-flight emote (still playing toward its 60% mark).
         if (g.openPanelId !== null) return
+        if (g.autoWalk !== null) {
+          g.setAutoWalk(null)
+          return
+        }
         if (g.activeEmote !== null) {
           g.setActiveEmote(null)
           s.current.emoteTime = 0
@@ -79,21 +114,8 @@ export function Player() {
       if (k !== 'e' && k !== 'enter') return
       if (g.openPanelId !== null || g.activeEmote !== null) return
       const near = g.nearbyStationId
-      if (!near) return
-      const emote = STATION_EMOTE[near]
-      if (!emote) return
-      if (reducedMotionRef.current) {
-        // Skip the emote but still perform its action: the lamp toggles the
-        // theme, every other station opens its panel.
-        if (near === 'lamp') g.requestThemeToggle()
-        else g.openPanel(near)
-        return
-      }
-      s.current.pendingStation = near
-      s.current.emoteTime = 0
-      s.current.firedPanel = false
-      s.current.firedToggle = false
-      g.setActiveEmote(emote)
+      if (!near || !STATION_EMOTE[near]) return
+      startInteract(g, s.current, near)
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -175,12 +197,45 @@ export function Player() {
       st.wasEmoting = false
     }
 
-    // --- Locomotion. ---
-    const mv = g.moveVector
-    const moving = mv.x !== 0 || mv.z !== 0
+    // --- Locomotion. Auto-walk, when active, overrides the manual move vector by
+    // steering toward the current path waypoint through the SAME damped velocity;
+    // reaching the final waypoint fires the contextual interaction. ---
+    let mvx = g.moveVector.x
+    let mvz = g.moveVector.z
+    const auto = g.autoWalk
+    if (auto) {
+      if (auto !== st.autoRef) {
+        st.autoRef = auto
+        // Skip the path's first point (the start cell center) so the player heads
+        // for the next waypoint rather than stepping back into its own cell.
+        st.wpIndex = auto.path.length > 1 ? 1 : auto.path.length
+      }
+      let wp = auto.path[st.wpIndex]
+      while (wp && Math.hypot(wp.x - pos.x, wp.z - pos.z) < WAYPOINT_POP) {
+        st.wpIndex++
+        wp = auto.path[st.wpIndex]
+      }
+      if (!wp) {
+        // Arrived: stop, clear the walk, and run the same flow the E key uses.
+        st.vx = 0
+        st.vz = 0
+        st.autoRef = null
+        g.setAutoWalk(null)
+        startInteract(g, st, auto.targetStationId)
+        mvx = 0
+        mvz = 0
+      } else {
+        const dx = wp.x - pos.x
+        const dz = wp.z - pos.z
+        const len = Math.hypot(dx, dz)
+        mvx = len > 1e-4 ? dx / len : 0
+        mvz = len > 1e-4 ? dz / len : 0
+      }
+    }
+    const moving = mvx !== 0 || mvz !== 0
     const lambda = moving ? ACCEL_LAMBDA : DECEL_LAMBDA
-    st.vx = damp(st.vx, mv.x * MOVE_SPEED, lambda, dt)
-    st.vz = damp(st.vz, mv.z * MOVE_SPEED, lambda, dt)
+    st.vx = damp(st.vx, mvx * MOVE_SPEED, lambda, dt)
+    st.vz = damp(st.vz, mvz * MOVE_SPEED, lambda, dt)
 
     // Axis-separated collision, X then Z — lets the player slide along walls.
     const nextX = pos.x + st.vx * dt

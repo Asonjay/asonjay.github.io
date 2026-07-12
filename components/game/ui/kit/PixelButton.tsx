@@ -12,7 +12,9 @@ type Common = {
   title?: string
   'aria-label'?: string
 }
-type AsLink = Common & { href: string; onClick?: never }
+// `newTab` forces target=_blank for same-origin links (e.g. a local PDF) that the
+// external-URL check below would otherwise open in the current tab.
+type AsLink = Common & { href: string; onClick?: never; newTab?: boolean }
 type AsButton = Common & { onClick: () => void; href?: never }
 
 const SOLID_INK = '#111321'
@@ -45,7 +47,7 @@ export function PixelButton(props: AsLink | AsButton) {
   const label = props['aria-label']
 
   if ('href' in props && props.href !== undefined) {
-    const external = /^(https?:|mailto:)/.test(props.href)
+    const openNew = props.newTab === true || /^(https?:|mailto:)/.test(props.href)
     return (
       <a
         href={props.href}
@@ -53,8 +55,8 @@ export function PixelButton(props: AsLink | AsButton) {
         style={style}
         title={title}
         aria-label={label}
-        target={external ? '_blank' : undefined}
-        rel={external ? 'noopener noreferrer' : undefined}
+        target={openNew ? '_blank' : undefined}
+        rel={openNew ? 'noopener noreferrer' : undefined}
       >
         {children}
       </a>

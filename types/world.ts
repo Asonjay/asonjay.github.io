@@ -26,6 +26,9 @@ export type Deadline = { name: string; date: string }
 // JSON only — no functions, no Date instances (see spec §3.3).
 export type WorldData = {
   introCode: string
+  // Plain-text synopsis derived from introduction.mdx at build time, rendered in
+  // the homepage's crawlable (screen-reader-only) SEO block.
+  introPlainText: string
   news: NewsItem[]
   publications: Publication[]
   projects: ProjectMeta[]

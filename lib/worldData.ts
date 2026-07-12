@@ -37,6 +37,37 @@ const SOCIAL: SocialLink[] = [
   { label: 'LinkedIn', url: 'https://www.linkedin.com/in/zexin-xu/', icon: 'linkedin' },
 ]
 
+// Naive MDX -> plain-text reduction for the homepage's crawlable SEO block. It
+// feeds crawlers, not humans, so the goal is legible prose, not fidelity: strip
+// the frontmatter, import/export lines, JSX/HTML tags and the common markdown
+// markers, keep the first couple of paragraphs, and cap the length.
+function deriveIntroPlainText(raw: string): string {
+  let s = raw.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, '') // frontmatter block
+  s = s
+    .split('\n')
+    .filter((l) => !/^\s*(import|export)\s/.test(l))
+    .join('\n')
+
+  const paras = s
+    .split(/\n{2,}/)
+    .map((p) => p.trim())
+    .filter(Boolean)
+    .slice(0, 2)
+  let text = paras.join(' ')
+
+  text = text.replace(/!\[[^\]]*\]\([^)]*\)/g, '') // images
+  text = text.replace(/\[([^\]]+)\]\([^)]*\)/g, '$1') // links -> label
+  text = text.replace(/<[^>]+>/g, '') // stray JSX/HTML tags
+  text = text.replace(/^#{1,6}\s*/gm, '') // headings
+  text = text.replace(/[*_`~]/g, '') // emphasis / code markers
+  text = text.replace(/\s+/g, ' ').trim() // collapse whitespace
+
+  if (text.length > 500) {
+    text = text.slice(0, 500).replace(/\s+\S*$/, '') + '…'
+  }
+  return text
+}
+
 function parsePlaylist(md: string): PlaylistTrack[] {
   return md
     .split('\n')
@@ -130,8 +161,22 @@ export async function getWorldData(): Promise<WorldData> {
     playlist = []
   }
 
+  // Raw read of the same intro source (the bundled `code` above can't be
+  // reversed to text) for the crawlable SEO synopsis.
+  let introPlainText = ''
+  try {
+    const introRaw = fs.readFileSync(
+      path.join(process.cwd(), 'content/introduction.mdx'),
+      'utf8'
+    )
+    introPlainText = deriveIntroPlainText(introRaw)
+  } catch {
+    introPlainText = ''
+  }
+
   return {
     introCode: introMdx.code,
+    introPlainText,
     news,
     publications,
     projects,

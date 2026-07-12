@@ -18,6 +18,7 @@ export function PixelPanel({
   onClose: () => void
   children: ReactNode
 }) {
+  const wrapRef = useRef<HTMLDivElement>(null)
   const surfaceRef = useRef<HTMLDivElement>(null)
   const titleId = `gp-panel-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`
 
@@ -33,8 +34,43 @@ export function PixelPanel({
     }
   }, [])
 
+  // Focus trap: keep Tab / Shift+Tab cycling within the panel (a modal dialog).
+  // The dialog surface itself (tabIndex -1) is the initial focus, so a first Tab
+  // from it, or a Tab off either end, wraps to the other end. Panels with no
+  // focusable content keep focus on the surface. Small manual handler — no lib.
+  const onTrapKey = (e: React.KeyboardEvent) => {
+    if (e.key !== 'Tab') return
+    const root = wrapRef.current
+    if (!root) return
+    const focusables = Array.from(
+      root.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      )
+    )
+    if (focusables.length === 0) {
+      e.preventDefault()
+      surfaceRef.current?.focus()
+      return
+    }
+    const first = focusables[0]
+    const last = focusables[focusables.length - 1]
+    const active = document.activeElement
+    const onSurface = active === surfaceRef.current || !root.contains(active)
+    if (e.shiftKey) {
+      if (active === first || onSurface) {
+        e.preventDefault()
+        last.focus()
+      }
+    } else if (active === last || onSurface) {
+      e.preventDefault()
+      first.focus()
+    }
+  }
+
   return (
     <div
+      ref={wrapRef}
+      onKeyDown={onTrapKey}
       className="gp-pop gp-panel-surface"
       style={{ boxShadow: '0 12px 44px -10px var(--gp-glow)' }}
     >

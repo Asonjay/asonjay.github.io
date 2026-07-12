@@ -1,5 +1,12 @@
 export default async function sitemap() {
-  return []
+  return [
+    {
+      url: 'https://zexinxu.com/classic',
+      lastModified: new Date(),
+      changeFrequency: 'yearly' as const,
+      priority: 0.3,
+    },
+  ]
 }
 
 /*

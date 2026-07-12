@@ -16,6 +16,8 @@ import { Hotbar } from './ui/Hotbar'
 import { HotbarSheet } from './ui/HotbarSheet'
 import { Joystick } from './ui/Joystick'
 import { InteractButton } from './ui/InteractButton'
+import { HUD } from './ui/HUD'
+import { WelcomeToast } from './ui/WelcomeToast'
 import { useInput } from './systems/useInput'
 import { useIsTouch } from './systems/useIsTouch'
 import { useGameStore } from './systems/store'
@@ -26,9 +28,31 @@ import { useDarkMode } from '../../hooks/useDarkMode'
 const DPR_TOUCH: [number, number] = [1, 1.75]
 const DPR_DESKTOP: [number, number] = [1, 2]
 
-export default function VoxelHome({ data }: { data: WorldData }) {
+export default function VoxelHome({
+  data,
+  onContextLost,
+}: {
+  data: WorldData
+  onContextLost?: () => void
+}) {
   useInput()
   const isTouch = useIsTouch()
+
+  // WebGL context loss (GPU reset, tab backgrounded on a low-memory device) is a
+  // DOM event on the canvas, not a React error — capture it here and forward it
+  // to GameLoader, which shows the fallback card. Refs keep the listener stable
+  // and stale-closure-free, and let the unmount cleanup remove it.
+  const onContextLostRef = useRef(onContextLost)
+  onContextLostRef.current = onContextLost
+  const lostCanvasRef = useRef<HTMLCanvasElement | null>(null)
+  const lostHandlerRef = useRef<((e: Event) => void) | null>(null)
+  useEffect(() => {
+    return () => {
+      if (lostCanvasRef.current && lostHandlerRef.current) {
+        lostCanvasRef.current.removeEventListener('webglcontextlost', lostHandlerRef.current)
+      }
+    }
+  }, [])
 
   // Site theme is the source of truth for day/night (localStorage `dark-mode` +
   // .dark/.light on <html>). Read it here, outside the canvas, and pass it in as
@@ -52,24 +76,36 @@ export default function VoxelHome({ data }: { data: WorldData }) {
 
   return (
     <div style={{ position: 'absolute', inset: 0 }}>
-      <Canvas
-        orthographic
-        // Cap the pixel ratio lower on touch GPUs (mobile) than on desktop.
-        dpr={isTouch ? DPR_TOUCH : DPR_DESKTOP}
-        gl={{ antialias: true, powerPreference: 'high-performance' }}
-        shadows
-      >
-        <Lighting isDark={Boolean(isDark)} />
-        <World />
-        <Player />
-        <Systems />
-        <FootstepDust />
-        <CameraRig />
-        {/* Tap/click the scene to interact — reads the store, no scene state. */}
-        <TapInteract />
-        {/* Runs last so its effect fires after furniture has mounted. */}
-        <StaticMerge />
-      </Canvas>
+      {/* The 3D surface is decorative to assistive tech — the panels, hotbar, HUD
+          and the hidden SEO block are the accessible/crawlable content. */}
+      <div aria-hidden="true" style={{ position: 'absolute', inset: 0 }}>
+        <Canvas
+          orthographic
+          // Cap the pixel ratio lower on touch GPUs (mobile) than on desktop.
+          dpr={isTouch ? DPR_TOUCH : DPR_DESKTOP}
+          gl={{ antialias: true, powerPreference: 'high-performance' }}
+          shadows
+          onCreated={({ gl }) => {
+            const canvas = gl.domElement
+            const handler = () => onContextLostRef.current?.()
+            lostCanvasRef.current = canvas
+            lostHandlerRef.current = handler
+            canvas.addEventListener('webglcontextlost', handler)
+          }}
+        >
+          <Lighting isDark={Boolean(isDark)} />
+          <World />
+          <Player />
+          <Systems />
+          <FootstepDust />
+          <CameraRig />
+          {/* Tap/click the scene to interact — reads the store, no scene state. */}
+          <TapInteract />
+          {/* Runs last so its effect fires after furniture has mounted. */}
+          <StaticMerge />
+        </Canvas>
+      </div>
+      <HUD />
       <NameplateBubble />
       <PanelHost data={data} />
       {/* Hotbar lives outside the Canvas: it owns the DOM theme toggle and passes
@@ -89,6 +125,7 @@ export default function VoxelHome({ data }: { data: WorldData }) {
         isDark={Boolean(isDark)}
         onToggleTheme={() => setIsDark(!isDark)}
       />
+      <WelcomeToast />
     </div>
   )
 }

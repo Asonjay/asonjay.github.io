@@ -28,6 +28,10 @@ export const routes = [
     path: '/deadlines',
     label: 'DEADLINES',
   },
+  {
+    path: '/classic',
+    label: 'CLASSIC',
+  },
   // {
   //   path: '/life',
   //   label: 'LIFE',

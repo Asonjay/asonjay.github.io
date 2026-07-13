@@ -109,6 +109,11 @@ function AttractDriver() {
       s.setActiveEmote(null)
       s.openPanel(null)
       s.setMoveVector({ x: 0, z: 0 })
+      // Restore the shared player-position singleton so a same-tab SPA nav to
+      // /study opens the full game at spawn, not the tile's last wander spot
+      // (VoxelHome/Player don't reset it on mount).
+      playerPosRef.current.x = SPAWN.x
+      playerPosRef.current.z = SPAWN.z
     }
   }, [])
 

@@ -18,8 +18,8 @@ import type {
 } from '../types/world'
 
 // This module does fs reads and MDX bundling — it must only ever be imported by
-// the server component app/(game)/page.tsx. The resulting WorldData is a plain
-// object threaded to client components as a prop.
+// server components (app/page.tsx and app/(game)/study/page.tsx). The resulting
+// WorldData is a plain object threaded to client components as a prop.
 
 const CV_URL = '/cv/Zexin_Xu_CV.pdf'
 

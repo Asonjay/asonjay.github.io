@@ -442,7 +442,7 @@ Decisions (AskUserQuestion): homepage = refreshed Bento + live game tile; visual
 
 **Homepage bento inventory (content-first, data via existing readers/worldData):** identity card (name, PhD @ UTD, multimodal agents, advisor), selected publications (selected flag, PDF/DOI buttons), recent news (4), CV download, contact/socials, music link-card, projects+blog link tiles, game live tile.
 
-**Animation package (framer-motion, NEW DEP, homepage bundle only):** entrance cascade (translateY+fade+scale .97, ~50ms stagger, spring), scroll-in reveals below fold, hover lift + border glow, ambient gradient drift (~50s cycles, subtle), game-tile attract mode (character auto-walks station loop via existing A*; waves on tile hover using existing wave emote), LIVE badge pulse. prefers-reduced-motion -> fade-only + static tile poster. Zero CLS; animations never reduce readability (density per Jason's compact preference).
+**Animation package (framer-motion, NEW DEP, homepage bundle only):** entrance cascade (translateY+fade+scale .97, ~50ms stagger, spring), scroll-in reveals below fold, hover lift (border glow dropped in implementation), ambient gradient drift (~50s cycles, subtle), game-tile attract mode (character auto-walks station loop via existing A*; waves on tile hover using existing wave emote), LIVE badge pulse. prefers-reduced-motion -> fade-only + static tile poster. Zero CLS; animations never reduce readability (density per Jason's compact preference).
 
 **Game live tile constraints:** lazy mount on visible+idle; dpr cap ~1.25; pause rendering when offscreen (IntersectionObserver); static poster fallback on touch/small viewports/reduced-motion/save-data; click -> /study.
 

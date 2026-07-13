@@ -92,7 +92,7 @@ export function Player() {
     // Last interactRequests count we've acted on (touch button / tap-to-interact).
     lastInteractReq: 0,
     // Last waveRequests count acted on (homepage attract tile hover/focus).
-    lastWaveReq: 0,
+    lastWaveReq: useGameStore.getState().waveRequests,
     // Auto-walk: the path object currently being followed, and the index of the
     // waypoint being steered toward.
     autoRef: null as GameState['autoWalk'],

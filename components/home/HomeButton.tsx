@@ -63,7 +63,7 @@ export function HomeButton(props: AsLink | AsButton) {
 
   if ('href' in props && props.href !== undefined) {
     const external = /^(https?:|mailto:)/.test(props.href)
-    const openNew = props.newTab === true || external
+    const openNew = props.newTab === true || (external && !props.href.startsWith('mailto:'))
     return (
       <m.a
         href={props.href}

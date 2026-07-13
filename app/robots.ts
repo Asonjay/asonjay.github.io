@@ -5,7 +5,7 @@ export default function robots() {
         userAgent: '*',
       },
     ],
-    sitemap: 'https://jeffjadulco.com/sitemap.xml',
-    host: 'https://jeffjadulco.com',
+    sitemap: 'https://zexinxu.com/sitemap.xml',
+    host: 'https://zexinxu.com',
   }
 }

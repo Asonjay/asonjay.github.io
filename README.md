@@ -5,7 +5,7 @@
 
 Welcome! I'm Jason, a PhD student in Computer Science at The University of Texas at Dallas, focusing on LLM, attack/defense and educational technology. This is my personal website, built with [Next.js](https://nextjs.org/), TypeScript, and Tailwind CSS.
 
-It features a glassmorphism bento grid layout, dark/light theme, an integrated SoundCloud music player, and MDX-powered blog. Feel free to explore my publications, projects, and blog posts to learn more about my work.
+The homepage (`/`) is a warm, rounded bento content layout with a live voxel-game tile; `/study` is the full interactive 2.5D voxel study (walk a low-poly room to browse the site); and `/classic` preserves the previous glassmorphism bento design. Throughout there's a dark/light theme, an integrated SoundCloud music player, and an MDX-powered blog. Feel free to explore my publications, projects, and blog posts to learn more about my work.
 
 ## Old versions
 

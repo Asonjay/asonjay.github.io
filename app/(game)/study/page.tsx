@@ -27,8 +27,8 @@ const SEO_LINKS: { href: string; label: string }[] = [
 
 // Server component: aggregates all content into a serializable WorldData object
 // at build time and threads it into the client-only game. getWorldData (which
-// does fs reads + MDX bundling) is imported ONLY here — it never enters the
-// client bundle.
+// does fs reads + MDX bundling) must only ever be imported by server components
+// (app/page.tsx and app/(game)/study/page.tsx) — it never enters the client bundle.
 export default async function StudyPage() {
   const worldData = await getWorldData()
   return (

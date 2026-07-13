@@ -163,10 +163,11 @@ data already render an empty state, so passing `[]` also works.
 ## Directory map
 
 - `VoxelHome.tsx` — scene assembly: the `<Canvas>`, perf governor, theme ownership, lamp->theme bridge, `?debug=1` sampler. The dynamic-import target.
+- `VoxelTile.tsx` — slim homepage-tile sibling of VoxelHome (attract wander + hover wave, fixed dpr/shadow, no HUD/panels/input).
 - `GameLoader.tsx` — client entry: `ssr:false` dynamic import + error boundary + WebGL-context-loss fallback.
 - `scene/` — R3F scene graph inside the Canvas: `World`, `Player`, `CameraRig`, `Systems`, `Lighting`, `StaticMerge`, `TapInteract`, `FootstepDust`, `emotes`.
 - `scene/furniture/` — voxel furniture + station meshes, plus the shared `Voxel` primitive/`PALETTE` and the reactive-prop / station-highlight hooks.
-- `systems/` — logic & state: the pure modules (below) plus `worldLayout` (geometry source of truth), `store` (zustand), `useInput`, `walkTo`, `playerConfig` (movement constants), `reducedMotion`, `useIsTouch`.
+- `systems/` — logic & state: the pure modules (below) plus `worldLayout` (geometry source of truth), `store` (zustand), `useInput`, `walkTo`, `playerConfig` (movement constants), `attract`, `reducedMotion`, `useIsTouch`.
 - `ui/` — DOM overlay outside the Canvas: `HUD`, `Hotbar`, `HotbarSheet`, `Joystick`, `InteractButton`, `PanelHost`, `NameplateBubble`, `WelcomeToast`, `LoadingScreen`, `GameErrorCard`, `DebugStats`, `stationSlots`.
 - `ui/kit/` — styled primitives + design tokens: `tokens.css`, `UiButton`, `UiPanel`, `IconSlot`, `KeyHint`, `Nameplate`, `TypewriterText`, `icons`.
 - `ui/panels/` — the station content panels + the shared `panelMdx` helper.
@@ -176,13 +177,14 @@ data already render an empty state, so passing `[]` also works.
 Framework-free (no three/react/next imports) so they can be unit-tested and
 reused:
 
+- `systems/attract.ts` — arrivalEffects truth table (attract suppression), mulberry32 PRNG, wander picker.
 - `systems/collision.ts` — AABB collider registry; `canMoveTo` circle-vs-box test for axis-separated wall sliding.
 - `systems/interactions.ts` — station registry; `nearestInRange` resolves the station under the player.
 - `systems/pathfinding.ts` — 4-connected A\* over a unit grid with blocked-cell snapping and string-pulled waypoints.
 - `systems/perfGovernor.ts` — pixel-budget -> dpr / shadow-tier math (see above).
 
-Tests live in `tests/game/`: `collision`, `interactions`, `pathfinding`,
-`perfGovernor`, and `worldPathfinding` (integration — verifies indoor->outdoor
+Tests live in `tests/game/`: `attract`, `collision`, `interactions`,
+`pathfinding`, `perfGovernor`, and `worldPathfinding` (integration — verifies indoor->outdoor
 auto-walk routes through the courtyard door gap and that every station anchor is
 standable). Run with `npm test` (vitest).
 

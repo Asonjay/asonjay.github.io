@@ -78,7 +78,7 @@ export function WelcomeToast() {
 
   return (
     <div
-      className="gp-corners gp-surface gp-toast"
+      className="gp-corners-lg gp-surface gp-toast"
       role="status"
       style={{
         position: 'fixed',

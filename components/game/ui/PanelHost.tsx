@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import type { ComponentType } from 'react'
 import { useGameStore } from '../systems/store'
 import type { WorldData } from '../../../types/world'
-import { PixelPanel } from './kit/PixelPanel'
+import { UiPanel } from './kit/UiPanel'
 import { AboutPanel } from './panels/AboutPanel'
 import { NewsPanel } from './panels/NewsPanel'
 import { PublicationsPanel } from './panels/PublicationsPanel'
@@ -71,9 +71,9 @@ export function PanelHost({ data }: { data: WorldData }) {
   return (
     <div className="gp-backdrop gp-panel-backdrop" onClick={() => openPanel(null)}>
       <div className="gp-panel-shell" onClick={e => e.stopPropagation()}>
-        <PixelPanel title={title} onClose={() => openPanel(null)}>
+        <UiPanel title={title} onClose={() => openPanel(null)}>
           <Panel data={data} />
-        </PixelPanel>
+        </UiPanel>
       </div>
     </div>
   )

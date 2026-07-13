@@ -1,5 +1,5 @@
 'use client'
-import { PixelButton } from './kit/PixelButton'
+import { UiButton } from './kit/UiButton'
 
 // Terminal fallback shown when the 3D scene fails to mount (render error caught
 // by the boundary) or the WebGL context is lost. Kit-styled so it matches the
@@ -20,15 +20,17 @@ export function GameErrorCard() {
       }}
     >
       <div
-        className="gp-corners gp-surface"
+        className="gp-corners-lg gp-surface"
         style={{ width: '100%', maxWidth: '28rem', padding: '22px 20px', textAlign: 'center' }}
       >
         <h2
           style={{
-            fontFamily: 'var(--font-pixel), ui-monospace, monospace',
-            fontSize: 13,
-            lineHeight: 1.5,
-            color: 'var(--gp-accent)',
+            fontFamily: 'var(--font-barlow), sans-serif',
+            fontSize: 16,
+            fontWeight: 600,
+            letterSpacing: '0.01em',
+            lineHeight: 1.4,
+            color: 'var(--gp-accent-ink)',
             margin: '0 0 12px',
           }}
         >
@@ -45,9 +47,9 @@ export function GameErrorCard() {
         >
           {"Your device may not support WebGL — you can still explore everything on the classic site."}
         </p>
-        <PixelButton href="/classic" variant="solid">
+        <UiButton href="/classic" variant="solid">
           Go to the classic site
-        </PixelButton>
+        </UiButton>
       </div>
     </div>
   )

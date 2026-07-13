@@ -1,7 +1,6 @@
 import { Metadata } from 'next'
 import { Barlow, Fira_Code, Space_Grotesk, Space_Mono } from 'next/font/google'
 import { Analytics } from '../components/analytics'
-import { pixelFont } from './fonts'
 import './styles/codeblock.css'
 import './styles/globals.css'
 
@@ -78,7 +77,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${fontBarlow.variable} ${fontSpaceGrotesk.variable} ${fontSpaceMono.variable} ${fontFiraCode.variable} ${pixelFont.variable} font-sans min-h-screen relative`}
+        className={`${fontBarlow.variable} ${fontSpaceGrotesk.variable} ${fontSpaceMono.variable} ${fontFiraCode.variable} font-sans min-h-screen relative`}
       >
         {children}
         <Analytics />

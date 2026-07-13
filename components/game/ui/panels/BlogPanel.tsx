@@ -1,8 +1,8 @@
 'use client'
 import { format, parseISO } from 'date-fns'
 import type { WorldData } from '../../../../types/world'
-import { PixelButton } from '../kit/PixelButton'
-import { PixelDivider } from '../kit/PixelDivider'
+import { UiButton } from '../kit/UiButton'
+import { UiDivider } from '../kit/UiDivider'
 
 export function BlogPanel({ data }: { data: WorldData }) {
   return (
@@ -12,14 +12,14 @@ export function BlogPanel({ data }: { data: WorldData }) {
           <a
             key={post.slug}
             href={`/blog/${post.slug}`}
-            className="gp-corners"
+            className="gp-corners gp-lift"
             style={{
               display: 'block',
               padding: '10px 12px',
               textDecoration: 'none',
               color: 'var(--gp-text)',
               background: 'var(--gp-bg)',
-              boxShadow: 'inset 0 0 0 2px var(--gp-border)',
+              border: '1px solid var(--gp-border)',
             }}
           >
             <div style={{ fontSize: 14.5, fontWeight: 600 }}>{post.title}</div>
@@ -41,10 +41,10 @@ export function BlogPanel({ data }: { data: WorldData }) {
           </a>
         ))}
       </div>
-      <PixelDivider />
-      <PixelButton href="/blog" variant="solid">
+      <UiDivider />
+      <UiButton href="/blog" variant="solid">
         All posts
-      </PixelButton>
+      </UiButton>
     </div>
   )
 }

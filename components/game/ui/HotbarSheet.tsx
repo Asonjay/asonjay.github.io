@@ -7,8 +7,8 @@ import { useIsTouch } from '../systems/useIsTouch'
 import { walkToStation } from '../systems/walkTo'
 import { STATION_SLOTS, SOCIAL_GLYPH } from './stationSlots'
 import { IconSlot } from './kit/IconSlot'
-import { PixelButton } from './kit/PixelButton'
-import { PixelDivider } from './kit/PixelDivider'
+import { UiButton } from './kit/UiButton'
+import { UiDivider } from './kit/UiDivider'
 import { IconPlay, IconSun, IconMoon, IconExternalLink, IconMenu, IconClose } from './kit/icons'
 
 // Mobile replacement for the desktop Hotbar: a single menu button (bottom-center,
@@ -69,7 +69,6 @@ export function HotbarSheet({
         aria-haspopup="dialog"
         aria-expanded={false}
         onClick={() => setOpen(true)}
-        className="gp-corners"
         style={menuButtonStyle}
       >
         <IconMenu />
@@ -89,6 +88,7 @@ export function HotbarSheet({
         alignItems: 'flex-end',
         justifyContent: 'center',
         background: 'rgba(0, 0, 0, 0.45)',
+        backdropFilter: 'blur(4px)',
       }}
     >
       <div
@@ -98,7 +98,7 @@ export function HotbarSheet({
         aria-label="Menu"
         tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
-        className="gp-surface gp-corners gp-sheet"
+        className="gp-surface gp-corners-lg gp-sheet"
         style={{
           width: '100%',
           maxWidth: '32rem',
@@ -114,19 +114,20 @@ export function HotbarSheet({
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <span
             style={{
-              fontFamily: 'var(--font-pixel), ui-monospace, monospace',
-              fontSize: 10,
-              letterSpacing: '0.05em',
+              fontFamily: 'var(--font-barlow), sans-serif',
+              fontSize: 13,
+              fontWeight: 600,
+              letterSpacing: '0.04em',
               color: 'var(--gp-text)',
             }}
           >
-            MENU
+            Menu
           </span>
           <button
             type="button"
             onClick={close}
             aria-label="Close menu"
-            className="gp-corners"
+            className="gp-corners gp-lift"
             style={closeButtonStyle}
           >
             <IconClose />
@@ -155,7 +156,7 @@ export function HotbarSheet({
           })}
         </div>
 
-        <PixelDivider />
+        <UiDivider />
 
         {/* controls: music + theme */}
         <div style={{ display: 'flex', justifyContent: 'center', gap: 8 }}>
@@ -167,7 +168,7 @@ export function HotbarSheet({
           />
         </div>
 
-        <PixelDivider />
+        <UiDivider />
 
         {/* socials + CV */}
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
@@ -175,16 +176,17 @@ export function HotbarSheet({
             const G = SOCIAL_GLYPH[link.icon]
             return <IconSlot key={link.label} icon={G ? <G /> : null} label={link.label} href={link.url} />
           })}
-          <PixelButton href={data.cvUrl} newTab aria-label="CV (opens in a new tab)">
+          <UiButton href={data.cvUrl} newTab aria-label="CV (opens in a new tab)">
             <IconExternalLink />
             <span>CV</span>
-          </PixelButton>
+          </UiButton>
         </div>
       </div>
     </div>
   )
 }
 
+// A round FAB — circular to match the joystick and read as a warm action button.
 const menuButtonStyle: CSSProperties = {
   position: 'fixed',
   left: '50%',
@@ -198,10 +200,11 @@ const menuButtonStyle: CSSProperties = {
   justifyContent: 'center',
   fontSize: 22,
   cursor: 'pointer',
-  border: 'none',
   background: 'var(--gp-bg)',
   color: 'var(--gp-text)',
-  boxShadow: 'inset 0 0 0 2px var(--gp-border)',
+  border: '1px solid var(--gp-border)',
+  borderRadius: '50%',
+  boxShadow: '0 6px 16px rgba(0, 0, 0, 0.22)',
   touchAction: 'manipulation',
 }
 
@@ -210,12 +213,11 @@ const closeButtonStyle: CSSProperties = {
   alignItems: 'center',
   justifyContent: 'center',
   width: 32,
-  height: 28,
-  fontSize: 15,
+  height: 30,
+  fontSize: 16,
   padding: 0,
   cursor: 'pointer',
-  border: 'none',
   background: 'var(--gp-bg)',
   color: 'var(--gp-text)',
-  boxShadow: 'inset 0 0 0 2px var(--gp-border)',
+  border: '1px solid var(--gp-border)',
 }

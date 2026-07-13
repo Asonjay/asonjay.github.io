@@ -6,8 +6,8 @@ import { walkToStation } from '../systems/walkTo'
 import { useIsTouch } from '../systems/useIsTouch'
 import { STATION_SLOTS, SOCIAL_GLYPH } from './stationSlots'
 import { IconSlot } from './kit/IconSlot'
-import { PixelButton } from './kit/PixelButton'
-import { PixelDivider } from './kit/PixelDivider'
+import { UiButton } from './kit/UiButton'
+import { UiDivider } from './kit/UiDivider'
 import { IconPlay, IconSun, IconMoon, IconExternalLink } from './kit/icons'
 
 // One station shortcut. Subscribes to only its own "nearby" flag so walking past
@@ -138,7 +138,7 @@ export function Hotbar({
       style={{ position: 'fixed', left: '50%', bottom: 16, transform: 'translateX(-50%)', zIndex: 30 }}
     >
       <div
-        className="gp-corners gp-surface"
+        className="gp-corners-lg gp-surface"
         style={{
           display: 'flex',
           flexWrap: 'wrap',
@@ -158,7 +158,7 @@ export function Hotbar({
           />
         ))}
 
-        <PixelDivider orientation="vertical" />
+        <UiDivider orientation="vertical" />
 
         <IconSlot icon={<IconPlay />} label="Music" onClick={openMusic} />
         <IconSlot
@@ -167,7 +167,7 @@ export function Hotbar({
           onClick={onToggleTheme}
         />
 
-        <PixelDivider orientation="vertical" />
+        <UiDivider orientation="vertical" />
 
         {data.social.map((link) => {
           const G = SOCIAL_GLYPH[link.icon]
@@ -181,10 +181,10 @@ export function Hotbar({
           )
         })}
 
-        <PixelButton href={data.cvUrl} newTab aria-label="CV (opens in a new tab)">
+        <UiButton href={data.cvUrl} newTab aria-label="CV (opens in a new tab)">
           <IconExternalLink />
           <span>CV</span>
-        </PixelButton>
+        </UiButton>
       </div>
     </div>
   )

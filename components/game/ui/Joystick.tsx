@@ -120,7 +120,8 @@ export function Joystick() {
         touchAction: 'none',
         userSelect: 'none',
         background: 'var(--gp-bg)',
-        boxShadow: 'inset 0 0 0 2px var(--gp-border)',
+        border: '1px solid var(--gp-border)',
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.18)',
         display: 'grid',
         placeItems: 'center',
       }}

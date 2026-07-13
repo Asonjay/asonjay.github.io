@@ -1,6 +1,6 @@
 'use client'
 import { useGameStore } from '../../systems/store'
-import { PixelButton } from '../kit/PixelButton'
+import { UiButton } from '../kit/UiButton'
 import { TypewriterText } from '../kit/TypewriterText'
 
 // The trash-can easter egg: a tiny confirm before leaving for the old site.
@@ -13,10 +13,10 @@ export function ClassicConfirm() {
         <TypewriterText text="Dig up the old website?" />
       </p>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
-        <PixelButton href="/classic" variant="solid">
+        <UiButton href="/classic" variant="solid">
           Visit /classic
-        </PixelButton>
-        <PixelButton onClick={() => openPanel(null)}>Close</PixelButton>
+        </UiButton>
+        <UiButton onClick={() => openPanel(null)}>Close</UiButton>
       </div>
     </div>
   )

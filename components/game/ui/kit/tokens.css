@@ -1,6 +1,9 @@
 /* Game UI kit tokens + primitives. Scoped entirely under .game-ui so nothing
  * here leaks into the classic site, and none of the classic --color-* variables
- * are reused. The site toggles .dark / .light on <html> (default dark). */
+ * are reused. The site toggles .dark / .light on <html> (default dark).
+ *
+ * Look: warm rounded-modern — rounded solid cards, soft drop shadows, thin
+ * stroke icons, Barlow everywhere. No pixel font, no stair corners. */
 
 .game-ui {
   font-family: var(--font-barlow), ui-sans-serif, system-ui, -apple-system,
@@ -8,60 +11,88 @@
   /* Night palette as the base so tokens resolve even before the theme class is
    * applied (root layout hardcodes .dark, so this is only a safety net). */
   --gp-bg: #0e1226f2;
-  --gp-border: #7c9aff;
+  --gp-border: rgba(124, 154, 255, 0.55);
   --gp-text: #f2f4ff;
   --gp-accent: #7c9aff;
+  /* Accent tuned for text-on-surface contrast. Night blue already clears 4.5:1
+   * on the deep navy; day needs a deeper amber (see html.light). */
+  --gp-accent-ink: #7c9aff;
   --gp-glow: rgba(124, 154, 255, 0.45);
+
+  /* Radii: controls (buttons, slots, cards) vs surfaces (panels, sheets, bars)
+   * vs pills (key hints, badges). */
+  --gp-radius: 10px;
+  --gp-radius-lg: 12px;
+  --gp-radius-pill: 999px;
+
+  /* Elevation: a soft drop shadow for surfaces, a subtle one for controls, and
+   * a slightly stronger one for the hover lift. Day overrides the panel shadow
+   * to a lighter value (see html.light). */
+  --gp-shadow-panel: 0 8px 24px rgba(0, 0, 0, 0.22);
+  --gp-shadow-btn: 0 2px 8px rgba(0, 0, 0, 0.16);
+  --gp-shadow-btn-hover: 0 5px 14px rgba(0, 0, 0, 0.22);
 }
 
 html.dark .game-ui {
   --gp-bg: #0e1226f2;
-  --gp-border: #7c9aff;
+  --gp-border: rgba(124, 154, 255, 0.55);
   --gp-text: #f2f4ff;
   --gp-accent: #7c9aff;
+  --gp-accent-ink: #7c9aff;
   --gp-glow: rgba(124, 154, 255, 0.45);
+  --gp-shadow-panel: 0 8px 24px rgba(0, 0, 0, 0.22);
 }
 
 html.light .game-ui {
   --gp-bg: #f7efdcf7;
-  --gp-border: #8a5a2b;
+  --gp-border: rgba(196, 122, 44, 0.55);
   --gp-text: #2b2117;
   --gp-accent: #c47a2c;
+  /* Deeper amber so small accent-colored labels clear 4.5:1 on the cream
+   * surface (the bright orange accent alone does not). */
+  --gp-accent-ink: #9a5511;
   --gp-glow: rgba(196, 122, 44, 0.4);
+  --gp-shadow-panel: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
-/* Pixel-stair corners: a symmetric two-step 4px staircase (8px total) on all
- * four corners. One consistent technique (clip-path) used by every kit surface;
- * the border is an inset box-shadow so it traces the same stair silhouette. */
+/* Rounded corners. Controls (buttons, slots, cards) use --gp-radius; larger
+ * surfaces (panels, sheets, floating bars) use the -lg variant. */
 .gp-corners {
-  clip-path: polygon(
-    8px 0,
-    calc(100% - 8px) 0,
-    calc(100% - 8px) 4px,
-    calc(100% - 4px) 4px,
-    calc(100% - 4px) 8px,
-    100% 8px,
-    100% calc(100% - 8px),
-    calc(100% - 4px) calc(100% - 8px),
-    calc(100% - 4px) calc(100% - 4px),
-    calc(100% - 8px) calc(100% - 4px),
-    calc(100% - 8px) 100%,
-    8px 100%,
-    8px calc(100% - 4px),
-    4px calc(100% - 4px),
-    4px calc(100% - 8px),
-    0 calc(100% - 8px),
-    0 8px,
-    4px 8px,
-    4px 4px,
-    8px 4px
-  );
+  border-radius: var(--gp-radius);
+}
+.gp-corners-lg {
+  border-radius: var(--gp-radius-lg);
 }
 
+/* Near-solid surface: fill, 1px softened border, soft drop shadow. */
 .gp-surface {
   background: var(--gp-bg);
   color: var(--gp-text);
-  box-shadow: inset 0 0 0 2px var(--gp-border);
+  border: 1px solid var(--gp-border);
+  box-shadow: var(--gp-shadow-panel);
+}
+
+/* Interactive lift for buttons/slots. The element supplies its own fill + border
+ * (variant-driven); this adds the resting shadow and, on hover-capable pointers,
+ * a 1px raise with a slightly stronger shadow. Reduced motion keeps the shadow
+ * change but drops the translate. */
+.gp-lift {
+  box-shadow: var(--gp-shadow-btn);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+@media (hover: hover) {
+  .gp-lift:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--gp-shadow-btn-hover);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gp-lift {
+    transition: box-shadow 120ms ease;
+  }
+  .gp-lift:hover {
+    transform: none;
+  }
 }
 
 /* Pop-in: 150ms scale .96 -> 1 + fade. Reduced motion collapses to fade only. */
@@ -84,7 +115,7 @@ html.light .game-ui {
   }
 }
 .gp-pop {
-  animation: gp-pop-in 150ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation: gp-pop-in 150ms cubic-bezier(0.22, 1.2, 0.36, 1) both;
 }
 .gp-backdrop {
   animation: gp-fade-in 150ms ease both;
@@ -138,6 +169,7 @@ html.light .game-ui {
   justify-content: center;
   padding: 24px;
   background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
 }
 .gp-panel-shell {
   width: 100%;
@@ -188,7 +220,7 @@ html.light .game-ui {
   }
 }
 .gp-sheet {
-  animation: gp-sheet-up 180ms cubic-bezier(0.34, 1.4, 0.64, 1) both;
+  animation: gp-sheet-up 180ms cubic-bezier(0.22, 1.2, 0.36, 1) both;
 }
 @media (prefers-reduced-motion: reduce) {
   .gp-sheet {
@@ -197,7 +229,7 @@ html.light .game-ui {
 }
 
 .gp-link {
-  color: var(--gp-accent);
+  color: var(--gp-accent-ink);
   text-decoration: none;
   border-bottom: 1px solid transparent;
 }
@@ -206,7 +238,9 @@ html.light .game-ui {
   border-bottom-color: currentColor;
 }
 
-/* Focus ring reused by every interactive kit element. */
+/* Focus ring reused by every interactive kit element. Follows the element's
+ * border-radius (modern browsers round the outline), so it reads as a rounded
+ * ring on the rounded controls. */
 .game-ui :focus-visible {
   outline: 2px solid var(--gp-accent);
   outline-offset: 2px;
@@ -232,7 +266,9 @@ html.light .game-ui {
   font-weight: 600;
   letter-spacing: 0.02em;
   text-decoration: none;
-  box-shadow: inset 0 0 0 2px var(--gp-accent);
+  border-radius: var(--gp-radius);
+  border: 1px solid var(--gp-accent);
+  box-shadow: var(--gp-shadow-btn);
 }
 .game-ui .gp-skip-link:focus {
   position: fixed;
@@ -262,7 +298,7 @@ html.light .game-ui {
   }
 }
 .gp-toast {
-  animation: gp-toast-up 220ms cubic-bezier(0.34, 1.4, 0.64, 1) both;
+  animation: gp-toast-up 220ms cubic-bezier(0.22, 1.2, 0.36, 1) both;
 }
 @media (prefers-reduced-motion: reduce) {
   .gp-toast {

@@ -21,7 +21,7 @@ export function InteractButton() {
       type="button"
       aria-label="Interact"
       onClick={() => requestInteract()}
-      className="gp-corners gp-pop"
+      className="gp-pop"
       style={{
         position: 'fixed',
         right: 'calc(20px + env(safe-area-inset-right))',
@@ -34,10 +34,11 @@ export function InteractButton() {
         justifyContent: 'center',
         fontSize: 30,
         cursor: 'pointer',
-        border: 'none',
         background: 'var(--gp-accent)',
         color: '#111321',
-        boxShadow: 'inset 0 0 0 2px var(--gp-accent), 0 4px 14px -4px var(--gp-glow)',
+        border: '1px solid var(--gp-accent)',
+        borderRadius: '50%',
+        boxShadow: '0 6px 16px -4px var(--gp-glow)',
         touchAction: 'manipulation',
       }}
     >

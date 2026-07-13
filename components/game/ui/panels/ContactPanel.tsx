@@ -1,6 +1,6 @@
 'use client'
 import type { WorldData } from '../../../../types/world'
-import { PixelButton } from '../kit/PixelButton'
+import { UiButton } from '../kit/UiButton'
 import {
   MailAt24,
   GoogleScholar24,
@@ -26,10 +26,10 @@ export function ContactPanel({ data }: { data: WorldData }) {
       {data.social.map(link => {
         const Glyph = GLYPH[link.icon]
         return (
-          <PixelButton key={link.label} href={link.url} aria-label={link.label}>
+          <UiButton key={link.label} href={link.url} aria-label={link.label}>
             {Glyph ? <Glyph /> : null}
             <span>{link.label}</span>
-          </PixelButton>
+          </UiButton>
         )
       })}
     </div>

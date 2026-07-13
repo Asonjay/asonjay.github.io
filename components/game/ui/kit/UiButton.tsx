@@ -1,10 +1,10 @@
 'use client'
 import type { CSSProperties, ReactNode } from 'react'
 
-// Stair-cornered button. `solid` fills with the accent (dark ink on top, which
-// reads on both the night-blue and day-orange accents); `ghost` is a bg plate
-// with an accent border. Renders an <a> when given href (external links get
-// target/rel), otherwise a <button>.
+// Rounded button. `solid` fills with the accent (dark ink on top, which reads on
+// both the night-blue and day-orange accents); `ghost` is a bg plate with a
+// softened border. Both get the shared lift on hover (.gp-lift). Renders an <a>
+// when given href (external links get target/rel), otherwise a <button>.
 type Common = {
   children: ReactNode
   variant?: 'solid' | 'ghost'
@@ -33,16 +33,15 @@ function styleFor(variant: 'solid' | 'ghost'): CSSProperties {
     cursor: 'pointer',
     userSelect: 'none',
     textDecoration: 'none',
-    border: 'none',
     background: solid ? 'var(--gp-accent)' : 'var(--gp-bg)',
     color: solid ? SOLID_INK : 'var(--gp-text)',
-    boxShadow: `inset 0 0 0 2px var(--gp-${solid ? 'accent' : 'border'})`,
+    border: `1px solid var(--gp-${solid ? 'accent' : 'border'})`,
   }
 }
 
-export function PixelButton(props: AsLink | AsButton) {
+export function UiButton(props: AsLink | AsButton) {
   const { children, variant = 'ghost', className, title } = props
-  const cls = `gp-corners${className ? ` ${className}` : ''}`
+  const cls = `gp-corners gp-lift${className ? ` ${className}` : ''}`
   const style = styleFor(variant)
   const label = props['aria-label']
 

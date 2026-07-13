@@ -24,10 +24,11 @@ export function NewsPanel({ data }: { data: WorldData }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
             <span
               style={{
-                fontFamily: 'var(--font-pixel), monospace',
-                fontSize: 10,
-                letterSpacing: '0.06em',
-                color: 'var(--gp-accent)',
+                fontFamily: 'var(--font-barlow), sans-serif',
+                fontSize: 12,
+                fontWeight: 600,
+                letterSpacing: '0.02em',
+                color: 'var(--gp-accent-ink)',
               }}
             >
               {year}
@@ -44,10 +45,11 @@ export function NewsPanel({ data }: { data: WorldData }) {
                     flexShrink: 0,
                     width: 44,
                     textAlign: 'right',
-                    fontFamily: 'var(--font-pixel), monospace',
-                    fontSize: 9,
+                    fontFamily: 'var(--font-barlow), sans-serif',
+                    fontSize: 11,
+                    fontWeight: 600,
                     lineHeight: 1.5,
-                    color: 'var(--gp-accent)',
+                    color: 'var(--gp-accent-ink)',
                   }}
                 >
                   {format(parseISO(item.date), 'MMM dd')}

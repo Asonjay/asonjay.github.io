@@ -1,8 +1,8 @@
 'use client'
 import { format, parseISO } from 'date-fns'
 import type { WorldData } from '../../../../types/world'
-import { PixelButton } from '../kit/PixelButton'
-import { PixelDivider } from '../kit/PixelDivider'
+import { UiButton } from '../kit/UiButton'
+import { UiDivider } from '../kit/UiDivider'
 
 const DAY_MS = 86_400_000
 
@@ -32,9 +32,11 @@ export function DeadlinePanel({ data }: { data: WorldData }) {
           <div
             style={{
               marginTop: 10,
-              fontFamily: 'var(--font-pixel), monospace',
-              fontSize: 11,
-              color: 'var(--gp-accent)',
+              fontFamily: 'var(--font-barlow), sans-serif',
+              fontSize: 13,
+              fontWeight: 600,
+              letterSpacing: '0.01em',
+              color: 'var(--gp-accent-ink)',
             }}
           >
             {days} {days === 1 ? 'day' : 'days'} left
@@ -50,10 +52,10 @@ export function DeadlinePanel({ data }: { data: WorldData }) {
   return (
     <div>
       {body}
-      <PixelDivider />
-      <PixelButton href="/deadlines" variant="solid">
+      <UiDivider />
+      <UiButton href="/deadlines" variant="solid">
         Conference deadlines
-      </PixelButton>
+      </UiButton>
     </div>
   )
 }

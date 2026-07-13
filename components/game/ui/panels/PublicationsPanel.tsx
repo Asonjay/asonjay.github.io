@@ -1,8 +1,8 @@
 'use client'
 import type { WorldData } from '../../../../types/world'
 import type { Publication } from '../../../../types/publication'
-import { PixelButton } from '../kit/PixelButton'
-import { PixelDivider } from '../kit/PixelDivider'
+import { UiButton } from '../kit/UiButton'
+import { UiDivider } from '../kit/UiDivider'
 
 function PubRow({ pub }: { pub: Publication }) {
   return (
@@ -30,10 +30,10 @@ function PubRow({ pub }: { pub: Publication }) {
       </div>
       {(pub.pdf || pub.doi || pub.code || pub.url) && (
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 8 }}>
-          {pub.pdf && <PixelButton href={pub.pdf}>PDF</PixelButton>}
-          {pub.doi && <PixelButton href={`https://doi.org/${pub.doi}`}>DOI</PixelButton>}
-          {pub.code && <PixelButton href={pub.code}>Code</PixelButton>}
-          {pub.url && !pub.pdf && <PixelButton href={pub.url}>Link</PixelButton>}
+          {pub.pdf && <UiButton href={pub.pdf}>PDF</UiButton>}
+          {pub.doi && <UiButton href={`https://doi.org/${pub.doi}`}>DOI</UiButton>}
+          {pub.code && <UiButton href={pub.code}>Code</UiButton>}
+          {pub.url && !pub.pdf && <UiButton href={pub.url}>Link</UiButton>}
         </div>
       )}
     </li>
@@ -53,10 +53,10 @@ export function PublicationsPanel({ data }: { data: WorldData }) {
           <PubRow key={`${pub.title}-${i}`} pub={pub} />
         ))}
       </ul>
-      <PixelDivider />
-      <PixelButton href="/publications" variant="solid">
+      <UiDivider />
+      <UiButton href="/publications" variant="solid">
         All publications
-      </PixelButton>
+      </UiButton>
     </div>
   )
 }

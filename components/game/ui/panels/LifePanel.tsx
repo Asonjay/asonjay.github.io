@@ -1,5 +1,5 @@
 'use client'
-import { PixelButton } from '../kit/PixelButton'
+import { UiButton } from '../kit/UiButton'
 
 // Static teaser; the full Life page lives at /life. Takes no props — assignable
 // to the registry's ComponentType<{ data }> since it simply ignores them.
@@ -11,9 +11,9 @@ export function LifePanel() {
         food experiments, and the odd side quest. A look at the parts of life
         that do not fit on a CV.
       </p>
-      <PixelButton href="/life" variant="solid">
+      <UiButton href="/life" variant="solid">
         Step into Life
-      </PixelButton>
+      </UiButton>
     </div>
   )
 }

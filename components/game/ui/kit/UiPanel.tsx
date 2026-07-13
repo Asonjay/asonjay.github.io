@@ -4,12 +4,12 @@ import type { ReactNode } from 'react'
 import { Nameplate } from './Nameplate'
 import { IconClose } from './icons'
 
-// The kit's modal surface. An unclipped wrapper carries the pop-in, the soft
-// glow, and the two elements that overhang the frame (the title plate and the
-// close button); the clipped surface inside is the actual dialog. Focus moves to
-// the surface on open and is restored to the previously focused element (or the
-// body) on close.
-export function PixelPanel({
+// The kit's modal surface. A wrapper carries the pop-in, a soft accent glow, and
+// the two elements that overhang the frame (the title plate and the close
+// button); the rounded surface inside is the actual dialog. Focus moves to the
+// surface on open and is restored to the previously focused element (or the body)
+// on close.
+export function UiPanel({
   title,
   onClose,
   children,
@@ -72,7 +72,7 @@ export function PixelPanel({
       ref={wrapRef}
       onKeyDown={onTrapKey}
       className="gp-pop gp-panel-surface"
-      style={{ boxShadow: '0 12px 44px -10px var(--gp-glow)' }}
+      style={{ boxShadow: '0 14px 40px -16px var(--gp-glow)' }}
     >
       <div style={{ position: 'absolute', top: -12, left: 14, zIndex: 2 }}>
         <Nameplate id={titleId}>{title}</Nameplate>
@@ -82,7 +82,7 @@ export function PixelPanel({
         type="button"
         onClick={onClose}
         aria-label="Close panel"
-        className="gp-corners"
+        className="gp-corners gp-lift"
         style={{
           position: 'absolute',
           top: -10,
@@ -92,14 +92,13 @@ export function PixelPanel({
           alignItems: 'center',
           justifyContent: 'center',
           width: 30,
-          height: 26,
-          fontSize: 15,
+          height: 28,
+          fontSize: 16,
           padding: 0,
           cursor: 'pointer',
-          border: 'none',
           background: 'var(--gp-bg)',
           color: 'var(--gp-text)',
-          boxShadow: 'inset 0 0 0 2px var(--gp-border)',
+          border: '1px solid var(--gp-border)',
         }}
       >
         <IconClose />
@@ -111,7 +110,7 @@ export function PixelPanel({
         aria-modal="true"
         aria-labelledby={titleId}
         tabIndex={-1}
-        className="gp-surface gp-corners"
+        className="gp-surface gp-corners-lg"
         style={{ outline: 'none' }}
       >
         <div className="gp-panel-body">{children}</div>

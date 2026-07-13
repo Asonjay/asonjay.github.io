@@ -11,10 +11,12 @@ export function AboutPanel({ data }: { data: WorldData }) {
     <div>
       <h2
         style={{
-          fontFamily: 'var(--font-pixel), monospace',
-          fontSize: 13,
-          lineHeight: 1.5,
-          color: 'var(--gp-accent)',
+          fontFamily: 'var(--font-barlow), sans-serif',
+          fontSize: 16,
+          fontWeight: 600,
+          letterSpacing: '0.01em',
+          lineHeight: 1.4,
+          color: 'var(--gp-accent-ink)',
           margin: '0 0 14px',
         }}
       >

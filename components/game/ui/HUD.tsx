@@ -26,19 +26,20 @@ export function HUD() {
       }}
     >
       <div
-        className="gp-corners gp-surface"
-        style={{ display: 'inline-flex', flexDirection: 'column', gap: 5, padding: '8px 11px' }}
+        className="gp-corners-lg gp-surface"
+        style={{ display: 'inline-flex', flexDirection: 'column', gap: 5, padding: '8px 12px' }}
       >
         <span
           style={{
-            fontFamily: 'var(--font-pixel), ui-monospace, monospace',
-            fontSize: 11,
-            lineHeight: 1.1,
-            letterSpacing: '0.04em',
-            color: 'var(--gp-accent)',
+            fontFamily: 'var(--font-barlow), sans-serif',
+            fontSize: 13,
+            fontWeight: 600,
+            lineHeight: 1.2,
+            letterSpacing: '0.03em',
+            color: 'var(--gp-accent-ink)',
           }}
         >
-          {"JASON'S VOXEL STUDY"}
+          {"Jason's Voxel Study"}
         </span>
         <span
           style={{

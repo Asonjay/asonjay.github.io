@@ -40,7 +40,7 @@ export function DebugStats({
 
   return (
     <div
-      className="gp-corners gp-surface"
+      className="gp-corners-lg gp-surface"
       aria-hidden="true"
       style={{
         position: 'fixed',
@@ -63,7 +63,7 @@ export function DebugStats({
     >
       {rows.map(([label, value]) => (
         <div key={label} style={{ display: 'contents' }}>
-          <span style={{ color: 'var(--gp-accent)' }}>{label}</span>
+          <span style={{ color: 'var(--gp-accent-ink)' }}>{label}</span>
           <span style={{ textAlign: 'right' }}>{value}</span>
         </div>
       ))}

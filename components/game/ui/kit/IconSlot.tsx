@@ -2,7 +2,7 @@
 import type { CSSProperties, ReactNode } from 'react'
 import { KeyHint } from './KeyHint'
 
-// Square hotbar/action slot: an icon centered in a stair-cornered plate with an
+// Square hotbar/action slot: an icon centered in a rounded plate with an
 // accessible label, an optional hotkey badge, and an active highlight. The icon
 // is decorative; the accessible name comes from `label`.
 type Base = {
@@ -25,10 +25,9 @@ function slotStyle(active: boolean): CSSProperties {
     height: 44,
     fontSize: 20,
     cursor: 'pointer',
-    border: 'none',
     background: active ? 'var(--gp-accent)' : 'var(--gp-bg)',
     color: active ? '#111321' : 'var(--gp-text)',
-    boxShadow: `inset 0 0 0 2px var(--gp-${active ? 'accent' : 'border'})`,
+    border: `1px solid var(--gp-${active ? 'accent' : 'border'})`,
   }
 }
 
@@ -43,7 +42,7 @@ function Badge({ hotkey }: { hotkey?: string }) {
 
 export function IconSlot(props: Clickable | Linkable) {
   const { icon, label, active = false, hotkey, className } = props
-  const cls = `gp-corners${className ? ` ${className}` : ''}`
+  const cls = `gp-corners gp-lift${className ? ` ${className}` : ''}`
   const style = slotStyle(active)
 
   if ('href' in props && props.href !== undefined) {

@@ -20,9 +20,10 @@ export function MusicPanel({ data }: { data: WorldData }) {
               flexShrink: 0,
               width: 22,
               textAlign: 'right',
-              fontFamily: 'var(--font-pixel), monospace',
-              fontSize: 10,
-              color: 'var(--gp-accent)',
+              fontFamily: 'var(--font-barlow), sans-serif',
+              fontSize: 12,
+              fontWeight: 600,
+              color: 'var(--gp-accent-ink)',
             }}
           >
             {i + 1}

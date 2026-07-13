@@ -46,10 +46,12 @@ export const panelMdxComponents = {
   h2: (props: P) => (
     <h2
       style={{
-        fontFamily: 'var(--font-pixel), monospace',
-        fontSize: 12,
+        fontFamily: 'var(--font-barlow), sans-serif',
+        fontSize: 15,
+        fontWeight: 600,
+        letterSpacing: '0.01em',
         lineHeight: 1.4,
-        color: 'var(--gp-accent)',
+        color: 'var(--gp-accent-ink)',
         margin: '1.2em 0 0.6em',
       }}
       {...props}
@@ -70,11 +72,10 @@ export const panelMdxComponents = {
     <hr
       style={{
         border: 'none',
-        height: 2,
+        height: 1,
         margin: '1em 0',
-        background:
-          'repeating-linear-gradient(90deg, var(--gp-border) 0 6px, transparent 6px 10px)',
-        opacity: 0.5,
+        borderRadius: 999,
+        background: 'var(--gp-border)',
       }}
     />
   ),

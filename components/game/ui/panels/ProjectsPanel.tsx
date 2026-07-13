@@ -1,7 +1,7 @@
 'use client'
 import type { WorldData } from '../../../../types/world'
-import { PixelButton } from '../kit/PixelButton'
-import { PixelDivider } from '../kit/PixelDivider'
+import { UiButton } from '../kit/UiButton'
+import { UiDivider } from '../kit/UiDivider'
 
 export function ProjectsPanel({ data }: { data: WorldData }) {
   return (
@@ -14,7 +14,7 @@ export function ProjectsPanel({ data }: { data: WorldData }) {
             style={{
               padding: '12px 14px',
               background: 'var(--gp-bg)',
-              boxShadow: 'inset 0 0 0 2px var(--gp-border)',
+              border: '1px solid var(--gp-border)',
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, alignItems: 'baseline' }}>
@@ -24,9 +24,11 @@ export function ProjectsPanel({ data }: { data: WorldData }) {
               <span
                 style={{
                   flexShrink: 0,
-                  fontFamily: 'var(--font-pixel), monospace',
-                  fontSize: 9,
-                  color: 'var(--gp-accent)',
+                  fontFamily: 'var(--font-barlow), sans-serif',
+                  fontSize: 11,
+                  fontWeight: 600,
+                  letterSpacing: '0.02em',
+                  color: 'var(--gp-accent-ink)',
                 }}
               >
                 {project.year}
@@ -40,10 +42,10 @@ export function ProjectsPanel({ data }: { data: WorldData }) {
           </article>
         ))}
       </div>
-      <PixelDivider />
-      <PixelButton href="/projects" variant="solid">
+      <UiDivider />
+      <UiButton href="/projects" variant="solid">
         All projects
-      </PixelButton>
+      </UiButton>
     </div>
   )
 }

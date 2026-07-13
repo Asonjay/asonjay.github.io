@@ -1,7 +1,19 @@
+import type { Metadata } from 'next'
 import GameLoader from 'components/game/GameLoader'
 import { getWorldData } from 'lib/worldData'
 
-// Crawlable, screen-reader-facing navigation for the 3D homepage. The visible
+// Page-level metadata for the interactive study. The academic homepage title
+// lives at `/` (root default); this route owns the game-specific title so a
+// share of /study reads as the experience it is, not the site landing page.
+export const metadata: Metadata = {
+  title: { absolute: "Jason's Voxel Study — interactive" },
+  description:
+    'An interactive 2.5D voxel study and courtyard. Walk a low-poly room to browse ' +
+    "Zexin (Jason) Xu's publications, projects, blog and more. Needs JavaScript; a " +
+    'text version of every section is linked in the page.',
+}
+
+// Crawlable, screen-reader-facing navigation for the 3D study page. The visible
 // experience is a WebGL room (canvas is aria-hidden); this list is the real
 // content surface for crawlers, assistive tech and the JS-off fallback.
 const SEO_LINKS: { href: string; label: string }[] = [
@@ -17,7 +29,7 @@ const SEO_LINKS: { href: string; label: string }[] = [
 // at build time and threads it into the client-only game. getWorldData (which
 // does fs reads + MDX bundling) is imported ONLY here — it never enters the
 // client bundle.
-export default async function GamePage() {
+export default async function StudyPage() {
   const worldData = await getWorldData()
   return (
     <>
@@ -65,7 +77,7 @@ export default async function GamePage() {
         >
           <h1 style={{ fontSize: 26, fontWeight: 700, margin: 0 }}>Zexin (Jason) Xu</h1>
           <p style={{ fontSize: 15, lineHeight: 1.6, maxWidth: '34rem', margin: 0 }}>
-            PhD student at The University of Texas at Dallas. This homepage is an
+            PhD student at The University of Texas at Dallas. This page is an
             interactive 3D room that needs JavaScript — use the links below to
             browse the site directly.
           </p>

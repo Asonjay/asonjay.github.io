@@ -1,63 +1,33 @@
-export default async function sitemap() {
-  return [
-    {
-      url: 'https://zexinxu.com/classic',
-      lastModified: new Date(),
-      changeFrequency: 'yearly' as const,
-      priority: 0.3,
-    },
+import type { MetadataRoute } from 'next'
+
+const BASE_URL = 'https://zexinxu.com'
+
+// Every indexable route in the static export, listed explicitly because the
+// export has no filesystem crawl step. `/` is the content homepage and `/study`
+// is the interactive voxel study (the game, formerly served at `/`); the rest
+// are the classic content pages.
+export default function sitemap(): MetadataRoute.Sitemap {
+  const lastModified = new Date()
+
+  const routes: {
+    path: string
+    changeFrequency: 'yearly' | 'monthly' | 'weekly'
+    priority: number
+  }[] = [
+    { path: '/', changeFrequency: 'monthly', priority: 1 },
+    { path: '/study', changeFrequency: 'yearly', priority: 0.6 },
+    { path: '/classic', changeFrequency: 'yearly', priority: 0.3 },
+    { path: '/publications', changeFrequency: 'monthly', priority: 0.7 },
+    { path: '/projects', changeFrequency: 'monthly', priority: 0.6 },
+    { path: '/blog', changeFrequency: 'weekly', priority: 0.6 },
+    { path: '/life', changeFrequency: 'monthly', priority: 0.4 },
+    { path: '/deadlines', changeFrequency: 'weekly', priority: 0.4 },
   ]
+
+  return routes.map((r) => ({
+    url: `${BASE_URL}${r.path}`,
+    lastModified,
+    changeFrequency: r.changeFrequency,
+    priority: r.priority,
+  }))
 }
-
-/*
-
-const fs = require('fs')
-
-const globby = require('globby')
-const prettier = require('prettier')
-
-;(async () => {
-  const prettierCfg = await prettier.resolveConfig('./.prettierrc')
-  const pages = await globby([
-    'src/pages/!**!/!*.tsx',
-    'content/!**!/!*.mdx',
-    '!src/pages/_*.tsx',
-    '!src/pages/404.tsx',
-    '!src/pages/blog/[slug].tsx',
-  ])
-
-  const sitemap = `
-        <?xml version="1.0" encoding="UTF-8"?>
-        <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-            ${pages
-    .map(page => {
-      const path = page
-        .replace('src/pages', '')
-        .replace('content', '')
-        .replace('.tsx', '')
-        .replace('.mdx', '')
-        .replace('/index', '')
-      return `
-                        <url>
-                            <loc>${`https://jeffjadulco.com${path}`}</loc>
-                            <changefreq>${
-        path.includes('/blog') ? 'monthly' : 'daily'
-      }</changefreq>
-                            <priority>${
-        path.includes('/blog') ? 0.7 : 0.2
-      }</priority>
-                        </url>
-                    `
-    })
-    .join('')}
-        </urlset>
-    `
-
-  const formatted = prettier.format(sitemap, {
-    ...prettierCfg,
-    parser: 'html',
-  })
-
-  fs.writeFileSync('public/sitemap.xml', formatted)
-})()
-*/

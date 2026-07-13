@@ -427,3 +427,23 @@ Execution: sequential SDD (8 → 9 → 10), opus implementer + opus task-reviewe
 Verdict: big-screen lag SOLVED (governor confirmed working). New feedback: character/models feel small; map elements read low-res; scene too dark. Jason chose the tuning pack over a style pivot (voxel form stays).
 
 **Task R3-11 (fidelity pass):** PLAYER_VISUAL_SCALE 1.3 (collision unchanged); VIEWSIZE 12→10 desktop / 15→13 touch; PIXEL_BUDGET 4.6M→7M (MIN_DPR 0.75 stays as decline floor; 4K now seeds ≈0.92); brightness pass both themes (toneMappingExposure ~1.1x, day +25-35% ambient, night +30-45% lift, GardenLamp bump, palette lightness +8-16% on darkest colors incl. day-mode navy). Adaptive perf protection unchanged. Station nameplates deliberately stay at NAMEPLATE_Y 2.7 - they anchor to furniture, which did not grow (adjudicated post-review).
+
+
+## Iteration 4 — content-first pivot (2026-07-13)
+
+Jason's reframe (verbatim intent): content presentation is PRIMARY — format/readability like the original site; the game becomes a SIDE feature ("游戏可能是一个side"); current form over-emphasizes gameplay. Also: the 2.5D game must be PRESERVED for reuse in other projects, and the new homepage needs cool animations.
+
+Decisions (AskUserQuestion): homepage = refreshed Bento + live game tile; visual language delegated to lead -> warm rounded-modern (site-wide identity, game tile embeds without clash).
+
+**Architecture:**
+- `/study` = the full game, moved verbatim (bare layout, all systems, its SEO/noscript block moves here). `/` = new content-first bento homepage. `/classic` stays as archive. Old subpages keep their chrome this round (known transitional style clash; subpage reskin is a future round if wanted).
+- Preservation: `components/game/` stays self-contained; NEW `components/game/README.md` transplant guide (dep pins three 0.160/r3f 8/drei 9.122/zustand 4, WorldData contract, useDarkMode/.dark theme contract, mounting recipe); git tag `voxel-study-v1` after merge.
+- Homepage bundle rule: `/` First-Load stays three-free — the game tile lazy-mounts the three chunk after paint/on visibility.
+
+**Homepage bento inventory (content-first, data via existing readers/worldData):** identity card (name, PhD @ UTD, multimodal agents, advisor), selected publications (selected flag, PDF/DOI buttons), recent news (4), CV download, contact/socials, music link-card, projects+blog link tiles, game live tile.
+
+**Animation package (framer-motion, NEW DEP, homepage bundle only):** entrance cascade (translateY+fade+scale .97, ~50ms stagger, spring), scroll-in reveals below fold, hover lift + border glow, ambient gradient drift (~50s cycles, subtle), game-tile attract mode (character auto-walks station loop via existing A*; waves on tile hover using existing wave emote), LIVE badge pulse. prefers-reduced-motion -> fade-only + static tile poster. Zero CLS; animations never reduce readability (density per Jason's compact preference).
+
+**Game live tile constraints:** lazy mount on visible+idle; dpr cap ~1.25; pause rendering when offscreen (IntersectionObserver); static poster fallback on touch/small viewports/reduced-motion/save-data; click -> /study.
+
+**Tasks:** R4-12 route move + preservation README (+SEO moves); R4-13 bento homepage (page-level token layer derived from gp palette, grid, nav links, data wiring); R4-14 animation layer (framer-motion package above); R4-15 game live tile (attract mode + wave-on-hover + perf guards + bundle proof). Sequential SDD, opus impl + opus review per task, lead gates, fable range review at round end.

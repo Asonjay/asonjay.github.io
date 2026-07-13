@@ -7,7 +7,7 @@ import { useReactiveProp } from './useReactiveProp'
 
 // Classic (easter egg) — an octagonal trash can whose lid pops open during the
 // `peek` emote and wobbles when bumped. Portal to the classic site. Stands on the
-// courtyard path near the door, south of the plaza; the player approaches from
+// courtyard path near the door, north of the plaza; the player approaches from
 // the -z (path) side, so the highlight and lid hinge face -z.
 const CX = 13.5
 const CZ = 6.7

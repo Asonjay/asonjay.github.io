@@ -33,7 +33,7 @@ export function NewsPanel({ data }: { data: WorldData }) {
             >
               {year}
             </span>
-            <span style={{ flex: 1, height: 1, background: 'var(--gp-border)', opacity: 0.4 }} />
+            <span style={{ flex: 1, height: 1, background: 'var(--gp-border)' }} />
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>

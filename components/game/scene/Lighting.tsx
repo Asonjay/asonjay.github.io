@@ -7,6 +7,8 @@ import { DELTA_CLAMP } from '../systems/playerConfig'
 
 // F4 — day/night lighting. Every light in the room is owned here so one useFrame
 // can crossfade the whole scene between the two modes when the site theme flips.
+// (Exception: the courtyard garden lamppost owns its own night light + crossfade,
+// in scene/furniture/GardenLamp.tsx — its brief forbade touching Lighting.)
 // The active mode follows the site's own light/dark theme (isDark prop, sourced
 // from useDarkMode at the VoxelHome level); the floor lamp toggles it in-game.
 //
@@ -127,6 +129,8 @@ export function Lighting({
   )
   const shadowSize = shadowMapSize ?? defaultShadow
 
+  // Shadow size is set in two deliberate places: the JSX shadow-mapSize prop (below)
+  // supplies the mount size; this effect owns runtime tier changes. Keep both halves.
   // Three allocates the shadow render target once, so a runtime tier change won't
   // take effect from the shadow-mapSize prop alone: dispose the existing map and
   // null it so WebGLShadowMap rebuilds it at the new resolution on the next shadow

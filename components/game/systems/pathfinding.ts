@@ -61,7 +61,7 @@ const manhattan = (ax: number, az: number, bx: number, bz: number) =>
 
 // 4-connected A* with a Manhattan heuristic (consistent on a unit grid, so
 // closed nodes never need reopening). Plain-array open set — the grid is small
-// (room + courtyard, ~33x20), so a binary heap buys nothing. Returns the cell
+// (room + courtyard, 32x20), so a binary heap buys nothing. Returns the cell
 // path start..goal.
 function aStar(grid: GridSpec, start: Cell, goal: Cell): Cell[] | null {
   const startKey = key(start.cx, start.cz)

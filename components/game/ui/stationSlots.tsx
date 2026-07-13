@@ -23,7 +23,7 @@ export type Glyph = ComponentType<{ className?: string }>
 
 // The ten station shortcuts, left-to-right, with their number hotkeys. Order and
 // hotkeys are the F5 contract; icons mirror each station's in-world furniture so
-// the bar reads as a map of the room. Shared by the desktop Hotbar and the mobile
+// the bar reads as a map of the room + courtyard. Shared by the desktop Hotbar and the mobile
 // HotbarSheet so the two stay in lockstep.
 export const STATION_SLOTS: { id: string; label: string; hotkey: string; Icon: Glyph }[] = [
   { id: 'about', label: 'About', hotkey: '1', Icon: IconIdCard },

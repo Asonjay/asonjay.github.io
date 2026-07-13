@@ -6,7 +6,7 @@ import { useStationHighlight } from './useStationHighlight'
 import { useReactiveProp } from './useReactiveProp'
 
 // Contact — post + box + a flag that flips up during the `mailbox` emote. Stands
-// on the courtyard path, north of the plaza; the player approaches from the +z
+// on the courtyard path, south of the plaza; the player approaches from the +z
 // (path) side, so the highlight faces +z. Short enough not to occlude the player.
 const CX = 16.5
 const CZ = 2.3

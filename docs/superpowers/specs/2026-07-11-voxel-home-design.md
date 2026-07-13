@@ -420,3 +420,10 @@ Decisions (AskUserQuestion, options + previews):
 - **UI (Task R2-9):** pixel style retired → **warm rounded-modern**: 12px-radius near-solid cards, soft shadows, Barlow-only (Press Start 2P removed entirely), icons redrawn as 20×20 round-cap strokes, renames PixelPanel/PixelButton/PixelDivider → UiPanel/UiButton/UiDivider. Token architecture (`.game-ui`, `--gp-*`, day/night variants) unchanged.
 
 Execution: sequential SDD (8 → 9 → 10), opus implementer + opus task-reviewer per task, lead gates (vitest/lint per task; consolidated build at the end). Briefs: `.superpowers/sdd/task-{8,9,10}-brief.md`.
+
+
+## Iteration 3 — playtest round 2 (2026-07-13)
+
+Verdict: big-screen lag SOLVED (governor confirmed working). New feedback: character/models feel small; map elements read low-res; scene too dark. Jason chose the tuning pack over a style pivot (voxel form stays).
+
+**Task R3-11 (fidelity pass):** PLAYER_VISUAL_SCALE 1.3 (collision unchanged); VIEWSIZE 12→10 desktop / 15→13 touch; PIXEL_BUDGET 4.6M→7M (MIN_DPR 0.75 stays as decline floor; 4K now seeds ≈0.92); brightness pass both themes (toneMappingExposure ~1.1x, day +25-35% ambient, night +30-45% lift, GardenLamp bump, palette lightness +8-15% on darkest colors incl. day-mode navy). Adaptive perf protection unchanged.

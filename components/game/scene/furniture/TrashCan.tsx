@@ -5,10 +5,12 @@ import { Voxel, PALETTE } from './Voxel'
 import { useStationHighlight } from './useStationHighlight'
 import { useReactiveProp } from './useReactiveProp'
 
-// Classic (easter egg) — an octagonal trash can by the entry whose lid pops open
-// during the `peek` emote and wobbles when bumped. Portal to the classic site.
-const CX = 0.9
-const CZ = 9.4
+// Classic (easter egg) — an octagonal trash can whose lid pops open during the
+// `peek` emote and wobbles when bumped. Portal to the classic site. Stands on the
+// courtyard path near the door, south of the plaza; the player approaches from
+// the -z (path) side, so the highlight and lid hinge face -z.
+const CX = 13.5
+const CZ = 6.7
 const R = 0.42
 const SIDES = 8
 
@@ -45,9 +47,9 @@ export function TrashCan() {
       {panels}
       <Voxel position={[CX, 0.03, CZ]} size={[0.8, 0.06, 0.8]} color={PALETTE.slate} />
 
-      {/* highlight band around the rim (room-facing side) */}
-      <mesh position={[CX + R, 0.85, CZ]} material={band} userData={{ dynamic: true }}>
-        <boxGeometry args={[0.05, 0.16, 0.4]} />
+      {/* highlight band around the rim (path-facing -z side) */}
+      <mesh position={[CX, 0.85, CZ - R]} material={band} userData={{ dynamic: true }}>
+        <boxGeometry args={[0.4, 0.16, 0.05]} />
       </mesh>
 
       {/* hinged lid (pivot at back edge) */}

@@ -5,10 +5,11 @@ import { Voxel, PALETTE } from './Voxel'
 import { useStationHighlight } from './useStationHighlight'
 import { useReactiveProp } from './useReactiveProp'
 
-// Contact — post + box + a flag that flips up during the `mailbox` emote. Sits
-// near the +Z knee wall by the entry; short enough not to occlude the player.
-const CX = 4.2
-const CZ = 9.3
+// Contact — post + box + a flag that flips up during the `mailbox` emote. Stands
+// on the courtyard path, north of the plaza; the player approaches from the +z
+// (path) side, so the highlight faces +z. Short enough not to occlude the player.
+const CX = 16.5
+const CZ = 2.3
 
 export function Mailbox() {
   const band = useStationHighlight('contact', PALETTE.metal, '#8ab4ff')
@@ -23,9 +24,9 @@ export function Mailbox() {
       <Voxel position={[CX, 1.5, CZ]} size={[0.7, 0.5, 0.9]} color={PALETTE.metal} />
       <Voxel position={[CX, 1.8, CZ]} size={[0.72, 0.2, 0.92]} color={PALETTE.slate} />
 
-      {/* highlight band on the room-facing (+x) side */}
-      <mesh position={[CX + 0.36, 1.5, CZ]} material={band} userData={{ dynamic: true }}>
-        <boxGeometry args={[0.04, 0.24, 0.7]} />
+      {/* highlight band on the path-facing (+z) side */}
+      <mesh position={[CX, 1.5, CZ + 0.47]} material={band} userData={{ dynamic: true }}>
+        <boxGeometry args={[0.5, 0.24, 0.04]} />
       </mesh>
 
       {/* flag: hinges up on the emote (pivot at the box side) */}

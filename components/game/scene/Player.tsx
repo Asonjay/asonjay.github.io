@@ -5,6 +5,7 @@ import * as THREE from 'three'
 import { useGameStore, playerPosRef, type GameState } from '../systems/store'
 import { worldColliders, SPAWN } from '../systems/worldLayout'
 import { reducedMotionRef } from '../systems/reducedMotion'
+import { arrivalEffects } from '../systems/attract'
 import {
   MOVE_SPEED,
   ACCEL_LAMBDA,
@@ -43,22 +44,27 @@ type InteractState = {
 // Single entry point for the contextual interaction, shared by the E/Enter key
 // and by auto-walk arrival. Starts the station's emote (the frame loop opens the
 // panel at 60% / toggles the lamp theme at 50%); under reduced motion it skips
-// the emote and performs the action immediately.
+// the emote and performs the action immediately. `arrivalEffects` (pure, unit
+// tested) resolves the branch: for normal play it reproduces the original truth
+// table exactly; under attract mode (homepage tile) it returns the emote with
+// pendingStation=null so the walk still plays a contextual gesture but opens NO
+// panel and flips NO theme — leaving /study behaviour unchanged (flag off there).
 function startInteract(g: GameState, st: InteractState, stationId: string) {
   // Committing to a station cancels any auto-walk in flight — pressing E mid-walk
   // interacts here-and-now instead of resuming toward the old target afterward.
   if (g.autoWalk !== null) g.setAutoWalk(null)
-  const emote = STATION_EMOTE[stationId]
-  if (!emote || reducedMotionRef.current) {
-    if (stationId === 'lamp') g.requestThemeToggle()
-    else g.openPanel(stationId)
+  const plan = arrivalEffects(g.attractMode, stationId, reducedMotionRef.current)
+  if (plan.immediate) {
+    if (plan.immediate.toggleTheme) g.requestThemeToggle()
+    else if (plan.immediate.openPanel) g.openPanel(plan.immediate.openPanel)
     return
   }
-  st.pendingStation = stationId
+  if (!plan.emote) return
+  st.pendingStation = plan.pendingStation
   st.emoteTime = 0
   st.firedPanel = false
   st.firedToggle = false
-  g.setActiveEmote(emote)
+  g.setActiveEmote(plan.emote)
 }
 
 export function Player() {
@@ -85,6 +91,8 @@ export function Player() {
     wasEmoting: false,
     // Last interactRequests count we've acted on (touch button / tap-to-interact).
     lastInteractReq: 0,
+    // Last waveRequests count acted on (homepage attract tile hover/focus).
+    lastWaveReq: 0,
     // Auto-walk: the path object currently being followed, and the index of the
     // waypoint being steered toward.
     autoRef: null as GameState['autoWalk'],
@@ -143,6 +151,24 @@ export function Player() {
       if (g.openPanelId === null && g.activeEmote === null) {
         const near = g.nearbyStationId
         if (near && STATION_EMOTE[near]) startInteract(g, st, near)
+      }
+    }
+
+    // Homepage attract tile: a hover / focus-visible on the tile bumps waveRequests;
+    // cancel any wander in flight and play the wave emote from the start (its pose
+    // turns him to face the camera). Gated on attractMode with pendingStation left
+    // null, so no panel/theme side effect fires and /study never reacts (the counter
+    // is never bumped there). Seen count updated unconditionally so a stale bump is
+    // dropped, not queued.
+    if (g.waveRequests !== st.lastWaveReq) {
+      st.lastWaveReq = g.waveRequests
+      if (g.attractMode && g.openPanelId === null) {
+        if (g.autoWalk !== null) g.setAutoWalk(null)
+        st.pendingStation = null
+        st.emoteTime = 0
+        st.firedPanel = false
+        st.firedToggle = false
+        g.setActiveEmote('wave')
       }
     }
 

@@ -19,6 +19,16 @@ export type GameState = {
   // its frame loop and runs the same contextual interaction the E key does
   // against the current nearby station. Mirrors themeToggleRequests.
   interactRequests: number
+  // Attract mode: the homepage bento GameTile embeds a slim, self-playing scene
+  // (components/game/VoxelTile). While true, auto-walk ARRIVAL plays the station
+  // emote but opens NO panel and flips NO theme (see systems/attract.ts
+  // `arrivalEffects` + Player's `startInteract`). Default false, so /study
+  // (VoxelHome, which never sets it) behaves exactly as before.
+  attractMode: boolean
+  // Transient signal (mirrors interactRequests): the homepage tile bumps this on
+  // hover / focus-visible and Player plays the wave emote once per increment.
+  // Tile-only — never bumped on /study, and gated on attractMode in Player.
+  waveRequests: number
   setMoveVector(v: { x: number; z: number }): void
   setAutoWalk(a: GameState['autoWalk']): void
   setNearbyStation(id: string | null): void
@@ -27,6 +37,8 @@ export type GameState = {
   markWelcomeSeen(): void
   requestThemeToggle(): void
   requestInteract(): void
+  setAttractMode(on: boolean): void
+  requestWave(): void
 }
 
 export const useGameStore = create<GameState>((set) => ({
@@ -39,6 +51,8 @@ export const useGameStore = create<GameState>((set) => ({
   hasSeenWelcome: false,
   themeToggleRequests: 0,
   interactRequests: 0,
+  attractMode: false,
+  waveRequests: 0,
   setMoveVector: (v) => set({ moveVector: v }),
   setAutoWalk: (a) => set({ autoWalk: a }),
   setNearbyStation: (id) => set({ nearbyStationId: id }),
@@ -47,6 +61,8 @@ export const useGameStore = create<GameState>((set) => ({
   markWelcomeSeen: () => set({ hasSeenWelcome: true }),
   requestThemeToggle: () => set((s) => ({ themeToggleRequests: s.themeToggleRequests + 1 })),
   requestInteract: () => set((s) => ({ interactRequests: s.interactRequests + 1 })),
+  setAttractMode: (on) => set({ attractMode: on }),
+  requestWave: () => set((s) => ({ waveRequests: s.waveRequests + 1 })),
 }))
 
 // Transient player position: read/written every frame without triggering

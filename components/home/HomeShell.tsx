@@ -5,6 +5,7 @@ import { HomeFooter } from './HomeFooter'
 import { HomeMotionProvider, MotionTile } from './motion'
 import { IdentityCard } from './tiles/IdentityCard'
 import { GameTile } from './tiles/GameTile'
+import { GameTileLive } from './GameTileLive'
 import { PublicationsTile } from './tiles/PublicationsTile'
 import { NewsTile } from './tiles/NewsTile'
 import { LinkStatTile } from './tiles/LinkStatTile'
@@ -57,7 +58,9 @@ export function HomeShell({ payload }: { payload: HomePayload }) {
                 <NewsTile news={payload.news} />
               </MotionTile>
               <MotionTile area="game" delay={0.1}>
-                <GameTile />
+                <GameTile>
+                  <GameTileLive />
+                </GameTile>
               </MotionTile>
               <MotionTile area="projects" delay={0} reveal>
                 <LinkStatTile

@@ -1,0 +1,289 @@
+/* Home UI tokens + primitives. Scoped entirely under .home-ui so nothing here
+ * leaks into the classic site, and none of the classic --color-* variables are
+ * reused.
+ *
+ * SOURCE OF TRUTH: the palette/radii/shadow VALUES below are mirrored from the
+ * game UI kit (components/game/ui/kit/tokens.css, the .game-ui scope). They are
+ * copied — not imported — so the homepage owns its own scope and never depends
+ * on game files. Keep the two in sync by hand: if the kit palette changes, echo
+ * it here. The site toggles .dark / .light on <html> (default dark), same as the
+ * game, so both scopes react to the one useDarkMode() source.
+ *
+ * Look: warm rounded-modern — rounded solid cards, soft drop shadows, thin
+ * stroke icons, Barlow everywhere. No glassmorphism, no pixel font. */
+
+.home-ui {
+  font-family: var(--font-barlow), ui-sans-serif, system-ui, -apple-system,
+    sans-serif;
+  /* Night palette as the base so tokens resolve even before the theme class is
+   * applied (root layout hardcodes .dark, so this is only a safety net). */
+  --home-bg: #0e1226f2;
+  --home-border: rgba(124, 154, 255, 0.55);
+  --home-text: #f2f4ff;
+  --home-accent: #7c9aff;
+  /* Accent tuned for text-on-surface contrast: the night blue clears 4.5:1 on
+   * the deep navy; day needs a deeper amber (see html.light). */
+  --home-accent-ink: #7c9aff;
+  --home-glow: rgba(124, 154, 255, 0.45);
+
+  /* Page canvas behind the bento — a touch deeper than the card fill so cards
+   * read as lifted panels. Home-only (the kit has no page surface). */
+  --home-page-bg: #0a0d1a;
+  /* Muted text opacity (kit uses inline 0.7–0.75; centralized here). */
+  --home-muted: 0.72;
+
+  /* Radii: controls (buttons, chips) vs surfaces (cards) vs pills (badges). */
+  --home-radius: 10px;
+  --home-radius-lg: 12px;
+  --home-radius-pill: 999px;
+
+  /* Elevation: a soft drop shadow for surfaces, a subtle one for controls, and
+   * a slightly stronger one for the hover lift. Day overrides the panel shadow
+   * to a lighter value (see html.light). */
+  --home-shadow-panel: 0 8px 24px rgba(0, 0, 0, 0.22);
+  --home-shadow-btn: 0 2px 8px rgba(0, 0, 0, 0.16);
+  --home-shadow-btn-hover: 0 5px 14px rgba(0, 0, 0, 0.22);
+  --home-shadow-card-hover: 0 14px 30px rgba(0, 0, 0, 0.26);
+}
+
+html.dark .home-ui {
+  --home-bg: #0e1226f2;
+  --home-border: rgba(124, 154, 255, 0.55);
+  --home-text: #f2f4ff;
+  --home-accent: #7c9aff;
+  --home-accent-ink: #7c9aff;
+  --home-glow: rgba(124, 154, 255, 0.45);
+  --home-page-bg: #0a0d1a;
+  --home-shadow-panel: 0 8px 24px rgba(0, 0, 0, 0.22);
+  --home-shadow-card-hover: 0 14px 30px rgba(0, 0, 0, 0.26);
+}
+
+html.light .home-ui {
+  --home-bg: #f7efdcf7;
+  --home-border: rgba(196, 122, 44, 0.55);
+  --home-text: #2b2117;
+  --home-accent: #c47a2c;
+  /* Deeper amber so small accent-colored labels clear 4.5:1 on the cream
+   * surface (the bright orange accent alone does not). */
+  --home-accent-ink: #9a5511;
+  --home-glow: rgba(196, 122, 44, 0.4);
+  --home-page-bg: #efe3ca;
+  --home-shadow-panel: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --home-shadow-card-hover: 0 14px 28px rgba(0, 0, 0, 0.14);
+}
+
+/* Page canvas + base type. min-h fills the viewport on the bare root layout.
+ * The bg/color fade matches the site body's 0.3s theme transition so the canvas
+ * cross-fades with it on toggle (tiles recolor instantly, like the game kit). */
+.home-ui {
+  min-height: 100vh;
+  background: var(--home-page-bg);
+  color: var(--home-text);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Rounded corners. Controls (buttons, chips) use --home-radius; larger surfaces
+ * (cards) use the -lg variant; pills use the full round. */
+.home-corners {
+  border-radius: var(--home-radius);
+}
+.home-corners-lg {
+  border-radius: var(--home-radius-lg);
+}
+.home-corners-pill {
+  border-radius: var(--home-radius-pill);
+}
+
+/* Near-solid surface: fill, 1px softened border, soft drop shadow. */
+.home-surface {
+  background: var(--home-bg);
+  color: var(--home-text);
+  border: 1px solid var(--home-border);
+  box-shadow: var(--home-shadow-panel);
+}
+
+/* Muted / secondary text. */
+.home-muted {
+  opacity: var(--home-muted);
+}
+
+/* Card hover lift: a subtle 2px raise + stronger shadow on hover-capable
+ * pointers. Decorative — reduced motion keeps the shadow, drops the translate. */
+.home-card {
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+@media (hover: hover) {
+  .home-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--home-shadow-card-hover);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-card {
+    transition: box-shadow 140ms ease;
+  }
+  .home-card:hover {
+    transform: none;
+  }
+}
+
+/* Interactive lift for buttons/chips. The element supplies its own fill +
+ * border (variant-driven); this adds the resting shadow and, on hover-capable
+ * pointers, a 1px raise with a slightly stronger shadow. Reduced motion keeps
+ * the shadow change but drops the translate. */
+.home-lift {
+  box-shadow: var(--home-shadow-btn);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+@media (hover: hover) {
+  .home-lift:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--home-shadow-btn-hover);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-lift {
+    transition: box-shadow 120ms ease;
+  }
+  .home-lift:hover {
+    transform: none;
+  }
+}
+
+.home-link {
+  color: var(--home-accent-ink);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.home-link:hover,
+.home-link:focus-visible {
+  border-bottom-color: currentColor;
+}
+
+/* Nav links: neutral at rest, accent on hover/focus. Color-only, so it is safe
+ * under reduced motion. */
+.home-nav-link {
+  transition: color 120ms ease;
+}
+.home-nav-link:hover,
+.home-nav-link:focus-visible {
+  color: var(--home-accent-ink);
+}
+
+/* Music track row (whole row is the link): recolor to accent on hover. */
+.home-track {
+  transition: color 120ms ease;
+}
+.home-track:hover,
+.home-track:focus-visible {
+  color: var(--home-accent-ink);
+}
+
+/* Contact icon buttons: accent the glyph + border on hover (the lift handles the
+ * raise). Color/border only, so no reduced-motion concern. */
+.home-icon-btn {
+  transition: color 120ms ease, border-color 120ms ease, transform 120ms ease,
+    box-shadow 120ms ease;
+}
+.home-icon-btn:hover,
+.home-icon-btn:focus-visible {
+  color: var(--home-accent-ink);
+  border-color: var(--home-accent);
+}
+
+/* Focus ring reused by every interactive home element. Follows the element's
+ * border-radius (modern browsers round the outline). */
+.home-ui :focus-visible {
+  outline: 2px solid var(--home-accent);
+  outline-offset: 2px;
+}
+
+/* Avatar ring: a radial-gradient border framing the profile image. Mirrors the
+ * classic `.avatar-border` look, re-implemented in the home scope (not imported)
+ * with a light-theme variant. */
+.home-avatar-ring {
+  padding: 3px;
+  border-radius: 1rem;
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.9),
+    rgba(255, 255, 255, 0.1) 50%
+  );
+}
+html.light .home-avatar-ring {
+  background: radial-gradient(
+    circle at center,
+    rgba(0, 0, 0, 0.25),
+    rgba(0, 0, 0, 0.08) 100%
+  );
+}
+.home-avatar-ring > img {
+  border-radius: calc(1rem - 3px);
+}
+
+/* Bento grid. Mobile is a single column in reading order (identity → pubs →
+ * news → game → projects → blog → music → contact). A 2-col tablet layout kicks
+ * in at md, the full 12-col bento at lg. Areas position the tiles; the DOM stays
+ * in mobile reading order so the phone (where source order == visual order) is
+ * perfect, and keyboard order stays sensible on larger screens. */
+.home-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "identity"
+    "pubs"
+    "news"
+    "game"
+    "projects"
+    "blog"
+    "music"
+    "contact";
+}
+.home-area-identity {
+  grid-area: identity;
+}
+.home-area-game {
+  grid-area: game;
+}
+.home-area-pubs {
+  grid-area: pubs;
+}
+.home-area-news {
+  grid-area: news;
+}
+.home-area-projects {
+  grid-area: projects;
+}
+.home-area-blog {
+  grid-area: blog;
+}
+.home-area-music {
+  grid-area: music;
+}
+.home-area-contact {
+  grid-area: contact;
+}
+
+@media (min-width: 768px) {
+  .home-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      "identity identity"
+      "pubs pubs"
+      "news game"
+      "projects blog"
+      "music contact";
+  }
+}
+
+@media (min-width: 1024px) {
+  .home-grid {
+    gap: 20px;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-areas:
+      "identity identity identity identity identity identity identity game game game game game"
+      "pubs pubs pubs pubs pubs pubs pubs pubs news news news news"
+      "projects projects projects blog blog blog music music music contact contact contact";
+  }
+}

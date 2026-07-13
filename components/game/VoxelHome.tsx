@@ -199,7 +199,10 @@ export default function VoxelHome({
           // below. r3f re-applies this prop every render, so it is the sole owner
           // of dpr (see the governor state above).
           dpr={canvasDpr}
-          gl={{ antialias: true, powerPreference: 'high-performance' }}
+          // R3 brightness pass: lift tone-mapping exposure so both themes read
+          // brighter (night readability especially). Leaves the dpr + context-lost
+          // wiring untouched; emissive lamps/neon are toneMapped:false, so unaffected.
+          gl={{ antialias: true, powerPreference: 'high-performance', toneMappingExposure: 1.14 }}
           shadows
           onCreated={({ gl }) => {
             const canvas = gl.domElement

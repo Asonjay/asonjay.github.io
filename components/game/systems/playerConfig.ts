@@ -15,9 +15,12 @@ export const LEAN_MAX = 0.08 // rad forward body lean at full speed
 export const DUST_SPEED_MIN = MOVE_SPEED * 0.2 // stride dust only above this speed
 export const DELTA_CLAMP = 1 / 30 // max dt (frame-rate independence)
 export const PLAYER_RADIUS = 0.35 // collision half-size
+// Visual-only up-scale of the player model group (R3 fidelity pass). Does NOT
+// touch PLAYER_RADIUS or any collision/pathfinding value — gameplay is unchanged.
+export const PLAYER_VISUAL_SCALE = 1.3
 export const WAYPOINT_POP = 0.3 // auto-walk: pop a path waypoint once within this range
-export const VIEWSIZE_LANDSCAPE = 12 // ortho half-height
-export const VIEWSIZE_PORTRAIT = 15 // ortho half-height when aspect < 1
+export const VIEWSIZE_LANDSCAPE = 10 // ortho half-height
+export const VIEWSIZE_PORTRAIT = 13 // ortho half-height when aspect < 1
 
 // Voxel Jason palette.
 export const PLAYER_COLORS = {

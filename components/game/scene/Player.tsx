@@ -16,6 +16,7 @@ import {
   DUST_SPEED_MIN,
   DELTA_CLAMP,
   PLAYER_RADIUS,
+  PLAYER_VISUAL_SCALE,
   WAYPOINT_POP,
   PLAYER_COLORS,
 } from '../systems/playerConfig'
@@ -315,7 +316,12 @@ export function Player() {
   })
 
   return (
-    <group ref={group} position={[SPAWN.x, 0, SPAWN.z]}>
+    // Visual scale rides on the root group: the frame loop only writes this
+    // group's position/rotation (never scale), and body squash/stretch + emote
+    // poses are children so they scale with it for free. Feet stay at y=0, so
+    // ground contact (shadow, footstep dust) is unaffected. Collision keeps using
+    // PLAYER_RADIUS, not this scale — gameplay is untouched.
+    <group ref={group} position={[SPAWN.x, 0, SPAWN.z]} scale={PLAYER_VISUAL_SCALE}>
       <group ref={body}>
         {/* legs (pivot at hip) */}
         <group ref={legL} position={[-0.15, 0.7, 0]}>

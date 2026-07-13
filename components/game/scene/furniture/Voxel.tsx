@@ -21,18 +21,21 @@ export function getMaterial(color: string): THREE.MeshLambertMaterial {
 }
 
 // Prototype-derived voxel palette (see design spec §2).
+// R3 brightness pass lifts the three darkest surfaces ~11–16% in lightness (hue
+// kept) so furniture silhouettes read; keys are unchanged so StaticMerge still
+// batches each color into one material.
 export const PALETTE = {
-  woodDark: '#3d2314',
+  woodDark: '#442716', // R3 +11% L (was #3d2314) — darkest wood, lifted for readability
   woodLight: '#d2b48c',
   fabricBlue: '#4169e1',
   fabricRed: '#b22222',
   fabricWhite: '#f8f8ff',
   metal: '#708090',
   leaf: '#228b22',
-  dirt: '#4a3018',
+  dirt: '#52351b', // R3 +11% L (was #4a3018) — courtyard ground
   cork: '#b98a5e',
   paper: '#efe9dd',
-  slate: '#2f3444',
+  slate: '#353c50', // R3 +16% L (was #2f3444) — navy furniture Jason flagged as too dark
   brass: '#c8a24a',
 } as const
 

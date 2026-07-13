@@ -9,9 +9,11 @@
 // a fixed budget, and map a runtime performance factor onto a dpr/shadow tier so
 // strong GPUs earn full resolution back and weak ones degrade gracefully.
 
-// Target physical-pixel ceiling (~1440p at dpr 1.12). Tuned so a 4K panel drops
-// to roughly half its native fill while 1080p keeps full device dpr.
-export const PIXEL_BUDGET = 4_600_000
+// Target physical-pixel ceiling (~1440p at dpr 1.38). Raised from 4.6M in R3 to
+// sharpen large displays: a 4K panel now holds ~0.92 dpr (was floored at 0.75)
+// while 1080p keeps full device dpr. The adaptive layer still sheds resolution
+// on weak GPUs, so this only lifts the starting point, never the safety net.
+export const PIXEL_BUDGET = 7_000_000
 
 // Never subsample below this — past it the scene reads as mushy rather than soft.
 export const MIN_DPR = 0.75

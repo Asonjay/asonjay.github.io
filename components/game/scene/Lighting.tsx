@@ -37,8 +37,8 @@ const DAY: Mode = {
   bg: '#87ceeb',
   ambSky: '#ffffff',
   ambGround: '#b9a888',
-  ambIntensity: 0.65,
-  sunIntensity: 0.9,
+  ambIntensity: 0.85, // R3 brightness pass +31% (was 0.65) — lift the day fill
+  sunIntensity: 1.05, // R3 brightness pass +17% (was 0.9)
   floorLamp: 0,
   deskLamp: 0,
   neonEmissive: 0.1,
@@ -49,8 +49,8 @@ const NIGHT: Mode = {
   bg: '#0b0e1a',
   ambSky: '#333344', // brief "#334" tint
   ambGround: '#0e0f18',
-  ambIntensity: 0.25,
-  sunIntensity: 0.0,
+  ambIntensity: 0.35, // R3 brightness pass +40% (was 0.25) — lift crushed night blacks
+  sunIntensity: 0.0, // no moon directional exists — sun stays fully off at night (shadows skipped)
   floorLamp: 1.2,
   deskLamp: 0.8,
   neonEmissive: 1.0,

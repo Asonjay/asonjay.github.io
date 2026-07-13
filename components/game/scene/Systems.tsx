@@ -5,11 +5,14 @@ import * as THREE from 'three'
 import { createStationRegistry } from '../systems/interactions'
 import { STATIONS } from '../systems/worldLayout'
 import { useGameStore, playerPosRef, nameplateRef } from '../systems/store'
+import { PLAYER_VISUAL_SCALE } from '../systems/playerConfig'
 
 // Per-frame interaction loop: resolve the nearby station (updating the store
 // only on change) and project its nameplate anchor into screen space for the
 // HTML NameplateBubble. Uses a pooled Vector3 — no per-frame allocation.
-const NAMEPLATE_Y = 2.7
+// Anchor height rides the player's visual scale so the bubble keeps its
+// head-clearance above the (now larger) character standing at the station.
+const NAMEPLATE_Y = 2.7 * PLAYER_VISUAL_SCALE
 
 export function Systems() {
   const camera = useThree((s) => s.camera)

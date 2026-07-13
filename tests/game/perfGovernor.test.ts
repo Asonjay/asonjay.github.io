@@ -9,7 +9,7 @@ import {
 
 describe('perfGovernor constants', () => {
   it('exposes the pixel budget and dpr floor', () => {
-    expect(PIXEL_BUDGET).toBe(4_600_000)
+    expect(PIXEL_BUDGET).toBe(7_000_000)
     expect(MIN_DPR).toBe(0.75)
   })
 })
@@ -21,19 +21,26 @@ describe('effectiveDpr', () => {
     expect(effectiveDpr(1536, 864, 1.25, 2)).toBe(1.25)
   })
 
-  // 1280x800 at device 2 = 4.10M px, just under budget -> full device dpr.
-  it('keeps device dpr just under budget (1280x800 @2)', () => {
+  // 1280x800 at device 2 = 4.10M physical px, comfortably under the 7M budget
+  // (which would allow ~2.6) -> the device/cap dpr of 2 is the binding limit.
+  it('keeps device dpr under budget (1280x800 @2)', () => {
     expect(effectiveDpr(1280, 800, 2, 2)).toBe(2)
   })
 
-  // 4K at device 1 wants dpr ~0.745, below the floor -> clamped up to MIN_DPR.
-  it('clamps up to the floor on a 4K screen (3840x2160 @1)', () => {
-    expect(effectiveDpr(3840, 2160, 1, 2)).toBe(0.75)
+  // 4K at device 1 is now budget-limited to ~0.92 (sqrt(7M/8.2944M)), above the floor.
+  it('is budget-limited on a 4K screen (3840x2160 @1)', () => {
+    expect(effectiveDpr(3840, 2160, 1, 2)).toBeCloseTo(0.92, 2)
   })
 
-  // 1440p at device 2 is budget-limited to ~1.12.
+  // 5K at device 1 wants dpr ~0.69 (sqrt(7M/14.7456M)), below the floor -> clamped
+  // up to MIN_DPR. The adaptive safety net still holds on the very largest panels.
+  it('clamps up to the floor on a 5K screen (5120x2880 @1)', () => {
+    expect(effectiveDpr(5120, 2880, 1, 2)).toBe(0.75)
+  })
+
+  // 1440p at device 2 is budget-limited to ~1.38 (sqrt(7M/3.6864M)).
   it('is budget-limited on 1440p (2560x1440 @2)', () => {
-    expect(effectiveDpr(2560, 1440, 2, 2)).toBeCloseTo(1.12, 2)
+    expect(effectiveDpr(2560, 1440, 2, 2)).toBeCloseTo(1.38, 2)
   })
 
   it('never exceeds the cap even when the device dpr is higher (device 3, cap 2)', () => {

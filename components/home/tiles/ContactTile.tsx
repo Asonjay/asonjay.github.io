@@ -1,6 +1,9 @@
+'use client'
 import type { ComponentType } from 'react'
+import { m } from 'framer-motion'
 import type { SocialLink } from '../../../types/world'
 import { TileCard } from '../TileCard'
+import { useInteraction } from '../motion'
 import { MailAt24, GoogleScholar24, GitHub24, Twitter24, LinkedIn24 } from '../../icons'
 
 // Maps the SocialLink.icon key (baked in lib/worldData) to a components/icons
@@ -17,6 +20,7 @@ const ICONS: Record<string, ComponentType<{ className?: string }>> = {
 // Contact (desktop col-3). The five social links as icon buttons (mailto
 // included). Reuses the site's existing social SVG glyphs.
 export function ContactTile({ social }: { social: SocialLink[] }) {
+  const interaction = useInteraction('control')
   return (
     <TileCard area="contact" label="Contact">
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
@@ -25,14 +29,14 @@ export function ContactTile({ social }: { social: SocialLink[] }) {
           if (!Icon) return null
           const external = /^https?:/.test(link.url)
           return (
-            <a
+            <m.a
               key={link.label}
               href={link.url}
               aria-label={link.label}
               title={link.label}
               target={external ? '_blank' : undefined}
               rel={external ? 'noopener noreferrer' : undefined}
-              className="home-corners home-lift home-icon-btn"
+              className="home-corners home-lift home-motion home-icon-btn"
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -43,9 +47,10 @@ export function ContactTile({ social }: { social: SocialLink[] }) {
                 background: 'var(--home-bg)',
                 border: '1px solid var(--home-border)',
               }}
+              {...interaction}
             >
               <Icon className="!w-5 !h-5" />
-            </a>
+            </m.a>
           )
         })}
       </div>

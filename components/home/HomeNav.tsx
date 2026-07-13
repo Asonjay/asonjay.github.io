@@ -1,5 +1,7 @@
+'use client'
 import Link from 'next/link'
 import { Fragment } from 'react'
+import { m, useReducedMotion } from 'framer-motion'
 import { HomeThemeToggle } from './HomeThemeToggle'
 
 // Destinations shown in the nav. All internal routes (Study + Classic included).
@@ -22,6 +24,7 @@ const linkStyle = {
 // Per the owner's rule the inline links only show at lg+; below lg they drop to
 // a compact second line (no hamburger). The wordmark and toggle stay put.
 export function HomeNav() {
+  const reduce = useReducedMotion()
   return (
     <header
       className="home-ui-nav"
@@ -33,9 +36,15 @@ export function HomeNav() {
         borderBottom: '1px solid var(--home-border)',
       }}
     >
-      <div
-        className="mx-auto"
+      {/* The entrance transform lives on this inner row, never on the sticky
+          <header> — a transform on the sticky element's ancestor chain would
+          break its stickiness. Fades in first (before the tile cascade). */}
+      <m.div
+        className="home-anim mx-auto"
         style={{ maxWidth: 1100, padding: '10px 16px' }}
+        initial={{ opacity: 0, y: reduce ? 0 : -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, ease: 'easeOut' }}
       >
         <div
           style={{
@@ -105,7 +114,7 @@ export function HomeNav() {
             </Link>
           ))}
         </nav>
-      </div>
+      </m.div>
     </header>
   )
 }

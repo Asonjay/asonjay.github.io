@@ -44,6 +44,13 @@
   --home-shadow-btn: 0 2px 8px rgba(0, 0, 0, 0.16);
   --home-shadow-btn-hover: 0 5px 14px rgba(0, 0, 0, 0.22);
   --home-shadow-card-hover: 0 14px 30px rgba(0, 0, 0, 0.26);
+
+  /* Ambient drift blobs: accent family at very low alpha (night blue). Low
+   * enough that text — which sits on the ~95%-opaque cards — keeps full
+   * contrast; only the page-bg gaps pick up the tint. */
+  --home-blob-a: rgba(124, 154, 255, 0.16);
+  --home-blob-b: rgba(96, 132, 246, 0.13);
+  --home-blob-c: rgba(122, 168, 255, 0.1);
 }
 
 html.dark .home-ui {
@@ -56,6 +63,9 @@ html.dark .home-ui {
   --home-page-bg: #0a0d1a;
   --home-shadow-panel: 0 8px 24px rgba(0, 0, 0, 0.22);
   --home-shadow-card-hover: 0 14px 30px rgba(0, 0, 0, 0.26);
+  --home-blob-a: rgba(124, 154, 255, 0.16);
+  --home-blob-b: rgba(96, 132, 246, 0.13);
+  --home-blob-c: rgba(122, 168, 255, 0.1);
 }
 
 html.light .home-ui {
@@ -70,6 +80,10 @@ html.light .home-ui {
   --home-page-bg: #efe3ca;
   --home-shadow-panel: 0 8px 24px rgba(0, 0, 0, 0.12);
   --home-shadow-card-hover: 0 14px 28px rgba(0, 0, 0, 0.14);
+  /* Day: warm amber family, matching alpha. */
+  --home-blob-a: rgba(196, 122, 44, 0.14);
+  --home-blob-b: rgba(224, 158, 74, 0.12);
+  --home-blob-c: rgba(210, 140, 60, 0.1);
 }
 
 /* Page canvas + base type. min-h fills the viewport on the bare root layout.
@@ -285,5 +299,147 @@ html.light .home-avatar-ring {
       "identity identity identity identity identity identity identity game game game game game"
       "pubs pubs pubs pubs pubs pubs pubs pubs news news news news"
       "projects projects projects blog blog blog music music music contact contact contact";
+  }
+}
+
+/* ── Animation layer (Task 14) ──────────────────────────────────────────────
+ * framer-motion (components/home/motion.tsx) owns the entrance/reveal transforms
+ * on the .home-anim wrappers and the hover/tap transforms on .home-motion
+ * controls. This is the CSS half: stacking, wrapper fill, the transform opt-out
+ * that prevents double-animating one element, the ambient drift, and the LIVE
+ * pulse. Every decorative loop below freezes under prefers-reduced-motion; the
+ * framer motion is gated separately via useReducedMotion(). Only opacity and
+ * transform animate anywhere here — zero layout properties, so zero CLS. */
+
+/* Own stacking context so the fixed blob layer sits behind the content. */
+.home-ui {
+  position: relative;
+  z-index: 0;
+}
+.home-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* .home-anim is the marker for every framer-hidden wrapper (bento tiles + the
+ * nav row); the <noscript> override keys off it. It carries no layout of its own
+ * so it is safe on the nav.
+ *
+ * .home-tile adds the grid-tile layout: a flex column whose single child (the
+ * tile) fills it, so the bento's equal-height rows survive the extra wrapper —
+ * the wrapper is the grid item and stretches to the row height; the tile grows
+ * to fill it. The wrapper carries the grid-area (home-area-*); the inner tile's
+ * own home-area-* is now inert (it is no longer a direct grid child). */
+.home-tile {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.home-tile > * {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Transform opt-out. Controls whose hover/tap transforms are owned by framer
+ * (.home-motion) drop the CSS hover translate so the two never stack on a single
+ * element. The box-shadow change from .home-lift / .home-card stays (framer never
+ * animates shadow). Hover-capable pointers only; touch has no :hover to cancel. */
+@media (hover: hover) {
+  .home-lift.home-motion:hover,
+  .home-card.home-motion:hover {
+    transform: none;
+  }
+}
+
+/* Ambient background drift. Three large, low-alpha, heavily-blurred radial blobs
+ * on slow transform loops (~46-60s — the owner's sweet spot). Fixed + clipped so
+ * they never add scroll; behind content; non-interactive. */
+.home-blobs {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.home-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(72px);
+  will-change: transform;
+}
+.home-blob-a {
+  top: -12%;
+  left: -8%;
+  width: 46vw;
+  height: 46vw;
+  background: radial-gradient(circle, var(--home-blob-a), transparent 68%);
+  animation: home-drift-a 52s ease-in-out infinite;
+}
+.home-blob-b {
+  right: -10%;
+  bottom: -16%;
+  width: 52vw;
+  height: 52vw;
+  background: radial-gradient(circle, var(--home-blob-b), transparent 68%);
+  animation: home-drift-b 60s ease-in-out infinite;
+}
+.home-blob-c {
+  top: 30%;
+  right: 12%;
+  width: 34vw;
+  height: 34vw;
+  background: radial-gradient(circle, var(--home-blob-c), transparent 70%);
+  animation: home-drift-c 46s ease-in-out infinite;
+}
+@keyframes home-drift-a {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(4vw, 3vh, 0) scale(1.08);
+  }
+}
+@keyframes home-drift-b {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-5vw, -2vh, 0) scale(1.1);
+  }
+}
+@keyframes home-drift-c {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-3vw, 4vh, 0) scale(0.92);
+  }
+}
+
+/* GameTile LIVE badge: a tiny opacity + scale breathing on the dot (~2.4s). */
+@keyframes home-live-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.82);
+  }
+}
+.home-live-dot {
+  animation: home-live-pulse 2.4s ease-in-out infinite;
+}
+
+/* Freeze every decorative CSS loop under reduced motion (the framer entrance,
+ * reveals, and tap are gated separately via useReducedMotion()). */
+@media (prefers-reduced-motion: reduce) {
+  .home-blob,
+  .home-live-dot {
+    animation: none;
   }
 }

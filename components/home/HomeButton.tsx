@@ -1,11 +1,16 @@
+'use client'
 import type { CSSProperties, ReactNode } from 'react'
+import { m } from 'framer-motion'
+import { useInteraction } from './motion'
 
 // Rounded button, mirroring the game kit's UiButton (copied, not imported, so
 // the home tree stays free of game deps). `solid` fills with the accent (dark
 // ink on top, which reads on both the night-blue and day-amber accents);
-// `ghost` is a surface plate with a softened border. Both get the shared hover
-// lift (.home-lift). Renders an <a> when given href (external links open in a
-// new tab), otherwise a <button>.
+// `ghost` is a surface plate with a softened border. Both get the resting/hover
+// SHADOW from .home-lift; the lift translate + tap scale are owned by framer
+// (whileHover/whileTap via useInteraction), and .home-motion cancels the CSS
+// hover translate so the transform is never double-animated. Renders an <a> when
+// given href (external links open in a new tab), otherwise a <button>.
 type Common = {
   children: ReactNode
   variant?: 'solid' | 'ghost'
@@ -51,15 +56,16 @@ function styleFor(variant: 'solid' | 'ghost', size: 'sm' | 'md'): CSSProperties 
 
 export function HomeButton(props: AsLink | AsButton) {
   const { children, variant = 'ghost', size = 'md', className, title } = props
-  const cls = `home-corners home-lift${className ? ` ${className}` : ''}`
+  const cls = `home-corners home-lift home-motion${className ? ` ${className}` : ''}`
   const style = styleFor(variant, size)
   const label = props['aria-label']
+  const interaction = useInteraction('control')
 
   if ('href' in props && props.href !== undefined) {
     const external = /^(https?:|mailto:)/.test(props.href)
     const openNew = props.newTab === true || external
     return (
-      <a
+      <m.a
         href={props.href}
         className={cls}
         style={style}
@@ -68,22 +74,24 @@ export function HomeButton(props: AsLink | AsButton) {
         download={props.download}
         target={openNew ? '_blank' : undefined}
         rel={openNew ? 'noopener noreferrer' : undefined}
+        {...interaction}
       >
         {children}
-      </a>
+      </m.a>
     )
   }
 
   return (
-    <button
+    <m.button
       type="button"
       onClick={props.onClick}
       className={cls}
       style={style}
       title={title}
       aria-label={label}
+      {...interaction}
     >
       {children}
-    </button>
+    </m.button>
   )
 }

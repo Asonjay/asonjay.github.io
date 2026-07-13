@@ -106,6 +106,7 @@ export function GameTile({
             }}
           >
             <span
+              className="home-live-dot"
               style={{
                 width: 7,
                 height: 7,

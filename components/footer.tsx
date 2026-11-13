@@ -26,17 +26,13 @@ const buildDate = (() => {
 
 export function Footer() {
   return (
-    <footer className="relative z-10 w-full mt-16">
-      <div className="max-w-screen-xl mx-auto px-6 sm:px-8 py-8">
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-6">
+    <footer className="relative z-10 w-full mt-10">
+      <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 pb-6">
+        <div className="glass-panel !py-5 flex flex-col sm:flex-row justify-between items-center gap-5">
           {/* Credits */}
-          <div className="on-glass text-[0.8125rem] leading-relaxed text-fore-secondary text-center sm:text-left">
+          <div className="text-[0.8125rem] leading-relaxed text-fore-subtle text-center sm:text-left">
             <div className="hidden sm:block mb-1">
-              Design inspired by{' '}
-              <a className="text-accent hover:underline" href="https://variant.com/">
-                Variant
-              </a>
-              . Implemented by{' '}
+              Implemented by{' '}
               <a className="text-accent hover:underline" href="https://claude.ai/code">
                 Claude Code
               </a>

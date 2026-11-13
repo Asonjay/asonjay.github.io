@@ -53,7 +53,7 @@ export async function NewsList({
                         />
                       </div>
                       <span className="font-mono-label whitespace-nowrap flex-shrink-0 text-center leading-tight">
-                        <span className="block text-accent font-bold text-xs">{format(parseISO(item.frontmatter.publishedAt), 'MMM')}</span>
+                        <span className="block text-accent-secondary font-bold text-xs">{format(parseISO(item.frontmatter.publishedAt), 'MMM')}</span>
                         <span className="block text-fore-primary text-lg font-bold leading-none">{format(parseISO(item.frontmatter.publishedAt), 'dd')}</span>
                       </span>
                     </div>

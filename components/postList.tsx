@@ -48,7 +48,7 @@ export async function PostList({
                         </p>
                       </div>
                       <span className="font-mono-label whitespace-nowrap flex-shrink-0 text-center leading-tight">
-                        <span className="block text-accent font-bold text-xs">{format(parseISO(post.publishedAt), 'MMM')}</span>
+                        <span className="block text-accent-secondary font-bold text-xs">{format(parseISO(post.publishedAt), 'MMM')}</span>
                         <span className="block text-fore-primary text-lg font-bold leading-none">{format(parseISO(post.publishedAt), 'dd')}</span>
                       </span>
                     </div>

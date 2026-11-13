@@ -3,14 +3,14 @@
   --tw-text-opacity: 1;
 
   /* Width of one glass rib. The backdrop canvas reads this too. */
-  --rib: 30px;
+  --rib: 22px;
   --radius-panel: 26px;
   --radius-item: 16px;
 }
 
 @media (max-width: 640px) {
   :root {
-    --rib: 20px;
+    --rib: 16px;
     --radius-panel: 22px;
     --radius-item: 14px;
   }
@@ -50,7 +50,11 @@
   --backdrop-rose: #f7b3d0;
   --backdrop-veil: linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05) 30%, rgba(255, 255, 255, 0.16));
   --rib-light: rgba(255, 255, 255, 0.3);
-  --rib-shade: rgba(20, 50, 110, 0.12);
+  --rib-shade: rgba(20, 50, 110, 0.15);
+
+  --color-tag-fg: #1746c4;
+  --color-tag-bg: rgba(23, 70, 196, 0.1);
+  --color-tag-border: rgba(23, 70, 196, 0.22);
 
   --color-gradient-accent1: #1746c4;
   --color-gradient-accent2: #c9482c;
@@ -79,20 +83,20 @@
 .dark {
   --color-fore-primary: #ffffff;
   --color-fore-secondary: rgba(255, 255, 255, 0.88);
-  --color-fore-subtle: rgba(255, 255, 255, 0.72);
+  --color-fore-subtle: rgba(198, 218, 252, 0.84);
 
   --color-back-primary: #1b4488;
   --color-back-secondary: rgba(255, 255, 255, 0.08);
   --color-back-subtle: rgba(255, 255, 255, 0.14);
 
-  /* On glass that sits over both blue and coral, only white reads everywhere;
-     links are told apart by their underline instead of a hue. */
-  --color-accent: #ffffff;
-  --color-accent-secondary: #ffd2c0;
+  /* Two hues lifted from the backdrop: warm for links and names, cool for
+     dates and tags. Panels are tinted deep enough that both read on them. */
+  --color-accent: #ffc7b0;
+  --color-accent-secondary: #a6d6ff;
   --color-back-accent: rgba(255, 255, 255, 0.16);
 
   --color-border: rgba(255, 255, 255, 0.18);
-  --color-panel-bg: rgba(14, 36, 86, 0.4);
+  --color-panel-bg: rgba(12, 30, 74, 0.56);
   --color-panel-border: rgba(255, 255, 255, 0.24);
   --color-panel-shine: rgba(255, 255, 255, 0.22);
   --color-item-bg: rgba(255, 255, 255, 0.08);
@@ -109,8 +113,12 @@
   --backdrop-warm: #ee6146;
   --backdrop-rose: #dd7fae;
   --backdrop-veil: linear-gradient(180deg, rgba(6, 18, 48, 0.3), rgba(6, 18, 48, 0.08) 30%, rgba(6, 18, 48, 0.3));
-  --rib-light: rgba(255, 255, 255, 0.16);
-  --rib-shade: rgba(4, 14, 44, 0.2);
+  --rib-light: rgba(255, 255, 255, 0.14);
+  --rib-shade: rgba(4, 14, 44, 0.26);
+
+  --color-tag-fg: #d3eaff;
+  --color-tag-bg: rgba(150, 205, 255, 0.16);
+  --color-tag-border: rgba(150, 205, 255, 0.34);
 
   --color-gradient-accent1: #ffd2c0;
   --color-gradient-accent2: #b5dcff;
@@ -189,7 +197,9 @@
 /* ─── Fluted glass backdrop ───
    One colour field behind ribbed glass, fixed behind every page. The canvas
    (components/flutedBackdrop.tsx) paints the bent light; the gradient below is
-   what shows before it has drawn, and ::after lays the rib highlights on top. */
+   what shows before it has drawn, and ::after lays light and shade over each
+   rib. That shading starts and ends on the same value, so neighbouring ribs
+   blend into each other with no edge line. */
 
 .backdrop {
   position: fixed;
@@ -221,9 +231,9 @@
     var(--backdrop-veil),
     linear-gradient(
       90deg,
-      var(--rib-light) 0,
-      transparent 22%,
-      transparent 62%,
+      var(--rib-shade) 0,
+      var(--rib-light) 34%,
+      transparent 66%,
       var(--rib-shade) 100%
     );
   background-size: 100% 100%, var(--rib) 100%;
@@ -248,8 +258,8 @@ a.text-accent:hover {
 
 .glass-panel {
   background: var(--color-panel-bg);
-  backdrop-filter: blur(14px) saturate(135%);
-  -webkit-backdrop-filter: blur(14px) saturate(135%);
+  backdrop-filter: blur(20px) saturate(135%);
+  -webkit-backdrop-filter: blur(20px) saturate(135%);
   border: 1px solid var(--color-panel-border);
   border-radius: var(--radius-panel);
   padding: 1.25rem;
@@ -339,13 +349,9 @@ a.text-accent:hover {
 }
 
 .tag-badge-accent {
-  color: var(--color-fore-primary);
-  background: var(--color-back-accent);
-  border-color: var(--color-border);
-}
-
-.light .tag-badge-accent {
-  color: var(--color-accent);
+  color: var(--color-tag-fg);
+  background: var(--color-tag-bg);
+  border-color: var(--color-tag-border);
 }
 
 .tag-badge-red {

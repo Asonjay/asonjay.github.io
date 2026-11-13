@@ -4,10 +4,13 @@ import { useEffect, useRef } from 'react'
 
 // A soft colour field seen through fluted (reeded) glass.
 //
-// The scene is painted very small, then each glass rib redraws a wider slice
-// of it squeezed into the rib's width. That squeeze is what makes real fluted
-// glass repeat and offset whatever is behind it. The crisp rib highlights are
-// a CSS layer on top (.backdrop::after), so the canvas itself can stay cheap.
+// The scene is painted very small, then redrawn column by column with each
+// column looking sideways by an amount that depends on where it sits in its
+// glass rib. Across a rib the view sweeps over a much wider slice of the scene
+// (the squeeze that makes fluted glass repeat what is behind it); at the rib's
+// edge it folds smoothly back for the next one, so ribs melt into each other
+// instead of meeting at a hard line. The soft light-and-shade on each rib is a
+// CSS layer on top (.backdrop::after).
 
 type Spot = {
   x: number // centre, 0..1 of scene width
@@ -27,13 +30,13 @@ const DUSK: Palette = {
   top: '#2c68b4',
   bottom: '#1a438a',
   spots: [
-    { x: 0.9, y: 0.2, rx: 0.42, ry: 0.6, color: '#63aee4', driftX: 0.04, driftY: 0.05, period: 46, phase: 0.3 },
-    { x: 0.12, y: 0.98, rx: 0.34, ry: 0.42, color: '#e9b7d3', driftX: 0.05, driftY: 0.03, period: 38, phase: 2.1 },
-    { x: 0.4, y: 0.86, rx: 0.36, ry: 0.4, color: '#dd7fae', driftX: 0.05, driftY: 0.04, period: 52, phase: 4.0 },
-    { x: 0.34, y: 0.52, rx: 0.3, ry: 0.46, color: '#ee6146', driftX: 0.06, driftY: 0.05, period: 41, phase: 1.2 },
-    { x: 0.31, y: 0.6, rx: 0.15, ry: 0.24, color: '#ff9150', driftX: 0.05, driftY: 0.06, period: 33, phase: 5.2 },
-    { x: 0.6, y: 0.2, rx: 0.075, ry: 0.15, color: '#0e2260', driftX: 0.035, driftY: 0.012, period: 29, phase: 0.9 },
-    { x: 0.59, y: 0.74, rx: 0.14, ry: 0.56, color: '#0e2260', driftX: 0.035, driftY: 0.012, period: 29, phase: 0.9 },
+    { x: 0.9, y: 0.2, rx: 0.42, ry: 0.6, color: '#63aee4', driftX: 0.12, driftY: 0.08, period: 56, phase: 0.3 },
+    { x: 0.12, y: 0.98, rx: 0.34, ry: 0.42, color: '#e9b7d3', driftX: 0.14, driftY: 0.05, period: 47, phase: 2.1 },
+    { x: 0.4, y: 0.86, rx: 0.36, ry: 0.4, color: '#dd7fae', driftX: 0.16, driftY: 0.06, period: 63, phase: 4.0 },
+    { x: 0.34, y: 0.52, rx: 0.3, ry: 0.46, color: '#ee6146', driftX: 0.14, driftY: 0.08, period: 52, phase: 1.2 },
+    { x: 0.31, y: 0.6, rx: 0.15, ry: 0.24, color: '#ff9150', driftX: 0.18, driftY: 0.1, period: 40, phase: 5.2 },
+    { x: 0.6, y: 0.2, rx: 0.075, ry: 0.15, color: '#0e2260', driftX: 0.17, driftY: 0.012, period: 74, phase: 0.9 },
+    { x: 0.59, y: 0.74, rx: 0.14, ry: 0.56, color: '#0e2260', driftX: 0.17, driftY: 0.012, period: 74, phase: 0.9 },
   ],
 }
 
@@ -41,20 +44,35 @@ const DAY: Palette = {
   top: '#9fcdf3',
   bottom: '#76b0e8',
   spots: [
-    { x: 0.9, y: 0.2, rx: 0.42, ry: 0.6, color: '#e2f3ff', driftX: 0.04, driftY: 0.05, period: 46, phase: 0.3 },
-    { x: 0.12, y: 0.98, rx: 0.34, ry: 0.42, color: '#fde3ee', driftX: 0.05, driftY: 0.03, period: 38, phase: 2.1 },
-    { x: 0.4, y: 0.86, rx: 0.36, ry: 0.4, color: '#f7b3d0', driftX: 0.05, driftY: 0.04, period: 52, phase: 4.0 },
-    { x: 0.34, y: 0.52, rx: 0.3, ry: 0.46, color: '#ff8f72', driftX: 0.06, driftY: 0.05, period: 41, phase: 1.2 },
-    { x: 0.31, y: 0.6, rx: 0.15, ry: 0.24, color: '#ffb27a', driftX: 0.05, driftY: 0.06, period: 33, phase: 5.2 },
-    { x: 0.6, y: 0.2, rx: 0.075, ry: 0.15, color: '#3a66c4', driftX: 0.035, driftY: 0.012, period: 29, phase: 0.9 },
-    { x: 0.59, y: 0.74, rx: 0.14, ry: 0.56, color: '#3a66c4', driftX: 0.035, driftY: 0.012, period: 29, phase: 0.9 },
+    { x: 0.9, y: 0.2, rx: 0.42, ry: 0.6, color: '#e2f3ff', driftX: 0.12, driftY: 0.08, period: 56, phase: 0.3 },
+    { x: 0.12, y: 0.98, rx: 0.34, ry: 0.42, color: '#fde3ee', driftX: 0.14, driftY: 0.05, period: 47, phase: 2.1 },
+    { x: 0.4, y: 0.86, rx: 0.36, ry: 0.4, color: '#f7b3d0', driftX: 0.16, driftY: 0.06, period: 63, phase: 4.0 },
+    { x: 0.34, y: 0.52, rx: 0.3, ry: 0.46, color: '#ff8f72', driftX: 0.14, driftY: 0.08, period: 52, phase: 1.2 },
+    { x: 0.31, y: 0.6, rx: 0.15, ry: 0.24, color: '#ffb27a', driftX: 0.18, driftY: 0.1, period: 40, phase: 5.2 },
+    { x: 0.6, y: 0.2, rx: 0.075, ry: 0.15, color: '#3a66c4', driftX: 0.17, driftY: 0.012, period: 74, phase: 0.9 },
+    { x: 0.59, y: 0.74, rx: 0.14, ry: 0.56, color: '#3a66c4', driftX: 0.17, driftY: 0.012, period: 74, phase: 0.9 },
   ],
 }
 
-const SCENE_W = 176 // tiny on purpose: upscaling it is the blur
-const SCENE_PAD = 16 // spare scene on each side so edge ribs have something to bend
-const LENS = 3.2 // how much wider than itself each rib "sees"
-const FRAME_MS = 1000 / 24
+const SCENE_W = 224 // tiny on purpose: upscaling it is the blur
+const SCENE_PAD = 40 // spare scene on each side so edge ribs have something to bend
+// How much wider than itself each rib "sees". High enough that every rib
+// carries its own visible gradient.
+const LENS = 7
+// Share of each rib spent folding the view back for the next rib. Bigger is a
+// softer, wider seam; zero would be a hard edge.
+const SEAM = 0.4
+const COLUMN = 2 // screen pixels per canvas column; the browser smooths the rest
+const FRAME_MS = 1000 / 30
+
+// Where a column looks, from -1 (far left of the rib's slice) to 1 (far right).
+// `u` runs 0..1 across one rib, with the seam centred on the rib boundary.
+function bend(u: number) {
+  const half = SEAM / 2
+  if (u >= half && u <= 1 - half) return -1 + (2 * (u - half)) / (1 - SEAM)
+  const t = (u < half ? u + half : u - (1 - half)) / SEAM
+  return Math.cos(Math.PI * t)
+}
 
 function paintScene(
   ctx: CanvasRenderingContext2D,
@@ -108,20 +126,30 @@ export function FlutedBackdrop() {
     const root = document.documentElement
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
 
-    let rib = 30
     let frame = 0
     let lastPaint = 0
+    // For every canvas column, the scene x it samples. Rebuilt on resize.
+    let sourceX = new Float32Array(0)
 
     const resize = () => {
       const width = Math.max(1, Math.round(window.innerWidth))
       const height = Math.max(1, Math.round(window.innerHeight))
-      rib = parseFloat(getComputedStyle(root).getPropertyValue('--rib')) || 30
-      // Full width keeps rib edges on whole pixels; nothing in the scene is
-      // sharp vertically, so a quarter of the height is plenty.
-      canvas.width = width
+      const rib = parseFloat(getComputedStyle(root).getPropertyValue('--rib')) || 22
+      // Nothing in the scene is sharp, so the canvas can be well under screen
+      // resolution in both directions.
+      canvas.width = Math.ceil(width / COLUMN)
       canvas.height = Math.max(1, Math.round(height / 4))
       scene.width = SCENE_W
       scene.height = Math.max(48, Math.round((SCENE_W * height) / width))
+
+      const perPixel = (SCENE_W - SCENE_PAD * 2) / width
+      const reach = Math.min((rib * (LENS - 1)) / 2, (SCENE_PAD - 1) / perPixel)
+      sourceX = new Float32Array(canvas.width)
+      for (let column = 0; column < canvas.width; column++) {
+        const x = (column + 0.5) * COLUMN
+        const u = (x % rib) / rib
+        sourceX[column] = SCENE_PAD + (x + reach * bend(u)) * perPixel
+      }
     }
 
     const draw = (seconds: number) => {
@@ -129,19 +157,9 @@ export function FlutedBackdrop() {
       paintScene(sceneCtx, palette, scene.width, scene.height, seconds)
 
       const { width, height } = canvas
-      const inner = scene.width - SCENE_PAD * 2
-      const perPixel = inner / width
-      const sourceWidth = Math.min(rib * LENS * perPixel, SCENE_PAD * 2)
-
       ctx.imageSmoothingEnabled = true
-      ctx.imageSmoothingQuality = 'high'
-      for (let x = 0; x < width; x += rib) {
-        const centre = SCENE_PAD + (x + rib / 2) * perPixel
-        ctx.drawImage(
-          scene,
-          centre - sourceWidth / 2, 0, sourceWidth, scene.height,
-          x, 0, rib, height
-        )
+      for (let column = 0; column < width; column++) {
+        ctx.drawImage(scene, sourceX[column] - 0.5, 0, 1, scene.height, column, 0, 1, height)
       }
     }
 

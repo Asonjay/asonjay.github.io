@@ -9,11 +9,15 @@ cyan "tech dashboard" look: dot grid, gradient orbs, mono uppercase labels.)
 
 - `components/flutedBackdrop.tsx` paints the scene on a fixed canvas behind every page.
 - The scene is drawn tiny (soft blobs: sky blue, coral, orange, rose, and a tall
-  navy "figure"), then each glass rib redraws a wider slice squeezed into its own
-  width. That squeeze is the fluted-glass refraction.
-- Rib highlights and the top/bottom veil are CSS (`.backdrop::after` in `globals.css`).
-- Rib width is the `--rib` CSS variable (30px, 20px on phones). The canvas reads it.
-- Blobs drift slowly (24fps, 30-50s cycles). With reduced motion on, one still frame.
+  navy "figure"), then redrawn column by column. Across each rib the view sweeps
+  over a slice about 7x the rib's width (`LENS`); at the rib's edge it folds
+  smoothly back (`SEAM`), so ribs melt into each other with no hard border line.
+  Jason asked for this explicitly: strong per-rib gradient, soft seams.
+- Rib light-and-shade and the top/bottom veil are CSS (`.backdrop::after` in
+  `globals.css`). The shading starts and ends on the same value for the same reason.
+- Rib width is the `--rib` CSS variable (22px, 16px on phones). The canvas reads it.
+- Blobs drift visibly but slowly (30fps, 40-75s cycles, up to ~18% of the screen).
+  With reduced motion on, one still frame.
 - Palettes for both themes live at the top of the component (`DUSK`, `DAY`).
 - `public/videos/background.mp4` and `components/backgroundVideo.tsx` are no longer used.
 
@@ -23,16 +27,19 @@ All colours are CSS variables in `app/styles/globals.css`.
 
 ### Dusk (default, `.dark`)
 - Text: white, white 88%, white 72%
-- Panels: navy `rgba(14, 36, 86, 0.4)` with a white 24% border
+- Panel border: white 24%
 - Items inside panels: white 8%, white 15% on hover
-- Accent: white. Panels sit over both blue and coral, so links are marked by an
-  underline rather than a hue.
+- Panels: navy `rgba(12, 30, 74, 0.56)`, deep enough that coloured text reads
+  even where coral shows through.
+- Two accents lifted from the backdrop so panels aren't all one colour: warm
+  peach `#ffc7b0` (links, own name in author lists) and sky `#a6d6ff` (month
+  labels, venue marker, tags). Quiet text is a blue-tinted white, not plain grey.
 - Solid buttons: white with navy text (`--color-solid` / `--color-on-solid`)
 
 ### Day (`.light`)
 - Text: ink `#0b1e3f`, `#22365c`, `#47597b`
 - Panels: white 60% with a white 80% border
-- Accent: cobalt `#1746c4` (links are also underlined)
+- Accent: cobalt `#1746c4` (links, tags); secondary coral `#c9482c` (month labels)
 - Solid buttons: ink with white text
 
 ### Urgency Colors (Deadlines)
@@ -74,6 +81,9 @@ No uppercase mono labels, no underscore names (`Latest_News`), no emoji in headi
 ### Sub-pages
 One glass panel inside `max-w-screen-xl`: breadcrumb + back icon, page title,
 optional description, divider, content.
+
+### Footer
+Its own glass panel (credit line + social buttons), never bare text on the backdrop.
 
 ### Header
 Three floating frosted pills (`.nav-pill`): name mark, page links, controls

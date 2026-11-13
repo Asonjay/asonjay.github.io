@@ -97,7 +97,7 @@ export function PublicationList({
 
                       {/* Venue */}
                       <div className="font-mono-label text-[0.7rem] text-fore-subtle mb-2.5 flex items-center gap-1">
-                        <span className="text-accent font-bold">@</span>
+                        <span className="text-accent-secondary font-bold">@</span>
                         <span className="italic">{pub.venue}</span>
                       </div>
 

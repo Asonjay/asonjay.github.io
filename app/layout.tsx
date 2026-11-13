@@ -61,8 +61,14 @@ export const metadata: Metadata = {
     card: 'summary',
     images: ['https://zexinxu.com/images/JJ-icon.png'],
   },
+  // The JJ mark on a white disc, generated from public/images/JJ-icon.png.
   icons: {
+    icon: [
+      { url: '/static/favicon.ico', sizes: '48x48' },
+      { url: '/static/icon-192.png', type: 'image/png', sizes: '192x192' },
+    ],
     shortcut: '/static/favicon.ico',
+    apple: '/static/apple-touch-icon.png',
   },
 }
 

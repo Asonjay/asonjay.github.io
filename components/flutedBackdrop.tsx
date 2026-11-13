@@ -2,66 +2,68 @@
 
 import { useEffect, useRef } from 'react'
 
-// Ribbons of light flowing behind fluted ("fractal") glass.
+// A soft colour field seen through fluted (reeded) glass.
 //
-// The scene is painted very small: a dark field with a few soft, glowing bands
-// that bend and travel like silk. It is then redrawn column by column, each
+// The scene is painted very small, then redrawn column by column with each
 // column looking sideways by an amount that depends on where it sits in its
-// glass rib. Across a rib the view sweeps over a much wider slice of the scene,
-// so a slanted band turns into a row of steep, feathered strokes that step from
-// rib to rib. At the rib's edge the view folds quickly back for the next one,
-// which keeps the edge from reading as a drawn line. The faint light-and-shade
-// on each rib is a CSS layer on top (.backdrop::after).
+// glass rib. Across a rib the view sweeps over a much wider slice of the scene
+// (the squeeze that makes fluted glass repeat what is behind it); at the rib's
+// edge it folds smoothly back for the next one, so ribs melt into each other
+// instead of meeting at a hard line. The soft light-and-shade on each rib is a
+// CSS layer on top (.backdrop::after).
 
-type Ribbon = {
-  y: number // resting height, 0..1 of the scene
-  width: number // thickness, as a fraction of scene height
-  swell: number // how far its waves rise and fall, as a fraction of scene height
-  crests: number // waves across the screen
-  period: number // seconds for a wave to travel one full cycle
-  strength: number // opacity of each soft layer; higher is a brighter core
+type Spot = {
+  x: number // home position, 0..1 of scene width
+  y: number // home position, 0..1 of scene height
+  rx: number // radius, as a fraction of scene width
+  ry: number // radius, as a fraction of scene height
+  color: string
+  roamX: number // how far it may wander from home, as a fraction of the scene
+  roamY: number
+  mover: number // spots sharing a mover travel together (the figure's head and body)
 }
 
-type Palette = {
-  top: string
-  bottom: string
-  colors: string[]
-  // 'lighter' adds light on a dark field; 'source-over' lays tint on a pale one
-  blend: GlobalCompositeOperation
-}
+type Palette = { top: string; bottom: string; colors: string[] }
 
-// Painted back to front: a broad dim wash, the main band, a thin bright one.
-const RIBBONS: Ribbon[] = [
-  { y: 0.62, width: 0.44, swell: 0.16, crests: 0.55, period: 46, strength: 0.04 },
-  { y: 0.52, width: 0.26, swell: 0.2, crests: 0.8, period: 31, strength: 0.085 },
-  { y: 0.36, width: 0.13, swell: 0.24, crests: 1.05, period: 24, strength: 0.085 },
+// Shape and wandering range of each spot; the two themes only recolour them.
+const SPOTS: Omit<Spot, 'color'>[] = [
+  { x: 0.85, y: 0.25, rx: 0.42, ry: 0.6, roamX: 0.26, roamY: 0.3, mover: 0 }, // sky glow
+  { x: 0.15, y: 0.9, rx: 0.34, ry: 0.42, roamX: 0.3, roamY: 0.3, mover: 1 }, // pale rose
+  { x: 0.42, y: 0.8, rx: 0.36, ry: 0.4, roamX: 0.32, roamY: 0.34, mover: 2 }, // rose
+  { x: 0.34, y: 0.5, rx: 0.3, ry: 0.46, roamX: 0.3, roamY: 0.32, mover: 3 }, // coral
+  { x: 0.31, y: 0.58, rx: 0.15, ry: 0.24, roamX: 0.34, roamY: 0.36, mover: 4 }, // orange core
+  { x: 0.6, y: 0.2, rx: 0.075, ry: 0.15, roamX: 0.3, roamY: 0.14, mover: 5 }, // figure: head
+  { x: 0.59, y: 0.74, rx: 0.14, ry: 0.56, roamX: 0.3, roamY: 0.14, mover: 5 }, // figure: body
 ]
 
 const DUSK: Palette = {
-  top: '#050f26',
-  bottom: '#0a1c42',
-  colors: ['#ff5f3d', '#ffa63f', '#b9dcff'],
-  blend: 'lighter',
+  top: '#2c68b4',
+  bottom: '#1a438a',
+  colors: ['#63aee4', '#e9b7d3', '#dd7fae', '#ee6146', '#ff9150', '#0e2260', '#0e2260'],
 }
 
 const DAY: Palette = {
-  top: '#e6eff9',
-  bottom: '#cfe0f4',
-  colors: ['#f6a9c9', '#ff8a5c', '#5f9df0'],
-  blend: 'source-over',
+  top: '#9fcdf3',
+  bottom: '#76b0e8',
+  colors: ['#e2f3ff', '#fde3ee', '#f7b3d0', '#ff8f72', '#ffb27a', '#3a66c4', '#3a66c4'],
 }
 
 const SCENE_W = 224 // tiny on purpose: upscaling it is the blur
 const SCENE_PAD = 40 // spare scene on each side so edge ribs have something to bend
 // How much wider than itself each rib "sees". High enough that every rib
 // carries its own visible gradient.
-const LENS = 5.5
+const LENS = 7
 // Share of each rib spent folding the view back for the next rib. Zero is a
 // hard edge line; much above 0.2 and the whole sheet starts to look blurred.
-const SEAM = 0.12
-const LAYERS = 10 // soft layers per ribbon, widest first
-const SEGMENTS = 40
+// This is about two pixels: enough to take the line away, no more.
+const SEAM = 0.1
+// Draw at the screen's real pixel density (up to 2x) so rib edges stay sharp
+// on high-density displays instead of being a stretched low-resolution image.
+const MAX_DENSITY = 2
 const FRAME_MS = 1000 / 30
+
+// One drawImage call: a strip of the scene stretched onto a strip of the canvas.
+type Slice = { sx: number; sw: number; dx: number; dw: number }
 
 // Where a column looks, from -1 (far left of the rib's slice) to 1 (far right).
 // `u` runs 0..1 across one rib, with the seam centred on the rib boundary.
@@ -72,11 +74,12 @@ function bend(u: number) {
   return Math.cos(Math.PI * t)
 }
 
-// A wandering value: three sine waves of unrelated speeds added together. It
-// never visibly repeats, has no sudden turns, and stays within -1..1.
+// A wandering path: three sine waves of unrelated speeds added together on each
+// axis. It never visibly repeats, has no sudden turns, and stays within -1..1.
 type Wander = { speed: number[]; phase: number[] }
 
-const SWING = [71, 43, 26] // seconds for one swing of the slow, medium, quick wave
+// Seconds for one swing of the slow, medium and quick wave.
+const SWING = [67, 41, 23]
 const WEIGHT = [1, 0.6, 0.35]
 const WEIGHT_SUM = WEIGHT[0] + WEIGHT[1] + WEIGHT[2]
 
@@ -93,71 +96,42 @@ function wanderAt(w: Wander, seconds: number) {
   return sum / WEIGHT_SUM
 }
 
-// What makes each ribbon's motion its own; rolled fresh on every visit.
-type Motion = { rise: Wander; tilt: Wander; phase: number; phase2: number; direction: number }
-
-function newMotion(): Motion {
-  return {
-    rise: newWander(),
-    tilt: newWander(),
-    phase: Math.random() * Math.PI * 2,
-    phase2: Math.random() * Math.PI * 2,
-    direction: Math.random() < 0.5 ? 1 : -1,
-  }
-}
-
 function paintScene(
   ctx: CanvasRenderingContext2D,
   palette: Palette,
-  motions: Motion[],
+  paths: { x: Wander; y: Wander }[],
   w: number,
   h: number,
   seconds: number
 ) {
-  ctx.globalCompositeOperation = 'source-over'
-  ctx.globalAlpha = 1
   const base = ctx.createLinearGradient(0, 0, 0, h)
   base.addColorStop(0, palette.top)
   base.addColorStop(1, palette.bottom)
+  ctx.globalAlpha = 1
   ctx.fillStyle = base
   ctx.fillRect(0, 0, w, h)
 
-  ctx.globalCompositeOperation = palette.blend
-  ctx.lineCap = 'round'
-  ctx.lineJoin = 'round'
+  SPOTS.forEach((spot, i) => {
+    const path = paths[spot.mover]
+    const color = palette.colors[i]
+    const cx = (spot.x + wanderAt(path.x, seconds) * spot.roamX) * w
+    const cy = (spot.y + wanderAt(path.y, seconds) * spot.roamY) * h
 
-  RIBBONS.forEach((ribbon, i) => {
-    const motion = motions[i]
-    const travel = motion.direction * (seconds / ribbon.period) * Math.PI * 2
-    const rise = wanderAt(motion.rise, seconds) * 0.2
-    const tilt = wanderAt(motion.tilt, seconds) * 0.55
-
-    // The ribbon's centre line: a slow wave travelling sideways, a second wave
-    // running against it so it never just slides, plus a drifting slope.
+    // Unit-circle gradient stretched into an ellipse.
+    ctx.save()
+    ctx.translate(cx, cy)
+    ctx.scale(spot.rx * w, spot.ry * h)
+    const glow = ctx.createRadialGradient(0, 0, 0, 0, 0, 1)
+    glow.addColorStop(0, color)
+    glow.addColorStop(0.45, color)
+    glow.addColorStop(1, `${color}00`) // same hue at zero alpha, so the edge doesn't grey out
+    ctx.fillStyle = glow
+    ctx.globalAlpha = 0.95
     ctx.beginPath()
-    for (let s = 0; s <= SEGMENTS; s++) {
-      const x = s / SEGMENTS
-      const y =
-        ribbon.y +
-        rise +
-        tilt * (x - 0.5) +
-        ribbon.swell * Math.sin(x * ribbon.crests * Math.PI * 2 + travel + motion.phase) +
-        ribbon.swell * 0.45 * Math.sin(x * ribbon.crests * 2.9 - travel * 0.6 + motion.phase2)
-      if (s === 0) ctx.moveTo(x * w, y * h)
-      else ctx.lineTo(x * w, y * h)
-    }
-
-    // Stack ever-narrower strokes: a soft edge that builds to a bright core.
-    ctx.strokeStyle = palette.colors[i]
-    ctx.globalAlpha = ribbon.strength
-    for (let layer = 0; layer < LAYERS; layer++) {
-      ctx.lineWidth = ribbon.width * h * (1 - layer / LAYERS)
-      ctx.stroke()
-    }
+    ctx.arc(0, 0, 1, 0, Math.PI * 2)
+    ctx.fill()
+    ctx.restore()
   })
-
-  ctx.globalCompositeOperation = 'source-over'
-  ctx.globalAlpha = 1
 }
 
 export function FlutedBackdrop() {
@@ -173,42 +147,72 @@ export function FlutedBackdrop() {
 
     const root = document.documentElement
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
-    const motions = RIBBONS.map(newMotion)
+
+    // One wandering path per mover, rolled fresh on every visit.
+    const movers = Math.max(...SPOTS.map(s => s.mover)) + 1
+    const paths = Array.from({ length: movers }, () => ({ x: newWander(), y: newWander() }))
 
     let frame = 0
     let lastPaint = 0
-    // For every canvas column, the scene x it samples. Rebuilt on resize.
-    let sourceX = new Float32Array(0)
+    // The strips that make up one frame. Rebuilt on resize.
+    let slices: Slice[] = []
 
     const resize = () => {
       const width = Math.max(1, Math.round(window.innerWidth))
       const height = Math.max(1, Math.round(window.innerHeight))
-      const rib = parseFloat(getComputedStyle(root).getPropertyValue('--rib')) || 28
-      // One canvas column per screen pixel keeps the ribs crisp; the bands are
-      // soft top to bottom, so a third of the height is plenty.
-      canvas.width = width
-      canvas.height = Math.max(1, Math.round(height / 3))
+      const rib = parseFloat(getComputedStyle(root).getPropertyValue('--rib')) || 22
+      const density = Math.min(window.devicePixelRatio || 1, MAX_DENSITY)
+      // Full pixel density across, where the rib edges are. Nothing in the
+      // scene is sharp vertically, so a quarter of the height is plenty.
+      canvas.width = Math.round(width * density)
+      canvas.height = Math.max(1, Math.round(height / 4))
       scene.width = SCENE_W
-      scene.height = Math.max(64, Math.round((SCENE_W * height) / width))
+      scene.height = Math.max(48, Math.round((SCENE_W * height) / width))
 
       const perPixel = (SCENE_W - SCENE_PAD * 2) / width
       const reach = Math.min((rib * (LENS - 1)) / 2, (SCENE_PAD - 1) / perPixel)
-      sourceX = new Float32Array(width)
-      for (let column = 0; column < width; column++) {
-        const x = column + 0.5
-        const u = (x % rib) / rib
-        sourceX[column] = SCENE_PAD + (x + reach * bend(u)) * perPixel
+      const half = (SEAM * rib) / 2
+      slices = []
+
+      // The body of each rib is a straight squeeze, so one stretched strip
+      // draws it exactly.
+      for (let left = 0; left < width; left += rib) {
+        const from = left + half
+        const to = left + rib - half
+        slices.push({
+          sx: SCENE_PAD + (from - reach) * perPixel,
+          sw: (to - from + 2 * reach) * perPixel,
+          dx: from * density,
+          dw: (to - from) * density,
+        })
+      }
+
+      // The seams between ribs curve, so they go in pixel by pixel. Drawn
+      // after the bodies so they also cover the bodies' soft ends.
+      for (let centre = 0; centre <= width + rib; centre += rib) {
+        const first = Math.max(0, Math.floor((centre - half) * density))
+        const last = Math.min(canvas.width, Math.ceil((centre + half) * density))
+        for (let column = first; column < last; column++) {
+          const x = (column + 0.5) / density
+          const u = (x % rib) / rib
+          slices.push({
+            sx: SCENE_PAD + (x + reach * bend(u)) * perPixel - 0.5,
+            sw: 1,
+            dx: column,
+            dw: 1,
+          })
+        }
       }
     }
 
     const draw = (seconds: number) => {
       const palette = root.classList.contains('light') ? DAY : DUSK
-      paintScene(sceneCtx, palette, motions, scene.width, scene.height, seconds)
+      paintScene(sceneCtx, palette, paths, scene.width, scene.height, seconds)
 
-      const { width, height } = canvas
+      const height = canvas.height
       ctx.imageSmoothingEnabled = true
-      for (let column = 0; column < width; column++) {
-        ctx.drawImage(scene, sourceX[column] - 0.5, 0, 1, scene.height, column, 0, 1, height)
+      for (const slice of slices) {
+        ctx.drawImage(scene, slice.sx, 0, slice.sw, scene.height, slice.dx, 0, slice.dw, height)
       }
     }
 
@@ -222,7 +226,7 @@ export function FlutedBackdrop() {
     const start = () => {
       cancelAnimationFrame(frame)
       if (reducedMotion.matches) {
-        draw(12) // one settled frame, no motion
+        draw(12) // one settled frame, no drift
       } else {
         frame = requestAnimationFrame(loop)
       }

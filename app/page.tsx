@@ -15,15 +15,6 @@ import ProjectList from 'components/projectList'
 import Introduction from '../components/introduction'
 import avatar from '../public/images/profile-img.jpeg'
 import { wenKai } from './fonts'
-import { CV_URL } from '../lib/route'
-
-function ArrowUpRight() {
-  return (
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M7 17L17 7M8 7h9v9" />
-    </svg>
-  )
-}
 
 function SocialLinks() {
   const icon = 'w-[1.125rem] h-[1.125rem]'
@@ -65,11 +56,15 @@ export default async function Page() {
       <section className="glass-panel grid gap-y-6 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-x-10" aria-labelledby="identity-title">
         <div className="lg:col-start-1 lg:row-start-1">
           <h1 id="identity-title" className="identity-title text-fore-primary">
-            Hi there, I&apos;m Zexin Xu
-            <span className={`identity-cjk ${wenKai.className}`}>徐泽鑫</span>
+            Hi there, I&apos;m Zexin Xu{' '}
+            <span className="whitespace-nowrap">
+              (<span className={wenKai.className}>徐泽鑫</span>)
+            </span>
           </h1>
           <p className="mt-2.5 text-[0.9375rem] leading-relaxed text-fore-subtle">
-            My name is pronounced as &quot;Zeh-Shin She&quot;, and I also go by{' '}
+            My full name is pronounced as{' '}
+            <span className="ipa" lang="en-fonipa">/zɛˈʃɪn ʃiː/</span>, with the &quot;X&quot; sounding
+            like &quot;sh&quot;. I also go by{' '}
             <strong className="font-semibold text-fore-primary">Jason</strong>.
           </p>
         </div>
@@ -110,16 +105,6 @@ export default async function Page() {
         <div className="lg:col-start-1 lg:row-start-2">
           <div className="intro-copy text-fore-secondary text-[0.9375rem] leading-relaxed xl:columns-2 xl:gap-10">
             <Introduction />
-          </div>
-          <div className="flex flex-wrap gap-2.5 mt-5">
-            <a href={CV_URL} target="_blank" rel="noopener noreferrer" className="btn-solid btn-lg">
-              View CV
-              <ArrowUpRight />
-            </a>
-            <Link href="/publications" className="btn-outline btn-lg">
-              Publications
-              <ArrowUpRight />
-            </Link>
           </div>
         </div>
       </section>

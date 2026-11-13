@@ -92,8 +92,9 @@ A serif italic (Fraunces) was tried for panel titles and rejected by Jason.
 ### Homepage
 - **Identity panel**: the page starts right under the nav with one glass panel, no
   empty hero above it. Left: "Hi there, I'm Zexin Xu 徐泽鑫" (`.identity-title`,
-  max 2.375rem), the pronunciation sentence, the introduction (two columns from
-  `xl`), then "View CV" and "Publications" pills. Right, behind a hairline: a large
+  max 2.375rem, greeting, name and Chinese name all one size), the pronunciation in
+  IPA (`.ipa`), the introduction (two columns from
+  `xl`). No buttons: Jason had the CV and Publications pills removed. Right, behind a hairline: a large
   photo (176px), name, role, university, social links. On phones: greeting, a photo
   row with the social links under it, then the introduction.
   Jason rejected every version that left the greeting on bare glass with space

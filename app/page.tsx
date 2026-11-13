@@ -15,6 +15,15 @@ import ProjectList from 'components/projectList'
 import Introduction from '../components/introduction'
 import avatar from '../public/images/profile-img.jpeg'
 import { wenKai } from './fonts'
+import { CV_URL } from '../lib/route'
+
+function ArrowUpRight() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M7 17L17 7M8 7h9v9" />
+    </svg>
+  )
+}
 
 function ViewAll({ href, label }: { href: string; label: string }) {
   return (
@@ -29,36 +38,36 @@ function ViewAll({ href, label }: { href: string; label: string }) {
 export default async function Page() {
   return (
     <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 pb-6 space-y-5 sm:space-y-6">
-      {/* ─── Hero: the glass gets the room; name bottom-left, profile top-right ─── */}
-      <section className="flex flex-col lg:flex-col-reverse lg:justify-between gap-8 pt-[16svh] pb-4 sm:pt-[20svh] lg:pt-6 lg:pb-8 lg:min-h-[calc(100svh-11.5rem)]">
-        <div>
-          <h1 className="on-glass text-fore-primary">
-            <span className="hero-greeting">Hi there, I&apos;m</span>
-            <span className="hero-name">
+      {/* ─── Hero: greeting on the glass at the left, profile panel at the right,
+          both resting on the same line above the first content panel ─── */}
+      <section className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 lg:gap-12 pt-[11svh] pb-2 sm:pt-[14svh] lg:pt-6 lg:pb-8 lg:min-h-[calc(100svh-11.5rem)]">
+        <div className="lg:pb-2">
+          <h1 className="hero-title on-glass text-fore-primary">
+            <span className="block text-fore-secondary">Hi there, I&apos;m</span>
+            <span className="block">
               Zexin Xu
               <span className={`hero-name-cjk ${wenKai.className}`}>徐泽鑫</span>
             </span>
           </h1>
-          <ul className="flex flex-wrap gap-2 mt-6 sm:mt-8">
-            <li className="chip">
-              <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M11 5L6 9H3v6h3l5 4V5z" /><path d="M15.5 8.5a5 5 0 010 7" /><path d="M18.5 5.5a9 9 0 010 13" />
-              </svg>
-              <span>
-                Pronounced <strong>&quot;Zeh-Shin She&quot;</strong>
-              </span>
-            </li>
-            <li className="chip">
-              <span>
-                I also go by <strong>Jason</strong>
-              </span>
-            </li>
-          </ul>
+          <p className="on-glass mt-5 max-w-[42ch] text-[0.9375rem] sm:text-base leading-relaxed text-fore-secondary">
+            My name is pronounced as &quot;Zeh-Shin She&quot;, and I also go by{' '}
+            <strong className="font-semibold text-fore-primary">Jason</strong>.
+          </p>
+          <div className="flex flex-wrap gap-2.5 mt-7">
+            <a href={CV_URL} target="_blank" rel="noopener noreferrer" className="btn-solid btn-lg">
+              View CV
+              <ArrowUpRight />
+            </a>
+            <Link href="/publications" className="btn-glass btn-lg">
+              Publications
+              <ArrowUpRight />
+            </Link>
+          </div>
         </div>
 
-        <aside className="glass-panel !p-4 w-full sm:w-[22rem] lg:self-end lg:mt-16">
+        <aside className="glass-panel !p-4 sm:!p-5 w-full lg:w-[23.5rem] flex-shrink-0" aria-label="Profile">
           <div className="flex items-center gap-4">
-            <div className="relative w-[5.5rem] h-[5.5rem] flex-shrink-0 avatar-border">
+            <div className="relative w-16 h-16 flex-shrink-0 avatar-border">
               <Image
                 src={avatar}
                 alt="Zexin (Jason) Xu"
@@ -71,28 +80,49 @@ export default async function Page() {
               />
             </div>
             <div className="min-w-0">
-              <div className="text-lg font-medium tracking-tight text-fore-primary leading-tight">
+              <div className="text-[1.0625rem] font-semibold tracking-tight text-fore-primary leading-tight">
                 Zexin (Jason) Xu
               </div>
-              <div className="text-sm text-fore-secondary mt-1.5">PhD Student</div>
-              <div className="text-sm text-fore-subtle">University of Texas at Dallas</div>
+              <div className="text-[0.8125rem] text-fore-subtle mt-1">PhD Student, Computer Science</div>
             </div>
           </div>
-          <div className="social-group flex items-stretch rounded-full overflow-hidden mt-4">
+
+          <dl className="mt-4 space-y-2">
+            <div className="panel-list-item">
+              <dt className="profile-label">Affiliation</dt>
+              <dd className="mt-1 text-[0.9375rem] font-medium text-fore-primary leading-snug">
+                University of Texas at Dallas
+              </dd>
+              <dd className="mt-0.5 text-[0.8125rem] text-fore-subtle leading-snug">
+                Co-advised by Dr. Yapeng Tian and Dr. Wei Yang
+              </dd>
+            </div>
+            <div className="panel-list-item">
+              <dt className="profile-label">Research focus</dt>
+              <dd className="mt-1 text-[0.9375rem] font-medium text-fore-primary leading-snug">
+                Egocentric multimodal agents
+              </dd>
+              <dd className="mt-0.5 text-[0.9375rem] font-medium text-fore-primary leading-snug">
+                Multimodal human state understanding
+              </dd>
+            </div>
+          </dl>
+
+          <div className="social-group flex items-stretch rounded-full overflow-hidden mt-3">
             <a href="mailto:zexin.xu@utdallas.edu" aria-label="Email" title="Email" className="social-group-item flex-1">
-              <MailAt24 className="w-5 h-5" />
+              <MailAt24 className="w-[1.125rem] h-[1.125rem]" />
             </a>
             <a href="https://scholar.google.com/citations?user=NvnoD1kAAAAJ&hl=en" aria-label="Google Scholar" title="Google Scholar" target="_blank" rel="noopener noreferrer" className="social-group-item flex-1">
-              <GoogleScholar24 className="w-5 h-5" />
+              <GoogleScholar24 className="w-[1.125rem] h-[1.125rem]" />
             </a>
             <a href="https://github.com/asonjay" aria-label="GitHub" title="GitHub" target="_blank" rel="noopener noreferrer" className="social-group-item flex-1">
-              <GitHub24 className="w-5 h-5" />
+              <GitHub24 className="w-[1.125rem] h-[1.125rem]" />
             </a>
             <a href="https://x.com/zexin_jason_xu" aria-label="Twitter/X" title="Twitter/X" target="_blank" rel="noopener noreferrer" className="social-group-item flex-1">
-              <Twitter24 className="w-5 h-5" />
+              <Twitter24 className="w-[1.125rem] h-[1.125rem]" />
             </a>
             <a href="https://www.linkedin.com/in/zexin-xu/" aria-label="LinkedIn" title="LinkedIn" target="_blank" rel="noopener noreferrer" className="social-group-item flex-1">
-              <LinkedIn24 className="w-5 h-5" />
+              <LinkedIn24 className="w-[1.125rem] h-[1.125rem]" />
             </a>
           </div>
         </aside>

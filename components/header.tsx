@@ -5,12 +5,9 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { ThemeToggle } from './themeToggle'
-import { routes } from '../lib/route'
+import { CV_URL, routes } from '../lib/route'
 import JJIcon from '../public/images/JJ-icon.png'
 import JJIconLight from '../public/images/JJ-icon-light.png'
-
-const CV_URL =
-  'https://docs.google.com/viewer?url=https://raw.githubusercontent.com/asonjay/asonjay.github.io/master/public/cv/Zexin_Xu_CV.pdf'
 
 function isCurrent(route: { path: string; exact?: boolean }, path: string) {
   return route.exact === true ? route.path === path : path.startsWith(route.path)

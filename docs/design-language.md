@@ -90,10 +90,14 @@ A serif italic (Fraunces) was tried for panel titles and rejected by Jason.
 ## Layout
 
 ### Homepage
-- **Hero**: fills most of the first screen. Bottom-left: a small "Hi there, I'm",
-  then the name very large and light (`.hero-name`) with 徐泽鑫 beside it in WenKai,
-  then two frosted chips (pronunciation, "I also go by Jason"). Profile card
-  (photo, role, social links) top-right. On phones: name, chips, then card.
+- **Hero**: fills most of the first screen, with the open glass above it. Two
+  blocks rest on the same line above the first panel. Left: "Hi there, I'm" and
+  "Zexin Xu 徐泽鑫" as two lines of the same light type (`.hero-title`, max 4.25rem),
+  the pronunciation sentence, then a solid "View CV" pill and a frosted
+  "Publications" pill. Right: the profile panel (small photo, name and role, an
+  Affiliation card, a Research focus card, social links). On phones: text, then panel.
+  Earlier attempts Jason rejected: a small profile card floating top-right, a
+  144px name, and chips under the name.
 - **About** panel (two columns on desktop).
 - **News** (5 cols) + **Publications** (7 cols), then **Projects** (7) + **Blog** (5).
   Single column below `lg`.

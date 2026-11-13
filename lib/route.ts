@@ -1,3 +1,7 @@
+// The CV opens in Google's viewer straight from the repository copy.
+export const CV_URL =
+  'https://docs.google.com/viewer?url=https://raw.githubusercontent.com/asonjay/asonjay.github.io/master/public/cv/Zexin_Xu_CV.pdf'
+
 export const routes = [
   {
     path: '/',

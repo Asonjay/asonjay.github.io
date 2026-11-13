@@ -327,55 +327,26 @@ a.text-accent:hover {
 
 /* ─── Page and hero titles ─── */
 
-/* Hero: a quiet greeting, then the name as the one big thing. */
-.hero-greeting {
-  display: block;
-  font-weight: 400;
-  font-size: clamp(1.25rem, 2.8vw, 2rem);
-  line-height: 1.2;
-  letter-spacing: -0.025em;
-  color: var(--color-fore-secondary);
-}
-
-.hero-name {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  column-gap: 0.22em;
-  margin-top: 0.06em;
+/* Hero: two lines of the same light type, kept well short of shouting. */
+.hero-title {
   font-weight: 300;
-  font-size: clamp(3.25rem, 13vw, 9rem);
-  line-height: 0.98;
-  letter-spacing: -0.055em;
+  font-size: clamp(2.25rem, 5.2vw, 4.25rem);
+  line-height: 1.07;
+  letter-spacing: -0.045em;
 }
 
 .hero-name-cjk {
-  font-size: 0.46em;
+  margin-left: 0.3em;
+  font-size: 0.56em;
   letter-spacing: 0.04em;
-  line-height: 1.3;
-  opacity: 0.86;
+  opacity: 0.9;
 }
 
-/* Small frosted facts under the name */
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  border-radius: 999px;
-  background: var(--color-nav-bg);
-  backdrop-filter: blur(18px) saturate(150%);
-  -webkit-backdrop-filter: blur(18px) saturate(150%);
-  border: 1px solid var(--color-panel-border);
-  box-shadow: inset 0 1px 0 var(--color-panel-shine);
-  font-size: 0.875rem;
-  color: var(--color-fore-secondary);
-  text-shadow: none;
-}
-
-.chip strong {
+/* Small label above a fact in the profile panel */
+.profile-label {
+  font-size: 0.6875rem;
   font-weight: 600;
-  color: var(--color-fore-primary);
+  color: var(--color-accent-secondary);
 }
 
 /* Type that sits straight on the glass needs a little separation from it. */
@@ -642,6 +613,31 @@ a.text-accent:hover {
 
 .btn-solid:hover {
   opacity: 0.85;
+}
+
+/* Frosted pill, for a second action beside a solid one */
+.btn-glass {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  border: 1px solid var(--color-panel-border);
+  background: var(--color-nav-bg);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  box-shadow: inset 0 1px 0 var(--color-panel-shine);
+  font-weight: 600;
+  color: var(--color-fore-primary);
+  transition: background-color 0.2s ease;
+}
+
+.btn-glass:hover {
+  background: var(--color-item-bg-hover);
+}
+
+.btn-lg {
+  padding: 10px 18px;
+  font-size: 0.8125rem;
 }
 
 /* ─── Project tiles ───

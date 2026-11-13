@@ -343,7 +343,7 @@ a.text-accent:hover {
 
 /* Home greeting, at the top of the identity panel */
 .identity-title {
-  font-weight: 500; /* a little weight gives the sheen something to show on */
+  font-weight: 600; /* some weight gives the sheen something to show on */
   font-size: clamp(1.625rem, 3.1vw, 2.375rem);
   line-height: 1.15;
   letter-spacing: -0.035em;

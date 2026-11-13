@@ -138,10 +138,10 @@ export default async function Page() {
         </section>
         <section className="lg:col-span-7 glass-panel" aria-labelledby="publications-title">
           <div className="flex items-center justify-between mb-4">
-            <h2 id="publications-title" className="section-label">Selected publications</h2>
+            <h2 id="publications-title" className="section-label">Recent publications</h2>
             <ViewAll href="/publications" label="View all publications" />
           </div>
-          <PublicationList selectedOnly={true} />
+          <PublicationList limit={6} />
         </section>
       </div>
 

@@ -107,7 +107,8 @@ A serif italic (Fraunces) was tried for panel titles and rejected by Jason.
   around it (floating card top-right, 144px name with chips, two-block hero with a
   facts panel). He wants the greeting inside glass, merged with the profile and
   introduction, and the photo large.
-- **News** (5 cols) + **Publications** (7 cols), then **Projects** (7) + **Blog** (5).
+- **News** (5 cols) + **Recent publications** (7 cols; the newest six by year, no
+  hand-picked "selected" list), then **Projects** (7) + **Blog** (5).
   Single column below `lg`.
 
 ### Sub-pages

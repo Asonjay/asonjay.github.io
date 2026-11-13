@@ -25,12 +25,11 @@ export default async function Publications() {
           Publications
         </h1>
         <p className="text-sm text-fore-subtle mb-6 max-w-3xl leading-relaxed">
-          My research focuses on reinforcement learning for robotics and the
-          capabilities and security of Large Language Models (LLMs). My current
-          research directions include reinforcement learning algorithms for
-          robotic manipulation, responsible AI, LLM post-training, development of
-          reliable LLM-powered applications, and AI-enhanced educational
-          technology.
+          My research interests lie in multimodal learning and AI agents. I
+          currently focus on egocentric multimodal agents that understand what a
+          user is doing from first-person video and audio and offer help
+          proactively. My publications also span embodied agents, the security
+          and alignment of large language models, and learning technology.
         </p>
         <div className="h-px bg-[var(--color-border)] mb-4"></div>
         <PublicationFilter publications={publications} />

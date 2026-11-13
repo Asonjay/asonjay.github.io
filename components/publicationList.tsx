@@ -6,17 +6,15 @@ import { getAllPublications } from '../lib/publications'
 import { Publication } from '../types/publication'
 
 interface PublicationListProps {
-  selectedOnly?: boolean
+  /** Show only the newest this-many publications. Omit to show them all. */
+  limit?: number
 }
 
-export function PublicationList({
-  selectedOnly = false,
-}: PublicationListProps) {
+export function PublicationList({ limit }: PublicationListProps) {
   const publications = use(getAllPublications())
 
-  const filteredPubs = selectedOnly
-    ? publications.filter(pub => pub.selected)
-    : publications
+  // getAllPublications returns newest year first.
+  const filteredPubs = limit ? publications.slice(0, limit) : publications
 
   const groupedPubs = filteredPubs.reduce((acc, pub) => {
     if (!acc[pub.year]) {

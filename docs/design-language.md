@@ -7,21 +7,25 @@ cyan "tech dashboard" look: dot grid, gradient orbs, mono uppercase labels.)
 
 ## Backdrop
 
+Reference: the "Fractal Glass Animation" Dribbble shot Jason shared (dark field,
+amber and ice-blue ribbons of light behind ribbed glass). Recreated in code; the
+video itself is not used.
+
 - `components/flutedBackdrop.tsx` paints the scene on a fixed canvas behind every page.
-- The scene is drawn tiny (soft blobs: sky blue, coral, orange, rose, and a tall
-  navy "figure"), then redrawn column by column. Across each rib the view sweeps
-  over a slice about 7x the rib's width (`LENS`); at the rib's edge it folds
-  smoothly back (`SEAM`), so ribs melt into each other with no hard border line.
-  Jason asked for a strong per-rib gradient without a visible border line, but a
-  wide seam (0.4) looked blurry to him; keep it narrow (about 3px, `SEAM = 0.14`).
+- The scene is drawn tiny: a dark gradient with three soft glowing ribbons (a broad
+  dim coral wash, an amber band, a thin ice-blue one). Each ribbon is a travelling
+  wave with a counter-wave and a drifting slope, so it bends and flows like silk.
+  Speeds, phases and directions are rolled fresh on every visit.
+- It is then redrawn column by column. Across each rib the view sweeps over a slice
+  about 5.5x the rib's width (`LENS`), which turns a slanted ribbon into feathered
+  strokes stepping from rib to rib. At the rib's edge the view folds back over about
+  three pixels (`SEAM`): no hard border line, but not blurry either. Jason rejected
+  both a drawn edge line and a wide soft seam (0.4).
 - Rib light-and-shade and the top/bottom veil are CSS (`.backdrop::after` in
-  `globals.css`). The shading starts and ends on the same value for the same reason.
-- Rib width is the `--rib` CSS variable (22px, 16px on phones). The canvas reads it.
-- Blobs wander freely in both directions (30fps, up to ~30% of the screen). Each
-  follows three sine waves of unrelated speeds per axis, with speeds and phases
-  rolled fresh on every visit, so the path looks random and never visibly repeats.
-  The figure's head and body share one path. With reduced motion on, one still frame.
-- Palettes for both themes live at the top of the component (`DUSK`, `DAY`).
+  `globals.css`). Rib width is the `--rib` variable (28px, 18px on phones).
+- Dusk adds light (`lighter` blend) on deep navy; Day lays tinted ribbons on a pale field.
+- 30fps. With reduced motion on, one still frame.
+- Palettes and ribbon shapes are at the top of the component (`DUSK`, `DAY`, `RIBBONS`).
 - `public/videos/background.mp4` and `components/backgroundVideo.tsx` are no longer used.
 
 ## Color System
@@ -29,11 +33,12 @@ cyan "tech dashboard" look: dot grid, gradient orbs, mono uppercase labels.)
 All colours are CSS variables in `app/styles/globals.css`.
 
 ### Dusk (default, `.dark`)
-- Text: white, white 88%, white 72%
+- Field: deep navy `#050f26` to `#0a1c42`
+- Text: white, white 88%, blue-tinted white
 - Panel border: white 24%
 - Items inside panels: white 8%, white 15% on hover
-- Panels: navy `rgba(12, 30, 74, 0.56)`, deep enough that coloured text reads
-  even where coral shows through.
+- Panels: navy `rgba(9, 20, 48, 0.62)`, deep enough that text reads even where a
+  bright ribbon passes behind. Nav pills and chips are dark glass too.
 - Two accents lifted from the backdrop so panels aren't all one colour: warm
   peach `#ffc7b0` (links, own name in author lists) and sky `#a6d6ff` (month
   labels, venue marker, tags). Quiet text is a blue-tinted white, not plain grey.
@@ -54,7 +59,7 @@ Unchanged: green 30+ days, yellow 8-30, red 7 or less, gray expired.
 |---------|------|-------|
 | Everything | Manrope (variable) | Same face as JJstudios.app |
 | Hero / page titles | Manrope 300 | `.hero-title`, `.page-title`, tight tracking |
-| Panel titles | Manrope 300, 1.875rem | `.section-label`, sentence case, same voice as the hero name |
+| Panel titles | Manrope 500, 1.3125rem | `.section-label`, sentence case. Jason found 1.875rem light too big and unrefined; keep titles modest |
 | Name mark in nav | Barlow 600 | `font-brand` |
 | Code | JetBrains Mono | |
 | Chinese | LXGW WenKai | inline |

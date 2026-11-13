@@ -28,7 +28,7 @@ function ProjectCard({ project }: { project: Project }) {
         )}
       </div>
 
-      <h3 className="mt-5 text-[1.375rem] font-medium tracking-tight leading-tight text-fore-primary">
+      <h3 className="mt-4 text-lg font-semibold tracking-tight leading-snug text-fore-primary">
         {project.link ? (
           <a
             href={project.link}

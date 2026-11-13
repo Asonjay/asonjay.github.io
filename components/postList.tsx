@@ -46,7 +46,7 @@ export async function PostList({
                     </span>
                     <span className="flex-1 min-w-0">
                       <span className="post-title">{post.title}</span>
-                      <span className="block mt-1.5 text-sm text-fore-subtle leading-snug">
+                      <span className="block mt-1 text-[0.8125rem] text-fore-subtle leading-snug">
                         {post.description}
                         {post.readingTime?.text && (
                           <span className="whitespace-nowrap"> ({post.readingTime.text})</span>

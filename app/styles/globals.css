@@ -3,14 +3,14 @@
   --tw-text-opacity: 1;
 
   /* Width of one glass rib. The backdrop canvas reads this too. */
-  --rib: 22px;
+  --rib: 28px;
   --radius-panel: 26px;
   --radius-item: 16px;
 }
 
 @media (max-width: 640px) {
   :root {
-    --rib: 16px;
+    --rib: 18px;
     --radius-panel: 22px;
     --radius-item: 14px;
   }
@@ -23,7 +23,7 @@
   --color-fore-secondary: #22365c;
   --color-fore-subtle: #47597b;
 
-  --color-back-primary: #cfe4f8;
+  --color-back-primary: #dbe8f6;
   --color-back-secondary: rgba(255, 255, 255, 0.5);
   --color-back-subtle: rgba(255, 255, 255, 0.7);
 
@@ -44,13 +44,13 @@
   --color-solid: #0b1e3f;
   --color-on-solid: #ffffff;
 
-  --backdrop-top: #9fcdf3;
-  --backdrop-bottom: #76b0e8;
-  --backdrop-warm: #ff8f72;
-  --backdrop-rose: #f7b3d0;
+  --backdrop-top: #e6eff9;
+  --backdrop-bottom: #cfe0f4;
+  --backdrop-warm: #ff8a5c;
+  --backdrop-rose: #f6a9c9;
   --backdrop-veil: linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05) 30%, rgba(255, 255, 255, 0.16));
-  --rib-light: rgba(255, 255, 255, 0.36);
-  --rib-shade: rgba(20, 50, 110, 0.18);
+  --rib-light: rgba(255, 255, 255, 0.4);
+  --rib-shade: rgba(20, 50, 110, 0.16);
 
   --hue-warm: #e0532f;
   --hue-cool: #1f5fd6;
@@ -90,7 +90,7 @@
   --color-fore-secondary: rgba(255, 255, 255, 0.88);
   --color-fore-subtle: rgba(198, 218, 252, 0.84);
 
-  --color-back-primary: #1b4488;
+  --color-back-primary: #08173a;
   --color-back-secondary: rgba(255, 255, 255, 0.08);
   --color-back-subtle: rgba(255, 255, 255, 0.14);
 
@@ -101,25 +101,25 @@
   --color-back-accent: rgba(255, 255, 255, 0.16);
 
   --color-border: rgba(255, 255, 255, 0.18);
-  --color-panel-bg: rgba(12, 30, 74, 0.56);
+  --color-panel-bg: rgba(9, 20, 48, 0.62);
   --color-panel-border: rgba(255, 255, 255, 0.24);
   --color-panel-shine: rgba(255, 255, 255, 0.22);
   --color-item-bg: rgba(255, 255, 255, 0.08);
   --color-item-bg-hover: rgba(255, 255, 255, 0.15);
   --color-item-border: rgba(255, 255, 255, 0.12);
-  --color-nav-bg: rgba(255, 255, 255, 0.16);
-  --color-nav-active: rgba(255, 255, 255, 0.2);
-  --color-overlay-bg: rgba(15, 36, 84, 0.86);
+  --color-nav-bg: rgba(16, 30, 66, 0.5);
+  --color-nav-active: rgba(255, 255, 255, 0.16);
+  --color-overlay-bg: rgba(10, 22, 54, 0.88);
   --color-solid: #ffffff;
-  --color-on-solid: #10295f;
+  --color-on-solid: #0b1c44;
 
-  --backdrop-top: #2c68b4;
-  --backdrop-bottom: #1a438a;
-  --backdrop-warm: #ee6146;
-  --backdrop-rose: #dd7fae;
-  --backdrop-veil: linear-gradient(180deg, rgba(6, 18, 48, 0.3), rgba(6, 18, 48, 0.08) 30%, rgba(6, 18, 48, 0.3));
-  --rib-light: rgba(255, 255, 255, 0.19);
-  --rib-shade: rgba(4, 14, 44, 0.32);
+  --backdrop-top: #050f26;
+  --backdrop-bottom: #0a1c42;
+  --backdrop-warm: #b4572b;
+  --backdrop-rose: #7a2f2a;
+  --backdrop-veil: linear-gradient(180deg, rgba(3, 10, 28, 0.28), transparent 26%, transparent 80%, rgba(3, 10, 28, 0.2));
+  --rib-light: rgba(255, 255, 255, 0.09);
+  --rib-shade: rgba(0, 4, 16, 0.42);
 
   --hue-warm: #ff9a78;
   --hue-cool: #7cc4ff;
@@ -205,7 +205,7 @@
 }
 
 /* ─── Fluted glass backdrop ───
-   One colour field behind ribbed glass, fixed behind every page. The canvas
+   Ribbons of light behind ribbed glass, fixed behind every page. The canvas
    (components/flutedBackdrop.tsx) paints the bent light; the gradient below is
    what shows before it has drawn, and ::after lays light and shade over each
    rib. That shading starts and ends on the same value, so neighbouring ribs
@@ -222,8 +222,8 @@
   pointer-events: none;
   overflow: hidden;
   background:
-    radial-gradient(34% 46% at 34% 54%, var(--backdrop-warm), transparent 100%),
-    radial-gradient(40% 44% at 38% 92%, var(--backdrop-rose), transparent 100%),
+    radial-gradient(60% 26% at 40% 56%, var(--backdrop-warm), transparent 100%),
+    radial-gradient(70% 34% at 60% 70%, var(--backdrop-rose), transparent 100%),
     linear-gradient(180deg, var(--backdrop-top), var(--backdrop-bottom));
 }
 
@@ -242,8 +242,9 @@
     linear-gradient(
       90deg,
       var(--rib-shade) 0,
-      var(--rib-light) 16%,
-      transparent 56%,
+      var(--rib-light) 14%,
+      transparent 50%,
+      transparent 78%,
       var(--rib-shade) 100%
     );
   background-size: 100% 100%, var(--rib) 100%;
@@ -305,12 +306,12 @@ a.text-accent:hover {
 
 /* ─── Section title ─── */
 
-/* Panel titles speak in the same voice as the hero name: large, light, tight. */
+/* Panel titles: modest in size, set a little tight. */
 .section-label {
-  font-weight: 300;
-  font-size: 1.875rem;
-  letter-spacing: -0.04em;
-  line-height: 1.1;
+  font-weight: 500;
+  font-size: 1.3125rem;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
   color: var(--color-fore-primary);
 }
 
@@ -384,9 +385,9 @@ a.text-accent:hover {
 }
 
 .page-title {
-  font-weight: 300;
-  font-size: clamp(2.125rem, 5vw, 3.5rem);
-  line-height: 1.05;
+  font-weight: 400;
+  font-size: clamp(1.75rem, 3.4vw, 2.5rem);
+  line-height: 1.1;
   letter-spacing: -0.035em;
 }
 
@@ -669,11 +670,11 @@ a.text-accent:hover {
 }
 
 .project-year {
-  font-size: 2rem;
-  font-weight: 300;
-  letter-spacing: -0.05em;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
   font-variant-numeric: tabular-nums;
-  line-height: 1;
+  line-height: 1.7;
   color: color-mix(in srgb, var(--tile-hue) 72%, var(--color-fore-primary));
 }
 
@@ -708,38 +709,38 @@ a.text-accent:hover {
   flex-direction: column;
   align-items: flex-start;
   flex-shrink: 0;
-  width: 3.25rem;
+  width: 2.5rem;
 }
 
 .post-day {
-  font-size: 2.25rem;
+  font-size: 1.625rem;
   font-weight: 300;
-  line-height: 0.95;
+  line-height: 1;
   letter-spacing: -0.04em;
   font-variant-numeric: tabular-nums;
   color: var(--color-fore-primary);
 }
 
 .post-month {
-  margin-top: 6px;
-  font-size: 0.75rem;
+  margin-top: 4px;
+  font-size: 0.6875rem;
   font-weight: 600;
   color: var(--color-accent-secondary);
 }
 
 .post-title {
   display: block;
-  font-size: 1.1875rem;
-  font-weight: 500;
-  line-height: 1.25;
-  letter-spacing: -0.02em;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
   color: var(--color-fore-primary);
 }
 
 .post-arrow {
-  width: 30px;
-  height: 30px;
-  margin-top: 2px;
+  width: 28px;
+  height: 28px;
+  margin-top: 1px;
   border-radius: 50%;
   border: 1px solid var(--color-border);
   display: flex;

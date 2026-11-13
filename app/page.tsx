@@ -141,7 +141,7 @@ export default async function Page() {
             <h2 id="publications-title" className="section-label">Recent publications</h2>
             <ViewAll href="/publications" label="View all publications" />
           </div>
-          <PublicationList limit={6} />
+          <PublicationList limit={5} />
         </section>
       </div>
 

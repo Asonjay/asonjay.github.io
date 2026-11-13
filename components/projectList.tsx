@@ -11,7 +11,7 @@ function ArrowUpRight() {
   )
 }
 
-const TAG_HUES = ['warm', 'cool', 'rose', 'mint', 'violet', 'amber']
+const TAG_HUES = ['warm', 'cool', 'rose', 'mint', 'violet', 'amber', 'teal', 'lime']
 
 // Hand each distinct tag the next hue, in the order tags first appear across
 // all projects. "React" is then the same colour on every project, and tags

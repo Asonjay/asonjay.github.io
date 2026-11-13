@@ -79,8 +79,8 @@ A serif italic (Fraunces) was tried for panel titles and rejected by Jason.
   section's page; inward arrows go back home.
 - **Breadcrumb** (`.crumb`): "Home / Publications" above each sub-page title.
 - **Project tile** (`.project-tile`): plain glass, all tiles alike. The colour is in
-  the tags: each distinct tag is handed the next of six hues (warm, cool, rose,
-  mint, violet, amber) in order of first appearance, so the same technology is the
+  the tags: each distinct tag is handed the next of eight hues (warm, cool, rose,
+  mint, violet, amber, teal, lime) in order of first appearance, so the same technology is the
   same colour everywhere and tags on one card differ. Jason did not
   want differently coloured cards. Demo is a solid pill (`.btn-solid`), GitHub an
   outlined one.
@@ -107,7 +107,7 @@ A serif italic (Fraunces) was tried for panel titles and rejected by Jason.
   around it (floating card top-right, 144px name with chips, two-block hero with a
   facts panel). He wants the greeting inside glass, merged with the profile and
   introduction, and the photo large.
-- **News** (5 cols) + **Recent publications** (7 cols; the newest six by year, no
+- **News** (5 cols) + **Recent publications** (7 cols; the newest five by year, no
   hand-picked "selected" list), then **Projects** (7) + **Blog** (5).
   Single column below `lg`.
 

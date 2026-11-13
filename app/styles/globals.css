@@ -62,6 +62,8 @@
   --hue-mint: #0b8a68;
   --hue-violet: #6a48d6;
   --hue-amber: #9a6400;
+  --hue-teal: #0a7f95;
+  --hue-lime: #557a00;
   --tag-ink: 100%;
 
   --color-tag-fg: #1746c4;
@@ -138,6 +140,8 @@
   --hue-mint: #7fe3c4;
   --hue-violet: #c4b3ff;
   --hue-amber: #ffd27a;
+  --hue-teal: #6fd8ea;
+  --hue-lime: #cdea78;
   --tag-ink: 55%;
 
   --color-tag-fg: #d3eaff;

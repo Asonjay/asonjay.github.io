@@ -17,8 +17,10 @@ cyan "tech dashboard" look: dot grid, gradient orbs, mono uppercase labels.)
 - Rib light-and-shade and the top/bottom veil are CSS (`.backdrop::after` in
   `globals.css`). The shading starts and ends on the same value for the same reason.
 - Rib width is the `--rib` CSS variable (22px, 16px on phones). The canvas reads it.
-- Blobs drift visibly but slowly (30fps, 40-75s cycles, up to ~18% of the screen).
-  With reduced motion on, one still frame.
+- Blobs wander freely in both directions (30fps, up to ~30% of the screen). Each
+  follows three sine waves of unrelated speeds per axis, with speeds and phases
+  rolled fresh on every visit, so the path looks random and never visibly repeats.
+  The figure's head and body share one path. With reduced motion on, one still frame.
 - Palettes for both themes live at the top of the component (`DUSK`, `DAY`).
 - `public/videos/background.mp4` and `components/backgroundVideo.tsx` are no longer used.
 
@@ -52,12 +54,13 @@ Unchanged: green 30+ days, yellow 8-30, red 7 or less, gray expired.
 |---------|------|-------|
 | Everything | Manrope (variable) | Same face as JJstudios.app |
 | Hero / page titles | Manrope 300 | `.hero-title`, `.page-title`, tight tracking |
-| Section titles | Manrope 500 | `.section-label`, sentence case |
+| Panel titles | Manrope 300, 1.875rem | `.section-label`, sentence case, same voice as the hero name |
 | Name mark in nav | Barlow 600 | `font-brand` |
 | Code | JetBrains Mono | |
 | Chinese | LXGW WenKai | inline |
 
 No uppercase mono labels, no underscore names (`Latest_News`), no emoji in headings.
+A serif italic (Fraunces) was tried for panel titles and rejected by Jason.
 
 ## Components
 
@@ -69,12 +72,22 @@ No uppercase mono labels, no underscore names (`Latest_News`), no emoji in headi
 - **Round icon link** (`.expand-icon`, `.shrink-icon`): arrow up-right opens a
   section's page; inward arrows go back home.
 - **Breadcrumb** (`.crumb`): "Home / Publications" above each sub-page title.
+- **Project tile** (`.project-tile`): each tile is washed with one of three backdrop
+  hues in turn (warm, cool, rose); the year, tags and border pick up that hue.
+  Demo is a solid pill (`.btn-solid`), GitHub an outlined one.
+- **Blog row** (`.post-row`): date-led rows separated by hairlines rather than
+  boxes: big light day numeral with the month under it, title, description and
+  reading time, arrow circle that fills on hover.
+- Modules are meant to differ in structure (cards, tinted tiles, rows) so the home
+  page isn't five identical lists.
 
 ## Layout
 
 ### Homepage
-- **Hero**: fills most of the first screen. Name bottom-left in large light type,
-  profile card (photo, role, social links) top-right. On phones: name, then card.
+- **Hero**: fills most of the first screen. Bottom-left: a small "Hi there, I'm",
+  then the name very large and light (`.hero-name`) with 徐泽鑫 beside it in WenKai,
+  then two frosted chips (pronunciation, "I also go by Jason"). Profile card
+  (photo, role, social links) top-right. On phones: name, chips, then card.
 - **About** panel (two columns on desktop).
 - **News** (5 cols) + **Publications** (7 cols), then **Projects** (7) + **Blog** (5).
   Single column below `lg`.

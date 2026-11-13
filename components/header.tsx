@@ -59,9 +59,9 @@ export function Header() {
           {/* Left: name mark */}
           <Link
             href="/"
-            className="nav-pill flex gap-2.5 !pr-4 lg:justify-self-start min-w-0"
+            className="nav-pill flex gap-2.5 !pl-3 !pr-[1.125rem] lg:justify-self-start min-w-0"
           >
-            <span className="w-9 h-9 rounded-full overflow-hidden flex-shrink-0 relative">
+            <span className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 relative">
               <Image
                 src={JJIcon}
                 alt=""

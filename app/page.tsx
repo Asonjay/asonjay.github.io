@@ -32,16 +32,28 @@ export default async function Page() {
       {/* ─── Hero: the glass gets the room; name bottom-left, profile top-right ─── */}
       <section className="flex flex-col lg:flex-col-reverse lg:justify-between gap-8 pt-[16svh] pb-4 sm:pt-[20svh] lg:pt-6 lg:pb-8 lg:min-h-[calc(100svh-11.5rem)]">
         <div>
-          <h1 className="hero-title on-glass text-fore-primary">
-            Hi there, I&apos;m{' '}
-            <span className="block whitespace-nowrap">
-              Zexin Xu (<span className={wenKai.className}>徐泽鑫</span>)!
+          <h1 className="on-glass text-fore-primary">
+            <span className="hero-greeting">Hi there, I&apos;m</span>
+            <span className="hero-name">
+              Zexin Xu
+              <span className={`hero-name-cjk ${wenKai.className}`}>徐泽鑫</span>
             </span>
           </h1>
-          <p className="on-glass mt-5 sm:mt-6 max-w-[44ch] text-base sm:text-lg leading-relaxed text-fore-secondary">
-            My name is pronounced as &quot;Zeh-Shin She&quot;, and I also go by{' '}
-            <strong className="font-semibold text-fore-primary">Jason</strong>.
-          </p>
+          <ul className="flex flex-wrap gap-2 mt-6 sm:mt-8">
+            <li className="chip">
+              <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M11 5L6 9H3v6h3l5 4V5z" /><path d="M15.5 8.5a5 5 0 010 7" /><path d="M18.5 5.5a9 9 0 010 13" />
+              </svg>
+              <span>
+                Pronounced <strong>&quot;Zeh-Shin She&quot;</strong>
+              </span>
+            </li>
+            <li className="chip">
+              <span>
+                I also go by <strong>Jason</strong>
+              </span>
+            </li>
+          </ul>
         </div>
 
         <aside className="glass-panel !p-4 w-full sm:w-[22rem] lg:self-end lg:mt-16">

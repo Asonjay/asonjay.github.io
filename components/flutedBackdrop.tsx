@@ -13,45 +13,39 @@ import { useEffect, useRef } from 'react'
 // CSS layer on top (.backdrop::after).
 
 type Spot = {
-  x: number // centre, 0..1 of scene width
-  y: number // centre, 0..1 of scene height
+  x: number // home position, 0..1 of scene width
+  y: number // home position, 0..1 of scene height
   rx: number // radius, as a fraction of scene width
   ry: number // radius, as a fraction of scene height
   color: string
-  driftX: number // how far it wanders, as a fraction of the scene
-  driftY: number
-  period: number // seconds for one wander cycle
-  phase: number
+  roamX: number // how far it may wander from home, as a fraction of the scene
+  roamY: number
+  mover: number // spots sharing a mover travel together (the figure's head and body)
 }
 
-type Palette = { top: string; bottom: string; spots: Spot[] }
+type Palette = { top: string; bottom: string; colors: string[] }
+
+// Shape and wandering range of each spot; the two themes only recolour them.
+const SPOTS: Omit<Spot, 'color'>[] = [
+  { x: 0.85, y: 0.25, rx: 0.42, ry: 0.6, roamX: 0.26, roamY: 0.3, mover: 0 }, // sky glow
+  { x: 0.15, y: 0.9, rx: 0.34, ry: 0.42, roamX: 0.3, roamY: 0.3, mover: 1 }, // pale rose
+  { x: 0.42, y: 0.8, rx: 0.36, ry: 0.4, roamX: 0.32, roamY: 0.34, mover: 2 }, // rose
+  { x: 0.34, y: 0.5, rx: 0.3, ry: 0.46, roamX: 0.3, roamY: 0.32, mover: 3 }, // coral
+  { x: 0.31, y: 0.58, rx: 0.15, ry: 0.24, roamX: 0.34, roamY: 0.36, mover: 4 }, // orange core
+  { x: 0.6, y: 0.2, rx: 0.075, ry: 0.15, roamX: 0.3, roamY: 0.14, mover: 5 }, // figure: head
+  { x: 0.59, y: 0.74, rx: 0.14, ry: 0.56, roamX: 0.3, roamY: 0.14, mover: 5 }, // figure: body
+]
 
 const DUSK: Palette = {
   top: '#2c68b4',
   bottom: '#1a438a',
-  spots: [
-    { x: 0.9, y: 0.2, rx: 0.42, ry: 0.6, color: '#63aee4', driftX: 0.12, driftY: 0.08, period: 56, phase: 0.3 },
-    { x: 0.12, y: 0.98, rx: 0.34, ry: 0.42, color: '#e9b7d3', driftX: 0.14, driftY: 0.05, period: 47, phase: 2.1 },
-    { x: 0.4, y: 0.86, rx: 0.36, ry: 0.4, color: '#dd7fae', driftX: 0.16, driftY: 0.06, period: 63, phase: 4.0 },
-    { x: 0.34, y: 0.52, rx: 0.3, ry: 0.46, color: '#ee6146', driftX: 0.14, driftY: 0.08, period: 52, phase: 1.2 },
-    { x: 0.31, y: 0.6, rx: 0.15, ry: 0.24, color: '#ff9150', driftX: 0.18, driftY: 0.1, period: 40, phase: 5.2 },
-    { x: 0.6, y: 0.2, rx: 0.075, ry: 0.15, color: '#0e2260', driftX: 0.17, driftY: 0.012, period: 74, phase: 0.9 },
-    { x: 0.59, y: 0.74, rx: 0.14, ry: 0.56, color: '#0e2260', driftX: 0.17, driftY: 0.012, period: 74, phase: 0.9 },
-  ],
+  colors: ['#63aee4', '#e9b7d3', '#dd7fae', '#ee6146', '#ff9150', '#0e2260', '#0e2260'],
 }
 
 const DAY: Palette = {
   top: '#9fcdf3',
   bottom: '#76b0e8',
-  spots: [
-    { x: 0.9, y: 0.2, rx: 0.42, ry: 0.6, color: '#e2f3ff', driftX: 0.12, driftY: 0.08, period: 56, phase: 0.3 },
-    { x: 0.12, y: 0.98, rx: 0.34, ry: 0.42, color: '#fde3ee', driftX: 0.14, driftY: 0.05, period: 47, phase: 2.1 },
-    { x: 0.4, y: 0.86, rx: 0.36, ry: 0.4, color: '#f7b3d0', driftX: 0.16, driftY: 0.06, period: 63, phase: 4.0 },
-    { x: 0.34, y: 0.52, rx: 0.3, ry: 0.46, color: '#ff8f72', driftX: 0.14, driftY: 0.08, period: 52, phase: 1.2 },
-    { x: 0.31, y: 0.6, rx: 0.15, ry: 0.24, color: '#ffb27a', driftX: 0.18, driftY: 0.1, period: 40, phase: 5.2 },
-    { x: 0.6, y: 0.2, rx: 0.075, ry: 0.15, color: '#3a66c4', driftX: 0.17, driftY: 0.012, period: 74, phase: 0.9 },
-    { x: 0.59, y: 0.74, rx: 0.14, ry: 0.56, color: '#3a66c4', driftX: 0.17, driftY: 0.012, period: 74, phase: 0.9 },
-  ],
+  colors: ['#e2f3ff', '#fde3ee', '#f7b3d0', '#ff8f72', '#ffb27a', '#3a66c4', '#3a66c4'],
 }
 
 const SCENE_W = 224 // tiny on purpose: upscaling it is the blur
@@ -75,9 +69,32 @@ function bend(u: number) {
   return Math.cos(Math.PI * t)
 }
 
+// A wandering path: three sine waves of unrelated speeds added together on each
+// axis. It never visibly repeats, has no sudden turns, and stays within -1..1.
+type Wander = { speed: number[]; phase: number[] }
+
+// Seconds for one swing of the slow, medium and quick wave.
+const SWING = [67, 41, 23]
+const WEIGHT = [1, 0.6, 0.35]
+const WEIGHT_SUM = WEIGHT[0] + WEIGHT[1] + WEIGHT[2]
+
+function newWander(): Wander {
+  return {
+    speed: SWING.map(s => (Math.PI * 2) / (s * (0.75 + Math.random() * 0.5))),
+    phase: SWING.map(() => Math.random() * Math.PI * 2),
+  }
+}
+
+function wanderAt(w: Wander, seconds: number) {
+  let sum = 0
+  for (let i = 0; i < 3; i++) sum += WEIGHT[i] * Math.sin(seconds * w.speed[i] + w.phase[i])
+  return sum / WEIGHT_SUM
+}
+
 function paintScene(
   ctx: CanvasRenderingContext2D,
   palette: Palette,
+  paths: { x: Wander; y: Wander }[],
   w: number,
   h: number,
   seconds: number
@@ -89,28 +106,27 @@ function paintScene(
   ctx.fillStyle = base
   ctx.fillRect(0, 0, w, h)
 
-  for (const spot of palette.spots) {
-    const angle = (seconds / spot.period) * Math.PI * 2 + spot.phase
-    const cx = (spot.x + Math.sin(angle) * spot.driftX) * w
-    const cy = (spot.y + Math.cos(angle * 0.8) * spot.driftY) * h
-    const rx = spot.rx * w
-    const ry = spot.ry * h
+  SPOTS.forEach((spot, i) => {
+    const path = paths[spot.mover]
+    const color = palette.colors[i]
+    const cx = (spot.x + wanderAt(path.x, seconds) * spot.roamX) * w
+    const cy = (spot.y + wanderAt(path.y, seconds) * spot.roamY) * h
 
     // Unit-circle gradient stretched into an ellipse.
     ctx.save()
     ctx.translate(cx, cy)
-    ctx.scale(rx, ry)
+    ctx.scale(spot.rx * w, spot.ry * h)
     const glow = ctx.createRadialGradient(0, 0, 0, 0, 0, 1)
-    glow.addColorStop(0, spot.color)
-    glow.addColorStop(0.45, spot.color)
-    glow.addColorStop(1, `${spot.color}00`) // same hue at zero alpha, so the edge doesn't grey out
+    glow.addColorStop(0, color)
+    glow.addColorStop(0.45, color)
+    glow.addColorStop(1, `${color}00`) // same hue at zero alpha, so the edge doesn't grey out
     ctx.fillStyle = glow
     ctx.globalAlpha = 0.95
     ctx.beginPath()
     ctx.arc(0, 0, 1, 0, Math.PI * 2)
     ctx.fill()
     ctx.restore()
-  }
+  })
 }
 
 export function FlutedBackdrop() {
@@ -127,6 +143,10 @@ export function FlutedBackdrop() {
     const root = document.documentElement
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
 
+    // One wandering path per mover, rolled fresh on every visit.
+    const movers = Math.max(...SPOTS.map(s => s.mover)) + 1
+    const paths = Array.from({ length: movers }, () => ({ x: newWander(), y: newWander() }))
+
     let frame = 0
     let lastPaint = 0
     // For every canvas column, the scene x it samples. Rebuilt on resize.
@@ -136,8 +156,8 @@ export function FlutedBackdrop() {
       const width = Math.max(1, Math.round(window.innerWidth))
       const height = Math.max(1, Math.round(window.innerHeight))
       const rib = parseFloat(getComputedStyle(root).getPropertyValue('--rib')) || 22
-      // Nothing in the scene is sharp, so the canvas can be well under screen
-      // resolution in both directions.
+      // Nothing in the scene is sharp vertically, so a quarter of the height
+      // is plenty.
       canvas.width = Math.ceil(width / COLUMN)
       canvas.height = Math.max(1, Math.round(height / 4))
       scene.width = SCENE_W
@@ -155,7 +175,7 @@ export function FlutedBackdrop() {
 
     const draw = (seconds: number) => {
       const palette = root.classList.contains('light') ? DAY : DUSK
-      paintScene(sceneCtx, palette, scene.width, scene.height, seconds)
+      paintScene(sceneCtx, palette, paths, scene.width, scene.height, seconds)
 
       const { width, height } = canvas
       ctx.imageSmoothingEnabled = true

@@ -52,6 +52,11 @@
   --rib-light: rgba(255, 255, 255, 0.36);
   --rib-shade: rgba(20, 50, 110, 0.18);
 
+  --hue-warm: #e0532f;
+  --hue-cool: #1f5fd6;
+  --hue-rose: #d0457f;
+  --tile-wash: 16%;
+
   --color-tag-fg: #1746c4;
   --color-tag-bg: rgba(23, 70, 196, 0.1);
   --color-tag-border: rgba(23, 70, 196, 0.22);
@@ -115,6 +120,11 @@
   --backdrop-veil: linear-gradient(180deg, rgba(6, 18, 48, 0.3), rgba(6, 18, 48, 0.08) 30%, rgba(6, 18, 48, 0.3));
   --rib-light: rgba(255, 255, 255, 0.19);
   --rib-shade: rgba(4, 14, 44, 0.32);
+
+  --hue-warm: #ff9a78;
+  --hue-cool: #7cc4ff;
+  --hue-rose: #f29ac4;
+  --tile-wash: 30%;
 
   --color-tag-fg: #d3eaff;
   --color-tag-bg: rgba(150, 205, 255, 0.16);
@@ -295,11 +305,12 @@ a.text-accent:hover {
 
 /* ─── Section title ─── */
 
+/* Panel titles speak in the same voice as the hero name: large, light, tight. */
 .section-label {
-  font-size: 1.0625rem;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  line-height: 1.3;
+  font-weight: 300;
+  font-size: 1.875rem;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
   color: var(--color-fore-primary);
 }
 
@@ -316,11 +327,55 @@ a.text-accent:hover {
 
 /* ─── Page and hero titles ─── */
 
-.hero-title {
+/* Hero: a quiet greeting, then the name as the one big thing. */
+.hero-greeting {
+  display: block;
+  font-weight: 400;
+  font-size: clamp(1.25rem, 2.8vw, 2rem);
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  color: var(--color-fore-secondary);
+}
+
+.hero-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.22em;
+  margin-top: 0.06em;
   font-weight: 300;
-  font-size: clamp(1.875rem, 9.4vw, 5.5rem);
-  line-height: 1.04;
-  letter-spacing: -0.04em;
+  font-size: clamp(3.25rem, 13vw, 9rem);
+  line-height: 0.98;
+  letter-spacing: -0.055em;
+}
+
+.hero-name-cjk {
+  font-size: 0.46em;
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+  opacity: 0.86;
+}
+
+/* Small frosted facts under the name */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--color-nav-bg);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  border: 1px solid var(--color-panel-border);
+  box-shadow: inset 0 1px 0 var(--color-panel-shine);
+  font-size: 0.875rem;
+  color: var(--color-fore-secondary);
+  text-shadow: none;
+}
+
+.chip strong {
+  font-weight: 600;
+  color: var(--color-fore-primary);
 }
 
 /* Type that sits straight on the glass needs a little separation from it. */
@@ -569,6 +624,136 @@ a.text-accent:hover {
   background: var(--color-solid);
   color: var(--color-on-solid);
   border-color: var(--color-solid);
+}
+
+.btn-solid {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 1px solid var(--color-solid);
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: var(--color-solid);
+  color: var(--color-on-solid);
+  transition: opacity 0.2s ease;
+}
+
+.btn-solid:hover {
+  opacity: 0.85;
+}
+
+/* ─── Project tiles ───
+   Three tints taken from the backdrop, dealt out in turn. */
+
+.project-tile {
+  --tile-hue: var(--hue-warm);
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem;
+  border-radius: 20px;
+  border: 1px solid color-mix(in srgb, var(--tile-hue) 34%, var(--color-item-border));
+  background:
+    radial-gradient(120% 110% at 0% 0%, color-mix(in srgb, var(--tile-hue) var(--tile-wash), transparent), transparent 64%),
+    var(--color-item-bg);
+  transition: background-color 0.2s ease;
+}
+
+.project-grid > :nth-child(3n + 2) {
+  --tile-hue: var(--hue-cool);
+}
+
+.project-grid > :nth-child(3n) {
+  --tile-hue: var(--hue-rose);
+}
+
+.project-year {
+  font-size: 2rem;
+  font-weight: 300;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: color-mix(in srgb, var(--tile-hue) 72%, var(--color-fore-primary));
+}
+
+.project-tag {
+  color: var(--color-fore-primary);
+  background: color-mix(in srgb, var(--tile-hue) 20%, transparent);
+  border-color: color-mix(in srgb, var(--tile-hue) 42%, transparent);
+}
+
+/* ─── Blog rows ─── */
+
+.post-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.125rem;
+  padding: 1.125rem 0.5rem;
+  margin: 0 -0.5rem;
+  border-radius: var(--radius-item);
+  transition: background-color 0.2s ease;
+}
+
+.post-row + .post-row {
+  box-shadow: 0 -1px 0 var(--color-border);
+}
+
+.post-row:hover {
+  background: var(--color-item-bg);
+}
+
+.post-date {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-shrink: 0;
+  width: 3.25rem;
+}
+
+.post-day {
+  font-size: 2.25rem;
+  font-weight: 300;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-fore-primary);
+}
+
+.post-month {
+  margin-top: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-accent-secondary);
+}
+
+.post-title {
+  display: block;
+  font-size: 1.1875rem;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--color-fore-primary);
+}
+
+.post-arrow {
+  width: 30px;
+  height: 30px;
+  margin-top: 2px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--color-fore-secondary);
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.post-row:hover .post-arrow {
+  background: var(--color-solid);
+  border-color: var(--color-solid);
+  color: var(--color-on-solid);
 }
 
 /* ─── Scrollbar ─── */

@@ -1,71 +1,77 @@
 import { getProjects } from '../lib/mdx'
 import { Project } from '../types/project'
-import { GitHub24, External24 } from '../components/icons'
+import { GitHub24 } from '../components/icons'
 
+function ArrowUpRight() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M7 17L17 7M8 7h9v9" />
+    </svg>
+  )
+}
+
+// Each tile is tinted with one of the backdrop's colours (see .project-tile in
+// globals.css), so a row of projects doesn't read as identical boxes.
 function ProjectCard({ project }: { project: Project }) {
   return (
-    <div className="panel-list-item h-full">
-      {/* Title and Year */}
-      <div className="flex justify-between items-start mb-1">
-        <h3 className="text-base font-medium text-fore-primary leading-snug">
-          {project.link ? (
+    <article className="project-tile h-full">
+      <div className="flex items-start justify-between gap-3">
+        <span className="project-year">{project.year}</span>
+        {project.tags && project.tags.length > 0 && (
+          <div className="flex flex-wrap justify-end gap-1.5 pt-1">
+            {project.tags.map(tag => (
+              <span key={tag} className="tag-badge project-tag">
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <h3 className="mt-5 text-[1.375rem] font-medium tracking-tight leading-tight text-fore-primary">
+        {project.link ? (
+          <a
+            href={project.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:underline underline-offset-4 decoration-1"
+          >
+            {project.title}
+          </a>
+        ) : (
+          project.title
+        )}
+      </h3>
+
+      <p className="mt-2 mb-5 text-sm text-fore-secondary leading-relaxed">{project.description}</p>
+
+      {(project.github || project.url) && (
+        <div className="flex flex-wrap gap-2 mt-auto">
+          {project.url && (
             <a
-              href={project.link}
+              href={project.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-accent transition-colors"
+              className="btn-solid"
             >
-              {project.title}
+              Demo
+              <ArrowUpRight />
             </a>
-          ) : (
-            project.title
           )}
-        </h3>
-        <span className="font-mono-label text-xs text-fore-subtle ml-2 flex-shrink-0">
-          {project.year}
-        </span>
-      </div>
-
-      {/* Tags */}
-      {project.tags && project.tags.length > 0 && (
-        <div className="flex flex-wrap gap-1.5 mb-2">
-          {project.tags.map(tag => (
-            <span key={tag} className="tag-badge tag-badge-accent">
-              {tag}
-            </span>
-          ))}
+          {project.github && (
+            <a
+              href={project.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-outline"
+            >
+              <GitHub24 className="w-3.5 h-3.5" />
+              GitHub
+            </a>
+          )}
         </div>
       )}
-
-      {/* Description */}
-      <p className="text-sm text-fore-subtle mb-3 leading-relaxed">{project.description}</p>
-
-      {/* Links */}
-      <div className="flex flex-wrap gap-2 mt-auto">
-        {project.github && (
-          <a
-            href={project.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-outline"
-          >
-            <GitHub24 className="w-3.5 h-3.5" />
-            GitHub
-          </a>
-        )}
-        {project.url && (
-          <a
-            href={project.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-outline"
-          >
-            <External24 className="w-3.5 h-3.5" />
-            Demo
-          </a>
-        )}
-      </div>
-    </div>
+    </article>
   )
 }
 
@@ -91,7 +97,7 @@ const ProjectList = async ({ selectedOnly = false }: Props) => {
 
     return (
       <section>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="project-grid grid grid-cols-1 sm:grid-cols-2 gap-4">
           {filteredProjects.map(project => (
             <ProjectCard key={project.id || project.title} project={project} />
           ))}

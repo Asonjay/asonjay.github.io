@@ -49,8 +49,8 @@
   --backdrop-warm: #ff8f72;
   --backdrop-rose: #f7b3d0;
   --backdrop-veil: linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05) 30%, rgba(255, 255, 255, 0.16));
-  --rib-light: rgba(255, 255, 255, 0.3);
-  --rib-shade: rgba(20, 50, 110, 0.15);
+  --rib-light: rgba(255, 255, 255, 0.36);
+  --rib-shade: rgba(20, 50, 110, 0.18);
 
   --color-tag-fg: #1746c4;
   --color-tag-bg: rgba(23, 70, 196, 0.1);
@@ -113,8 +113,8 @@
   --backdrop-warm: #ee6146;
   --backdrop-rose: #dd7fae;
   --backdrop-veil: linear-gradient(180deg, rgba(6, 18, 48, 0.3), rgba(6, 18, 48, 0.08) 30%, rgba(6, 18, 48, 0.3));
-  --rib-light: rgba(255, 255, 255, 0.14);
-  --rib-shade: rgba(4, 14, 44, 0.26);
+  --rib-light: rgba(255, 255, 255, 0.19);
+  --rib-shade: rgba(4, 14, 44, 0.32);
 
   --color-tag-fg: #d3eaff;
   --color-tag-bg: rgba(150, 205, 255, 0.16);
@@ -232,8 +232,8 @@
     linear-gradient(
       90deg,
       var(--rib-shade) 0,
-      var(--rib-light) 34%,
-      transparent 66%,
+      var(--rib-light) 16%,
+      transparent 56%,
       var(--rib-shade) 100%
     );
   background-size: 100% 100%, var(--rib) 100%;

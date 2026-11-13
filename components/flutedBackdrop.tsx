@@ -59,10 +59,11 @@ const SCENE_PAD = 40 // spare scene on each side so edge ribs have something to 
 // How much wider than itself each rib "sees". High enough that every rib
 // carries its own visible gradient.
 const LENS = 7
-// Share of each rib spent folding the view back for the next rib. Bigger is a
-// softer, wider seam; zero would be a hard edge.
-const SEAM = 0.4
-const COLUMN = 2 // screen pixels per canvas column; the browser smooths the rest
+// Share of each rib spent folding the view back for the next rib. Zero is a
+// hard edge line; much above 0.2 and the whole sheet starts to look blurred.
+// This is about three pixels: enough to take the line away, no more.
+const SEAM = 0.14
+const COLUMN = 1 // screen pixels per canvas column
 const FRAME_MS = 1000 / 30
 
 // Where a column looks, from -1 (far left of the rib's slice) to 1 (far right).

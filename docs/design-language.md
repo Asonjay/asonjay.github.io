@@ -12,7 +12,8 @@ cyan "tech dashboard" look: dot grid, gradient orbs, mono uppercase labels.)
   navy "figure"), then redrawn column by column. Across each rib the view sweeps
   over a slice about 7x the rib's width (`LENS`); at the rib's edge it folds
   smoothly back (`SEAM`), so ribs melt into each other with no hard border line.
-  Jason asked for this explicitly: strong per-rib gradient, soft seams.
+  Jason asked for a strong per-rib gradient without a visible border line, but a
+  wide seam (0.4) looked blurry to him; keep it narrow (about 3px, `SEAM = 0.14`).
 - Rib light-and-shade and the top/bottom veil are CSS (`.backdrop::after` in
   `globals.css`). The shading starts and ends on the same value for the same reason.
 - Rib width is the `--rib` CSS variable (22px, 16px on phones). The canvas reads it.

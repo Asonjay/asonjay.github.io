@@ -2,6 +2,15 @@
 
 Notes from iterative design sessions with Jason (Zexin Xu).
 
+## November 2026 redesign
+- Jason felt the dark cyan glass/bento look read as AI-generated and asked for a
+  major aesthetic change based on a fluted-glass reference image, keeping all content.
+- Main font is Manrope (as on JJstudios.app); Barlow stays available.
+- Mobile layout must be kept working alongside desktop.
+- Notes below about cyan accents, dot grid, orbs, underscore labels (`Latest_News`)
+  and square nav buttons describe the old look and no longer apply. See
+  `design-language.md` for the current system.
+
 ## General Approach
 - Prefers iterative refinement over big changes -- try something, evaluate visually, adjust
 - Values consistency across components (same hover effects, same border styles, same transitions)

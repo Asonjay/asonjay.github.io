@@ -38,10 +38,11 @@ export default function DeadlinePageContent({
           <button
             key={filter.value}
             onClick={() => setActiveFilter(filter.value)}
-            className={`px-3 py-1.5 font-mono-label text-xs uppercase tracking-widest rounded-lg transition-all border ${
+            aria-pressed={activeFilter === filter.value}
+            className={`px-3.5 py-1.5 text-xs font-semibold rounded-full transition-colors border ${
               activeFilter === filter.value
-                ? 'text-accent bg-[rgba(255,255,255,0.08)] border-[var(--color-border)]'
-                : 'text-fore-subtle border-transparent hover:text-accent hover:bg-[rgba(255,255,255,0.06)] hover:border-[var(--color-border)]'
+                ? 'bg-[var(--color-solid)] text-[var(--color-on-solid)] border-[var(--color-solid)]'
+                : 'text-fore-secondary border-[var(--color-border)] hover:text-fore-primary hover:bg-[var(--color-item-bg-hover)]'
             }`}
           >
             {filter.label}

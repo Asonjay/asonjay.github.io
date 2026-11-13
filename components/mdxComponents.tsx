@@ -57,7 +57,7 @@ export const components = {
       <h2
         {...props}
         data-heading
-        className="flex items-baseline mb-6 text-2xl font-heading font-bold leading-10 group mt-12 lg:text-3xl text-accent"
+        className="flex items-baseline mb-6 text-2xl font-heading font-medium tracking-tight leading-10 group mt-12 lg:text-3xl text-fore-primary"
       />
     )
   },
@@ -66,7 +66,7 @@ export const components = {
       <h3
         {...props}
         data-heading
-        className="flex items-baseline mb-4 text-xl font-heading font-bold leading-tight group mt-10 text-accent"
+        className="flex items-baseline mb-4 text-xl font-heading font-medium tracking-tight leading-tight group mt-10 text-fore-primary"
       />
     )
   },

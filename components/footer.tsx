@@ -26,11 +26,11 @@ const buildDate = (() => {
 
 export function Footer() {
   return (
-    <footer className="relative z-10 w-full border-t border-[var(--color-border)] mt-20">
+    <footer className="relative z-10 w-full mt-16">
       <div className="max-w-screen-xl mx-auto px-6 sm:px-8 py-8">
         <div className="flex flex-col sm:flex-row justify-between items-center gap-6">
           {/* Credits */}
-          <div className="font-mono-label text-xs text-fore-subtle tracking-wider text-center sm:text-left">
+          <div className="on-glass text-[0.8125rem] leading-relaxed text-fore-secondary text-center sm:text-left">
             <div className="hidden sm:block mb-1">
               Design inspired by{' '}
               <a className="text-accent hover:underline" href="https://variant.com/">
@@ -48,12 +48,12 @@ export function Footer() {
           </div>
 
           {/* Social links */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2.5">
             <a
               href="mailto:zexin.xu@utdallas.edu"
               aria-label="Email"
               title="Email"
-              className="social-btn w-9 h-9"
+              className="social-btn"
             >
               <MailAt24 className="w-4 h-4" />
             </a>
@@ -63,7 +63,7 @@ export function Footer() {
               title="Google Scholar"
               target="_blank"
               rel="noopener noreferrer"
-              className="social-btn w-9 h-9"
+              className="social-btn"
             >
               <GoogleScholar24 className="w-4 h-4" />
             </a>
@@ -73,7 +73,7 @@ export function Footer() {
               title="GitHub"
               target="_blank"
               rel="noopener noreferrer"
-              className="social-btn w-9 h-9"
+              className="social-btn"
             >
               <GitHub24 className="w-4 h-4" />
             </a>
@@ -83,7 +83,7 @@ export function Footer() {
               title="Twitter/X"
               target="_blank"
               rel="noopener noreferrer"
-              className="social-btn w-9 h-9"
+              className="social-btn"
             >
               <Twitter24 className="w-4 h-4" />
             </a>
@@ -93,7 +93,7 @@ export function Footer() {
               title="LinkedIn"
               target="_blank"
               rel="noopener noreferrer"
-              className="social-btn w-9 h-9"
+              className="social-btn"
             >
               <LinkedIn24 className="w-4 h-4" />
             </a>

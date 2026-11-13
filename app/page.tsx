@@ -16,33 +16,37 @@ import Introduction from '../components/introduction'
 import avatar from '../public/images/profile-img.jpeg'
 import { wenKai } from './fonts'
 
+function ViewAll({ href, label }: { href: string; label: string }) {
+  return (
+    <Link href={href} className="expand-icon" title={label} aria-label={label}>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M7 17L17 7M8 7h9v9" />
+      </svg>
+    </Link>
+  )
+}
+
 export default async function Page() {
   return (
-    <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-      {/* ─── Identity Hero (full width) ─── */}
-      <div className="glass-panel">
-        <div className="section-label text-fore-subtle mb-4">Identity</div>
-        <div className="flex flex-col-reverse md:flex-row gap-6 md:gap-8 items-stretch">
-          {/* Left: name + intro */}
-          <div className="flex-1 min-w-0">
-            <h1 className="font-heading text-4xl sm:text-[2.75rem] font-bold tracking-tight mb-2 text-fore-primary">
-              Hi there, I&apos;m Zexin Xu (<span className={wenKai.className}>徐泽鑫</span>)! 👋
-            </h1>
-            <div className="font-mono-label text-xs text-fore-subtle mb-4 flex items-center gap-2 bg-[var(--color-back-accent)] border border-[var(--color-border)] rounded-md px-3 py-2 w-fit">
-              <span>💡</span>
-              <span>My name is pronounced as &quot;Zeh-Shin She&quot;, and I also go by <strong className="text-accent">Jason</strong>.</span>
-            </div>
-            <div className="text-fore-primary text-base leading-relaxed">
-              <Introduction />
-            </div>
-          </div>
+    <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 pb-6 space-y-5 sm:space-y-6">
+      {/* ─── Hero: the glass gets the room; name bottom-left, profile top-right ─── */}
+      <section className="flex flex-col lg:flex-col-reverse lg:justify-between gap-8 pt-[16svh] pb-4 sm:pt-[20svh] lg:pt-6 lg:pb-8 lg:min-h-[calc(100svh-11.5rem)]">
+        <div>
+          <h1 className="hero-title on-glass text-fore-primary">
+            Hi there, I&apos;m{' '}
+            <span className="block whitespace-nowrap">
+              Zexin Xu (<span className={wenKai.className}>徐泽鑫</span>)!
+            </span>
+          </h1>
+          <p className="on-glass mt-5 sm:mt-6 max-w-[44ch] text-base sm:text-lg leading-relaxed text-fore-secondary">
+            My name is pronounced as &quot;Zeh-Shin She&quot;, and I also go by{' '}
+            <strong className="font-semibold text-fore-primary">Jason</strong>.
+          </p>
+        </div>
 
-          {/* Divider: horizontal on mobile, vertical on sm+ */}
-          <div className="w-full h-px md:w-px md:h-auto md:self-stretch bg-[var(--color-border)]" aria-hidden="true" />
-
-          {/* Right: profile card (vertically centered) */}
-          <div className="flex flex-col items-center justify-center gap-5 flex-shrink-0 md:w-60 lg:w-72">
-            <div className="relative w-36 h-36 md:w-40 md:h-40 lg:w-44 lg:h-44 rounded-2xl avatar-border">
+        <aside className="glass-panel !p-4 w-full sm:w-[22rem] lg:self-end lg:mt-16">
+          <div className="flex items-center gap-4">
+            <div className="relative w-[5.5rem] h-[5.5rem] flex-shrink-0 avatar-border">
               <Image
                 src={avatar}
                 alt="Zexin (Jason) Xu"
@@ -51,84 +55,79 @@ export default async function Page() {
                 quality={100}
                 priority={true}
                 placeholder="blur"
-                className="w-full h-full object-cover rounded-2xl"
+                className="w-full h-full object-cover"
               />
             </div>
-            <div className="text-center">
-              <div className="font-heading text-lg font-bold text-fore-primary leading-tight">
+            <div className="min-w-0">
+              <div className="text-lg font-medium tracking-tight text-fore-primary leading-tight">
                 Zexin (Jason) Xu
               </div>
-              <div className="text-sm text-fore-subtle mt-1">PhD Student</div>
+              <div className="text-sm text-fore-secondary mt-1.5">PhD Student</div>
               <div className="text-sm text-fore-subtle">University of Texas at Dallas</div>
             </div>
-            <div className="social-group flex items-center rounded-xl overflow-hidden max-w-full">
-              <a href="mailto:zexin.xu@utdallas.edu" aria-label="Email" title="Email" className="social-group-item">
-                <MailAt24 className="w-5 h-5" />
-              </a>
-              <a href="https://scholar.google.com/citations?user=NvnoD1kAAAAJ&hl=en" aria-label="Google Scholar" title="Google Scholar" target="_blank" rel="noopener noreferrer" className="social-group-item">
-                <GoogleScholar24 className="w-5 h-5" />
-              </a>
-              <a href="https://github.com/asonjay" aria-label="GitHub" title="GitHub" target="_blank" rel="noopener noreferrer" className="social-group-item">
-                <GitHub24 className="w-5 h-5" />
-              </a>
-              <a href="https://x.com/zexin_jason_xu" aria-label="Twitter/X" title="Twitter/X" target="_blank" rel="noopener noreferrer" className="social-group-item">
-                <Twitter24 className="w-5 h-5" />
-              </a>
-              <a href="https://www.linkedin.com/in/zexin-xu/" aria-label="LinkedIn" title="LinkedIn" target="_blank" rel="noopener noreferrer" className="social-group-item">
-                <LinkedIn24 className="w-5 h-5" />
-              </a>
-            </div>
           </div>
+          <div className="social-group flex items-stretch rounded-full overflow-hidden mt-4">
+            <a href="mailto:zexin.xu@utdallas.edu" aria-label="Email" title="Email" className="social-group-item flex-1">
+              <MailAt24 className="w-5 h-5" />
+            </a>
+            <a href="https://scholar.google.com/citations?user=NvnoD1kAAAAJ&hl=en" aria-label="Google Scholar" title="Google Scholar" target="_blank" rel="noopener noreferrer" className="social-group-item flex-1">
+              <GoogleScholar24 className="w-5 h-5" />
+            </a>
+            <a href="https://github.com/asonjay" aria-label="GitHub" title="GitHub" target="_blank" rel="noopener noreferrer" className="social-group-item flex-1">
+              <GitHub24 className="w-5 h-5" />
+            </a>
+            <a href="https://x.com/zexin_jason_xu" aria-label="Twitter/X" title="Twitter/X" target="_blank" rel="noopener noreferrer" className="social-group-item flex-1">
+              <Twitter24 className="w-5 h-5" />
+            </a>
+            <a href="https://www.linkedin.com/in/zexin-xu/" aria-label="LinkedIn" title="LinkedIn" target="_blank" rel="noopener noreferrer" className="social-group-item flex-1">
+              <LinkedIn24 className="w-5 h-5" />
+            </a>
+          </div>
+        </aside>
+      </section>
+
+      {/* ─── About ─── */}
+      <section className="glass-panel" aria-labelledby="about-title">
+        <h2 id="about-title" className="section-label mb-4">About</h2>
+        <div className="intro-copy text-fore-secondary text-base leading-relaxed lg:columns-2 lg:gap-12">
+          <Introduction />
         </div>
-      </div>
+      </section>
 
       {/* ─── News + Publications ─── */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div className="lg:col-span-5 glass-panel">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6">
+        <section className="lg:col-span-5 glass-panel" aria-labelledby="news-title">
           <div className="flex items-center justify-between mb-4">
-            <div className="section-label text-fore-subtle">Latest_News</div>
+            <h2 id="news-title" className="section-label">Latest news</h2>
           </div>
           <NewsList />
-        </div>
-        <div className="lg:col-span-7 glass-panel">
+        </section>
+        <section className="lg:col-span-7 glass-panel" aria-labelledby="publications-title">
           <div className="flex items-center justify-between mb-4">
-            <div className="section-label text-fore-subtle">Selected_Publications</div>
-            <Link href="/publications" className="expand-icon" title="View all publications">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
-              </svg>
-            </Link>
+            <h2 id="publications-title" className="section-label">Selected publications</h2>
+            <ViewAll href="/publications" label="View all publications" />
           </div>
           <PublicationList selectedOnly={true} />
-        </div>
+        </section>
       </div>
 
       {/* ─── Projects + Blog ─── */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div className="lg:col-span-7 glass-panel">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6">
+        <section className="lg:col-span-7 glass-panel" aria-labelledby="projects-title">
           <div className="flex items-center justify-between mb-4">
-            <div className="section-label text-fore-subtle">Projects</div>
-            <Link href="/projects" className="expand-icon" title="View all projects">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
-              </svg>
-            </Link>
+            <h2 id="projects-title" className="section-label">Projects</h2>
+            <ViewAll href="/projects" label="View all projects" />
           </div>
           <ProjectList selectedOnly={true} />
-        </div>
-        <div className="lg:col-span-5 glass-panel">
+        </section>
+        <section className="lg:col-span-5 glass-panel" aria-labelledby="blog-title">
           <div className="flex items-center justify-between mb-4">
-            <div className="section-label text-fore-subtle">Blog</div>
-            <Link href="/blog" className="expand-icon" title="View all blog posts">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
-              </svg>
-            </Link>
+            <h2 id="blog-title" className="section-label">Blog</h2>
+            <ViewAll href="/blog" label="View all blog posts" />
           </div>
           <PostList />
-        </div>
+        </section>
       </div>
-
     </div>
   )
 }

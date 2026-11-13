@@ -13,7 +13,7 @@ export function ThemeToggle({ className }: { className?: string }) {
   }, [])
 
   if (!mounted) {
-    return <div className={className} style={{ width: 40, height: 28 }} />
+    return <div className={className} style={{ width: 36, height: 36 }} />
   }
 
   return (
@@ -25,7 +25,7 @@ export function ThemeToggle({ className }: { className?: string }) {
         trackCustomEvent({ eventName: 'toggle-theme' })
       }}
       className={cn(
-        'relative w-8 h-8 rounded-lg border border-[var(--color-border)] flex items-center justify-center transition-all duration-200 hover:border-accent hover:bg-[var(--color-back-accent)] hover:text-accent group',
+        'icon-btn',
         className
       )}
     >
@@ -35,12 +35,12 @@ export function ThemeToggle({ className }: { className?: string }) {
           'absolute w-4 h-4 transition-all duration-500',
           isDark
             ? 'opacity-0 rotate-90 scale-0'
-            : 'opacity-100 rotate-0 scale-100 text-amber-500'
+            : 'opacity-100 rotate-0 scale-100'
         )}
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
-        strokeWidth="2"
+        strokeWidth="1.75"
         strokeLinecap="round"
       >
         <circle cx="12" cy="12" r="5" />
@@ -52,13 +52,13 @@ export function ThemeToggle({ className }: { className?: string }) {
         className={cn(
           'absolute w-4 h-4 transition-all duration-500',
           isDark
-            ? 'opacity-100 rotate-0 scale-100 text-accent'
+            ? 'opacity-100 rotate-0 scale-100'
             : 'opacity-0 -rotate-90 scale-0'
         )}
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
-        strokeWidth="2"
+        strokeWidth="1.75"
         strokeLinecap="round"
       >
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />

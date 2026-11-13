@@ -50,7 +50,7 @@ function ProjectCard({ project }: { project: Project }) {
             className="btn-outline"
           >
             <GitHub24 className="w-3.5 h-3.5" />
-            GITHUB
+            GitHub
           </a>
         )}
         {project.url && (
@@ -61,7 +61,7 @@ function ProjectCard({ project }: { project: Project }) {
             className="btn-outline"
           >
             <External24 className="w-3.5 h-3.5" />
-            DEMO
+            Demo
           </a>
         )}
       </div>

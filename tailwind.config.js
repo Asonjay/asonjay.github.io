@@ -25,52 +25,41 @@ module.exports = {
         border: 'var(--color-border)',
       },
       fontFamily: {
+        // Manrope carries the whole site; Barlow is kept for the name mark.
         sans: [
-          'var(--font-barlow)',
-          'Barlow',
+          'var(--font-manrope)',
+          'Manrope',
           'ui-sans-serif',
           'system-ui',
           '-apple-system',
           'sans-serif',
         ],
         heading: [
-          'var(--font-space-grotesk)',
-          'Space Grotesk',
+          'var(--font-manrope)',
+          'Manrope',
           'ui-sans-serif',
           'system-ui',
           'sans-serif',
         ],
+        brand: [
+          'var(--font-barlow)',
+          'Barlow',
+          'var(--font-manrope)',
+          'sans-serif',
+        ],
         'mono-label': [
-          'var(--font-space-mono)',
-          'Space Mono',
-          'monospace',
+          'var(--font-manrope)',
+          'Manrope',
+          'ui-sans-serif',
+          'system-ui',
+          'sans-serif',
         ],
         mono: [
-          'var(--font-fira-code)',
-          'Fira Code',
+          'var(--font-jetbrains-mono)',
+          'JetBrains Mono',
           'Monaco',
           'monospace',
         ],
-      },
-      animation: {
-        'orb-float': 'orb-float 20s infinite alternate ease-in-out',
-        'orb-morph': 'orb-morph 15s infinite alternate ease-in-out',
-      },
-      keyframes: {
-        'orb-float': {
-          '0%': { transform: 'translate(0, 0) scale(1)' },
-          '100%': { transform: 'translate(5%, 5%) scale(1.1)' },
-        },
-        'orb-morph': {
-          '0%': {
-            borderRadius: '40% 60% 70% 30% / 40% 50% 60% 50%',
-            transform: 'rotate(-15deg) scale(1)',
-          },
-          '100%': {
-            borderRadius: '70% 30% 50% 50% / 30% 30% 70% 70%',
-            transform: 'rotate(5deg) scale(1.1)',
-          },
-        },
       },
     },
   },

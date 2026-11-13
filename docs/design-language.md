@@ -1,109 +1,104 @@
 # Design Language
 
+The site is one soft colour field seen through fluted (reeded) glass, with quiet
+frosted panels and light-weight type on top. The glass is the only loud thing;
+everything else stays calm. (Redesigned November 2026, replacing the dark
+cyan "tech dashboard" look: dot grid, gradient orbs, mono uppercase labels.)
+
+## Backdrop
+
+- `components/flutedBackdrop.tsx` paints the scene on a fixed canvas behind every page.
+- The scene is drawn tiny (soft blobs: sky blue, coral, orange, rose, and a tall
+  navy "figure"), then each glass rib redraws a wider slice squeezed into its own
+  width. That squeeze is the fluted-glass refraction.
+- Rib highlights and the top/bottom veil are CSS (`.backdrop::after` in `globals.css`).
+- Rib width is the `--rib` CSS variable (30px, 20px on phones). The canvas reads it.
+- Blobs drift slowly (24fps, 30-50s cycles). With reduced motion on, one still frame.
+- Palettes for both themes live at the top of the component (`DUSK`, `DAY`).
+- `public/videos/background.mp4` and `components/backgroundVideo.tsx` are no longer used.
+
 ## Color System
 
-### Dark Mode (Default)
-- **Background**: Near black `#030305` (primary), `#0a0a0f` (secondary), `#151520` (subtle)
-- **Foreground**: White `#fff` (primary), `#ccc` (secondary), `#8b8b9e` (subtle)
-- **Accent**: Cyan `#00d2ff` (primary), Blue `#0078ff` (secondary)
-- **Accent bg**: `rgba(0, 210, 255, 0.1)`
-- **Borders**: `rgba(255, 255, 255, 0.08)`
-- **Panel bg**: `rgba(15, 15, 20, 0.4)` (unhovered), `rgba(10, 10, 18, 0.95)` (hovered)
+All colours are CSS variables in `app/styles/globals.css`.
 
-### Light Mode
-- **Background**: Warm cream `#f5f0e8` (primary) -- intentionally warm, not pure white
-- **Foreground**: Near black `#0f0f0f` (primary), `#374151` (secondary), `#6b7280` (subtle)
-- **Accent**: Blue `#0078ff` (primary), Cyan `#00b4d8` (secondary)
-- **Panel bg**: `rgba(255, 255, 255, 0.3)` (unhovered), `rgba(255, 255, 255, 0.95)` (hovered)
+### Dusk (default, `.dark`)
+- Text: white, white 88%, white 72%
+- Panels: navy `rgba(14, 36, 86, 0.4)` with a white 24% border
+- Items inside panels: white 8%, white 15% on hover
+- Accent: white. Panels sit over both blue and coral, so links are marked by an
+  underline rather than a hue.
+- Solid buttons: white with navy text (`--color-solid` / `--color-on-solid`)
+
+### Day (`.light`)
+- Text: ink `#0b1e3f`, `#22365c`, `#47597b`
+- Panels: white 60% with a white 80% border
+- Accent: cobalt `#1746c4` (links are also underlined)
+- Solid buttons: ink with white text
 
 ### Urgency Colors (Deadlines)
-- Green (`green-500`): 30+ days remaining
-- Yellow (`yellow-500`): 8-30 days
-- Red (`red-500`): 7 days or less
-- Gray (`gray-400`): Expired
+Unchanged: green 30+ days, yellow 8-30, red 7 or less, gray expired.
 
 ## Typography
 
-| Purpose | Font | Weight | Size |
-|---------|------|--------|------|
-| Headings | Space Grotesk | 700 | 3xl-5xl |
-| Body | Inter | 400 | sm-base |
-| Labels/Tags | Space Mono | 400/700 | 0.55rem-0.75rem, uppercase |
-| Code | Fira Code | 400 | -- |
-| Chinese | LXGW WenKai | -- | inline |
+| Purpose | Font | Notes |
+|---------|------|-------|
+| Everything | Manrope (variable) | Same face as JJstudios.app |
+| Hero / page titles | Manrope 300 | `.hero-title`, `.page-title`, tight tracking |
+| Section titles | Manrope 500 | `.section-label`, sentence case |
+| Name mark in nav | Barlow 600 | `font-brand` |
+| Code | JetBrains Mono | |
+| Chinese | LXGW WenKai | inline |
 
-Section labels use red `#ff0044` left bar (12px x 2px `::before`), uppercase Space Mono with `0.1em` letter-spacing.
+No uppercase mono labels, no underscore names (`Latest_News`), no emoji in headings.
 
 ## Components
 
-### Glass Panels
-Core design element. Frosted glass with backdrop-blur, semi-transparent background, 16px border-radius, 1.5rem padding. On hover: background becomes nearly opaque, slight `translateY(-2px)`, glow enhancement via radial gradient overlay.
-
-### Buttons
-- **Nav links**: `px-3 py-1.5 rounded-lg` with transparent border, hover shows border + accent bg
-- **Music/Theme toggle**: `w-8 h-8 rounded-lg` with visible border, same hover effect
-- **Social group** (profile card): Grouped bar with shared border, individual item hover bg
-- **Social buttons** (footer): Individual circles, `w-9 h-9`, scale(1.1) on hover
-- **Expand icons**: 24px circles with expand arrows (outward), on card headers
-- **Shrink icons**: 36px circles with shrink arrows (inward), on sub-page headers
-
-### Icons
-- Most icons: stroke-based, `strokeWidth="1.5"`
-- LinkedIn: stroke-based "in" outline, `strokeWidth="1.5"`, viewBox `-2 -2 28 28` (slightly padded)
-- Twitter/X: filled path, viewBox `-3 -3 30 30` (padded to match other icon sizes)
-- Music icon always uses accent color in the nav
+- **Glass panel** (`.glass-panel`): tinted, 14px blur, 26px radius (22px on phones).
+  No hover lift or glow. The ribs stay faintly visible through it.
+- **Panel item** (`.panel-list-item`): 16px radius, lighter tint, brighter on hover.
+- **Pill button** (`.btn-outline`): outlined pill, fills solid on hover.
+- **Tag** (`.tag-badge`): small pill.
+- **Round icon link** (`.expand-icon`, `.shrink-icon`): arrow up-right opens a
+  section's page; inward arrows go back home.
+- **Breadcrumb** (`.crumb`): "Home / Publications" above each sub-page title.
 
 ## Layout
 
-### Homepage (Bento Grid)
-12-column grid on `lg`, single column on mobile:
-- **Top**: Bio (9 cols) + Profile/Deadlines (3 cols, stacked)
-- **Middle**: News (5 cols) + Publications (7 cols)
-- **Bottom**: Projects (7 cols) + Blog (5 cols)
+### Homepage
+- **Hero**: fills most of the first screen. Name bottom-left in large light type,
+  profile card (photo, role, social links) top-right. On phones: name, then card.
+- **About** panel (two columns on desktop).
+- **News** (5 cols) + **Publications** (7 cols), then **Projects** (7) + **Blog** (5).
+  Single column below `lg`.
 
-### Sub-Pages
-Single centered glass-panel inside `max-w-screen-xl`. Section label + shrink-icon header, large h1, optional description, divider, content.
+### Sub-pages
+One glass panel inside `max-w-screen-xl`: breadcrumb + back icon, page title,
+optional description, divider, content.
 
 ### Header
-Sticky `top-0`, blur backdrop with gradient mask fade. Fake dot grid layer for seamless background pattern. Nav bar is a glass-panel with `rounded-xl`. Content wrapper at `z-10` above the dots.
+Three floating frosted pills (`.nav-pill`): name mark, page links, controls
+(now-playing text, music, theme, and the menu button below `lg`). A blurred haze
+(`.nav-haze`) softens content as it scrolls behind them. Below `lg` the links
+move into a dropdown that slides open (grid-rows transition).
 
-## Animations
+## Motion
 
-### Ambient
-- **3 gradient orbs**: Drift + morph on 40-50s cycles
-- **Dot grid**: Fixed radial dots at 20px spacing (opacity 0.4 dark, 0.15 light)
-- **Header dots**: Fake dot grid in header area matching background grid
-
-### Interactive
-- **Glass panel hover**: `translateY(-2px)` + glow + border color shift, 0.4s cubic-bezier
-- **Button hover**: Various (scale, bg change, border color)
-- **Player expand/collapse**: Scale from `origin-top-right`, 0.35s
-- **Player content**: Staggered fade-in from above (`translateY(-8px)`), 50ms apart
-- **Mobile menu**: CSS grid `grid-rows-[0fr]`/`grid-rows-[1fr]` with opacity, 300ms
-
-### Status
-- **Blink**: 2s opacity pulse for status dots
-- **Breathing (dark only)**: `saturate(1.25) brightness(1.1)` on deadline countdown numbers
-- **Bar bounce**: Staggered height animation on music equalizer bars
-- **Marquee scroll**: Status text scrolls left, pauses, scrolls right, pauses (12s cycle)
-- **Music note**: Gentle rocking rotation on first-visit prompt icon
+- Ambient: only the backdrop drift.
+- Player expand/collapse, staggered player content, mobile menu slide, equalizer
+  bars, now-playing marquee, deadline countdown breathing (dusk only): unchanged.
+- No entrance animations, no hover lift on cards.
 
 ## Music Player
 
-- SoundCloud widget via hidden iframe, persists in root layout
-- 5-track curated playlist, shuffled on each page load
-- Triggered from nav bar button (music note icon, always accent-colored)
-- Dropdown panel anchored below nav, right-aligned with nav edge (measured dynamically)
-- First visit: "Want some music?" prompt after 1s (sessionStorage tracks per session)
-- Header shows: blinking red dot + scrolling "VIBING_: [track name]" when playing
-- Collapse button uses shrink icon (inward arrows), not X
+Behaviour unchanged (SoundCloud widget, shuffled playlist, drops down from the
+nav's right edge, first-visit prompt). The prompt is now a pill; the player uses
+the opaque overlay tint (`--color-overlay-bg`) so page text doesn't show through.
+While playing, the nav shows "Vibing: [track]".
 
 ## Navigation
 
-- All internal links use Next.js `<Link>` for client-side navigation
-- Expand icons on homepage cards link to full sub-pages
-- Shrink icons on sub-pages link back to home
-- Mobile nav: hamburger menu with smooth slide-down animation
+- Internal links use Next.js `<Link>`.
+- Mobile nav: menu button with a slide-down panel.
 
 ## Deployment
 

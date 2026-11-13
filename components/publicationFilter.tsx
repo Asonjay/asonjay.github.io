@@ -212,7 +212,7 @@ export default function PublicationFilter({
                               <polyline points="16 18 22 12 16 6" />
                               <polyline points="8 6 2 12 8 18" />
                             </svg>
-                            CODE
+                            Code
                           </Link>
                         )}
                         {pub.url && !pub.pdf && (
@@ -234,7 +234,7 @@ export default function PublicationFilter({
                               <polyline points="15 3 21 3 21 9" />
                               <line x1="10" y1="14" x2="21" y2="3" />
                             </svg>
-                            LINK
+                            Link
                           </Link>
                         )}
                         <CiteButton publication={pub} />

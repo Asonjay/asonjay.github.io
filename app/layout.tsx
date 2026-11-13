@@ -1,11 +1,10 @@
 import { Metadata } from 'next'
-import { Barlow, Fira_Code, Space_Grotesk, Space_Mono } from 'next/font/google'
+import { Barlow, JetBrains_Mono, Manrope } from 'next/font/google'
 import { Analytics } from '../components/analytics'
 import { Footer } from '../components/footer'
 import { Header } from '../components/header'
 import { MiniPlayer } from '../components/miniPlayer'
-import { MouseTracker } from '../components/mouseTracker'
-import { BackgroundVideo } from '../components/backgroundVideo'
+import { FlutedBackdrop } from '../components/flutedBackdrop'
 import './styles/codeblock.css'
 import './styles/globals.css'
 
@@ -15,21 +14,14 @@ const fontBarlow = Barlow({
   weight: ['400', '500', '600', '700'],
 })
 
-const fontSpaceGrotesk = Space_Grotesk({
+const fontManrope = Manrope({
   subsets: ['latin'],
-  variable: '--font-space-grotesk',
-  weight: ['700'],
+  variable: '--font-manrope',
 })
 
-const fontSpaceMono = Space_Mono({
+const fontJetBrainsMono = JetBrains_Mono({
   subsets: ['latin'],
-  variable: '--font-space-mono',
-  weight: ['400', '700'],
-})
-
-const fontFiraCode = Fira_Code({
-  subsets: ['latin'],
-  variable: '--font-fira-code',
+  variable: '--font-jetbrains-mono',
 })
 
 export const metadata: Metadata = {
@@ -82,20 +74,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${fontBarlow.variable} ${fontSpaceGrotesk.variable} ${fontSpaceMono.variable} ${fontFiraCode.variable} font-sans min-h-screen relative`}
+        className={`${fontManrope.variable} ${fontBarlow.variable} ${fontJetBrainsMono.variable} font-sans min-h-screen relative`}
       >
-        {/* Background video */}
-        <BackgroundVideo src="/videos/background.mp4" speed={0.5} />
-        <div className="bg-video-overlay" aria-hidden="true" />
-        {/* Ambient Background */}
-        <MouseTracker />
-        <div className="ambient-bg">
-          <div className="orb orb-1"></div>
-          <div className="orb orb-2"></div>
-          <div className="orb orb-3"></div>
-        </div>
-        <div className="tech-grid"></div>
-
+        <FlutedBackdrop />
 
         {/* Content */}
         <div className="page-content flex flex-col min-h-screen">

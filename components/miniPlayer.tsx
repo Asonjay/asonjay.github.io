@@ -271,12 +271,12 @@ export function MiniPlayer() {
       {showPrompt && !expanded && (
         <div className="fixed top-20 z-[200] animate-[playerExpand_0.35s_ease-out_both] origin-top-right" style={{ right: `${navRight}px` }}>
           <div
-            className="music-prompt rounded-2xl border border-[var(--color-border)] p-4 flex items-center gap-3"
+            className="music-prompt rounded-full border border-[var(--color-panel-border)] py-2.5 pl-4 pr-2.5 flex items-center gap-3"
           >
             <svg className="w-5 h-5 text-accent animate-[musicNote_3s_ease-in-out_infinite] flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" />
             </svg>
-            <span className="font-mono-label text-xs text-fore-primary tracking-wider">Want some music?</span>
+            <span className="text-[0.8125rem] font-medium text-fore-primary">Want some music?</span>
             <div className="flex items-center gap-1.5 flex-shrink-0">
               <button
                 onClick={() => {
@@ -286,7 +286,7 @@ export function MiniPlayer() {
                   measureNav()
                   setExpanded(true)
                 }}
-                className="w-7 h-7 rounded-lg border border-[var(--color-border)] flex items-center justify-center text-green-500 hover:border-green-500 hover:bg-green-500/10 transition-all"
+                className="w-8 h-8 rounded-full bg-[var(--color-solid)] text-[var(--color-on-solid)] flex items-center justify-center hover:opacity-85 transition-opacity"
                 title="Yes"
               >
                 <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -299,7 +299,7 @@ export function MiniPlayer() {
                   sessionStorage.setItem('musicPlayerVisited', 'true')
                   setHasVisited(true)
                 }}
-                className="w-7 h-7 rounded-lg border border-[var(--color-border)] flex items-center justify-center text-fore-subtle hover:border-[#ff0044] hover:text-[#ff0044] hover:bg-[rgba(255,0,68,0.1)] transition-all"
+                className="w-8 h-8 rounded-full border border-[var(--color-border)] flex items-center justify-center text-fore-secondary hover:bg-[var(--color-nav-active)] hover:text-fore-primary transition-colors"
                 title="No"
               >
                 <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -315,12 +315,11 @@ export function MiniPlayer() {
       {expanded && (
         <div className="fixed top-20 z-50" style={{ right: `${navRight}px` }}>
           <div
-            className={`w-80 rounded-2xl border border-[var(--color-border)] backdrop-blur-xl p-4 origin-top-right ${collapsing ? 'animate-[playerCollapse_0.3s_ease-in_both]' : 'animate-[playerExpand_0.35s_ease-out_both]'}`}
-            style={{ background: 'var(--color-panel-bg)' }}
+            className={`music-prompt w-80 max-w-[calc(100vw-2rem)] rounded-[22px] border border-[var(--color-panel-border)] p-4 origin-top-right ${collapsing ? 'animate-[playerCollapse_0.3s_ease-in_both]' : 'animate-[playerExpand_0.35s_ease-out_both]'}`}
           >
             {/* Header */}
             <div className="flex items-center justify-between mb-3 animate-[playerFadeIn_0.3s_ease-out_0.1s_both]">
-              <div className="section-label text-fore-subtle text-[0.65rem]">Now Playing</div>
+              <div className="text-xs font-medium text-fore-subtle">Now playing</div>
               <button onClick={handleCollapse} className="shrink-icon !w-6 !h-6" title="Collapse player">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M10 14l-7 7" />
@@ -392,7 +391,7 @@ export function MiniPlayer() {
                   className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-left transition-colors ${
                     i === currentIndex
                       ? 'bg-[var(--color-back-accent)] text-accent'
-                      : 'hover:bg-[rgba(255,255,255,0.05)] text-fore-subtle'
+                      : 'hover:bg-[var(--color-nav-active)] text-fore-subtle'
                   }`}
                 >
                   <div className="flex items-center gap-2 min-w-0">

@@ -55,7 +55,7 @@ export default function CiteButton({ publication }: { publication: Publication }
         <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M6 9h6V5l7 7-7 7v-4H6V9z" />
         </svg>
-        CITE
+        Cite
       </button>
 
       <div

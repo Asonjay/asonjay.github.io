@@ -1,12 +1,12 @@
 export const routes = [
   {
     path: '/',
-    label: 'HOME',
+    label: 'Home',
     exact: true,
   },
   // {
   //   path: '/about',
-  //   label: 'ABOUT',
+  //   label: 'About',
   // },
   // {
   //   path: 'https://docs.google.com/viewer?url=https://raw.githubusercontent.com/asonjay/asonjay.github.io/master/public/cv/Zexin_Xu_CV.pdf',
@@ -14,26 +14,26 @@ export const routes = [
   // },
   {
     path: '/publications',
-    label: 'PUBLICATIONS',
+    label: 'Publications',
   },
   {
     path: '/projects',
-    label: 'PROJECTS',
+    label: 'Projects',
   },
   {
     path: '/blog',
-    label: 'BLOG',
+    label: 'Blog',
   },
   {
     path: '/deadlines',
-    label: 'DEADLINES',
+    label: 'Deadlines',
   },
   // {
   //   path: '/life',
-  //   label: 'LIFE',
+  //   label: 'Life',
   // },
   // {
   //   path: '/moments',
-  //   label: 'MOMENTS',
+  //   label: 'Moments',
   // },
 ]

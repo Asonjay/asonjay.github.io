@@ -1,5 +1,6 @@
 // app/life/page.tsx
 import { Metadata } from 'next'
+import Link from 'next/link'
 import { Heart, Book, Music, Coffee, Camera, Plane } from 'lucide-react'
 import LifeCard from '../../components/lifeCard'
 
@@ -57,8 +58,8 @@ export default function Life() {
   return (
     <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div className="glass-panel">
-        <div className="section-label text-fore-subtle mb-2">Life.Log</div>
-        <h1 className="font-heading text-3xl sm:text-4xl font-bold tracking-tight text-fore-primary mb-4">
+        <div className="crumb mb-2"><Link href="/">Home</Link> / Life</div>
+        <h1 className="page-title text-fore-primary mb-4">
           Life
         </h1>
         <p className="text-sm text-fore-subtle mb-6 max-w-3xl leading-relaxed">

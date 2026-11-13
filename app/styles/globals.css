@@ -1,39 +1,65 @@
 :root {
   --tw-bg-opacity: 1;
   --tw-text-opacity: 1;
+
+  /* Width of one glass rib. The backdrop canvas reads this too. */
+  --rib: 30px;
+  --radius-panel: 26px;
+  --radius-item: 16px;
 }
 
+@media (max-width: 640px) {
+  :root {
+    --rib: 20px;
+    --radius-panel: 22px;
+    --radius-item: 14px;
+  }
+}
+
+/* ─── Day: bright sky behind the glass, ink on frosted white ─── */
+
 .light {
-  --color-fore-primary: #0f0f0f;
-  --color-fore-secondary: #374151;
-  --color-fore-subtle: #6b7280;
+  --color-fore-primary: #0b1e3f;
+  --color-fore-secondary: #22365c;
+  --color-fore-subtle: #47597b;
 
-  --color-back-primary: #f5f0e8;
-  --color-back-secondary: rgba(250, 245, 237, 0.6);
-  --color-back-subtle: #ebe5d5;
+  --color-back-primary: #cfe4f8;
+  --color-back-secondary: rgba(255, 255, 255, 0.5);
+  --color-back-subtle: rgba(255, 255, 255, 0.7);
 
-  --color-accent: #0078ff;
-  --color-accent-secondary: #00b4d8;
-  --color-back-accent: #e0f2fe;
+  --color-accent: #1746c4;
+  --color-accent-secondary: #c9482c;
+  --color-back-accent: rgba(23, 70, 196, 0.1);
 
-  --color-border: rgba(0, 0, 0, 0.08);
+  --color-border: rgba(11, 30, 63, 0.13);
   --color-panel-bg: rgba(255, 255, 255, 0.6);
-  --color-panel-hover-border: rgba(0, 0, 0, 0.15);
-  --color-panel-glow: rgba(0, 120, 255, 0.06);
+  --color-panel-border: rgba(255, 255, 255, 0.8);
+  --color-panel-shine: rgba(255, 255, 255, 0.9);
+  --color-item-bg: rgba(255, 255, 255, 0.46);
+  --color-item-bg-hover: rgba(255, 255, 255, 0.78);
+  --color-item-border: rgba(255, 255, 255, 0.7);
+  --color-nav-bg: rgba(255, 255, 255, 0.58);
+  --color-nav-active: rgba(11, 30, 63, 0.09);
+  --color-overlay-bg: rgba(244, 249, 255, 0.9);
+  --color-solid: #0b1e3f;
+  --color-on-solid: #ffffff;
 
-  --color-orb-1-from: rgba(0, 120, 255, 0.35);
-  --color-orb-1-to: rgba(0, 180, 216, 0.25);
-  --color-orb-2: rgba(255, 0, 68, 0.18);
-  --color-orb-3: rgba(139, 92, 246, 0.15);
+  --backdrop-top: #9fcdf3;
+  --backdrop-bottom: #76b0e8;
+  --backdrop-warm: #ff8f72;
+  --backdrop-rose: #f7b3d0;
+  --backdrop-veil: linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05) 30%, rgba(255, 255, 255, 0.16));
+  --rib-light: rgba(255, 255, 255, 0.3);
+  --rib-shade: rgba(20, 50, 110, 0.12);
 
-  --color-gradient-accent1: #0078ff;
-  --color-gradient-accent2: #00b4d8;
+  --color-gradient-accent1: #1746c4;
+  --color-gradient-accent2: #c9482c;
 
-  --color-code-background: #f3f4f6;
-  --color-code-background-file: #e5e7eb;
-  --color-code-line-hover: #e5e7eb;
-  --color-code-word-highlight: rgba(0, 120, 255, 0.15);
-  --color-code-word-highlight-hover: rgba(0, 120, 255, 0.3);
+  --color-code-background: rgba(255, 255, 255, 0.62);
+  --color-code-background-file: rgba(255, 255, 255, 0.85);
+  --color-code-line-hover: rgba(11, 30, 63, 0.06);
+  --color-code-word-highlight: rgba(23, 70, 196, 0.15);
+  --color-code-word-highlight-hover: rgba(23, 70, 196, 0.3);
 
   /* Material Light theme for code */
   --color-code-text: #24292e;
@@ -48,49 +74,64 @@
   --color-code-regex: #032f62;
 }
 
+/* ─── Dusk (default): deeper sky, white on tinted glass ─── */
+
 .dark {
   --color-fore-primary: #ffffff;
-  --color-fore-secondary: #cccccc;
-  --color-fore-subtle: #8b8b9e;
+  --color-fore-secondary: rgba(255, 255, 255, 0.88);
+  --color-fore-subtle: rgba(255, 255, 255, 0.72);
 
-  --color-back-primary: #030305;
-  --color-back-secondary: #0a0a0f;
-  --color-back-subtle: #151520;
+  --color-back-primary: #1b4488;
+  --color-back-secondary: rgba(255, 255, 255, 0.08);
+  --color-back-subtle: rgba(255, 255, 255, 0.14);
 
-  --color-accent: #00d2ff;
-  --color-accent-secondary: #0078ff;
-  --color-back-accent: rgba(0, 210, 255, 0.1);
+  /* On glass that sits over both blue and coral, only white reads everywhere;
+     links are told apart by their underline instead of a hue. */
+  --color-accent: #ffffff;
+  --color-accent-secondary: #ffd2c0;
+  --color-back-accent: rgba(255, 255, 255, 0.16);
 
-  --color-border: rgba(255, 255, 255, 0.08);
-  --color-panel-bg: rgba(15, 15, 20, 0.4);
-  --color-panel-hover-border: rgba(255, 255, 255, 0.2);
-  --color-panel-glow: rgba(0, 210, 255, 0.06);
+  --color-border: rgba(255, 255, 255, 0.18);
+  --color-panel-bg: rgba(14, 36, 86, 0.4);
+  --color-panel-border: rgba(255, 255, 255, 0.24);
+  --color-panel-shine: rgba(255, 255, 255, 0.22);
+  --color-item-bg: rgba(255, 255, 255, 0.08);
+  --color-item-bg-hover: rgba(255, 255, 255, 0.15);
+  --color-item-border: rgba(255, 255, 255, 0.12);
+  --color-nav-bg: rgba(255, 255, 255, 0.16);
+  --color-nav-active: rgba(255, 255, 255, 0.2);
+  --color-overlay-bg: rgba(15, 36, 84, 0.86);
+  --color-solid: #ffffff;
+  --color-on-solid: #10295f;
 
-  --color-orb-1-from: rgba(0, 210, 255, 0.3);
-  --color-orb-1-to: rgba(0, 120, 255, 0.2);
-  --color-orb-2: rgba(255, 0, 68, 0.2);
-  --color-orb-3: rgba(139, 92, 246, 0.15);
+  --backdrop-top: #2c68b4;
+  --backdrop-bottom: #1a438a;
+  --backdrop-warm: #ee6146;
+  --backdrop-rose: #dd7fae;
+  --backdrop-veil: linear-gradient(180deg, rgba(6, 18, 48, 0.3), rgba(6, 18, 48, 0.08) 30%, rgba(6, 18, 48, 0.3));
+  --rib-light: rgba(255, 255, 255, 0.16);
+  --rib-shade: rgba(4, 14, 44, 0.2);
 
-  --color-gradient-accent1: #00d2ff;
-  --color-gradient-accent2: #0078ff;
+  --color-gradient-accent1: #ffd2c0;
+  --color-gradient-accent2: #b5dcff;
 
-  --color-code-background: rgba(15, 15, 25, 0.8);
-  --color-code-background-file: rgba(10, 10, 18, 0.9);
-  --color-code-line-hover: rgba(25, 25, 40, 0.6);
-  --color-code-word-highlight: rgba(0, 210, 255, 0.15);
-  --color-code-word-highlight-hover: rgba(0, 210, 255, 0.3);
+  --color-code-background: rgba(6, 18, 48, 0.5);
+  --color-code-background-file: rgba(6, 18, 48, 0.7);
+  --color-code-line-hover: rgba(255, 255, 255, 0.06);
+  --color-code-word-highlight: rgba(255, 210, 192, 0.18);
+  --color-code-word-highlight-hover: rgba(255, 210, 192, 0.32);
 
   /* Duotone Sea theme for code */
-  --color-code-text: hsl(212, 87%, 73%);
-  --color-code-comment: hsl(213, 24%, 45%);
-  --color-code-punctuation: hsl(213, 24%, 45%);
-  --color-code-const: hsl(160, 88%, 34%);
-  --color-code-bool: hsl(160, 80%, 60%);
-  --color-code-string: hsl(160, 80%, 60%);
-  --color-code-var: hsl(160, 80%, 60%);
-  --color-code-func: hsl(212, 24%, 45%);
-  --color-code-keyword: hsl(160, 80%, 60%);
-  --color-code-regex: hsl(160, 80%, 60%);
+  --color-code-text: hsl(212, 87%, 80%);
+  --color-code-comment: hsl(213, 30%, 68%);
+  --color-code-punctuation: hsl(213, 30%, 68%);
+  --color-code-const: hsl(160, 80%, 62%);
+  --color-code-bool: hsl(160, 80%, 68%);
+  --color-code-string: hsl(160, 80%, 68%);
+  --color-code-var: hsl(160, 80%, 68%);
+  --color-code-func: hsl(212, 40%, 74%);
+  --color-code-keyword: hsl(160, 80%, 68%);
+  --color-code-regex: hsl(160, 80%, 68%);
 }
 
 @tailwind base;
@@ -99,13 +140,13 @@
 
 @layer base {
   ::-moz-selection {
-    background: var(--color-accent);
-    color: var(--color-back-primary);
+    background: var(--color-solid);
+    color: var(--color-on-solid);
   }
 
   ::selection {
-    background: var(--color-accent);
-    color: var(--color-back-primary);
+    background: var(--color-solid);
+    color: var(--color-on-solid);
   }
 
   html {
@@ -131,350 +172,186 @@
     color: var(--color-fore-primary);
     @apply antialiased;
   }
-}
 
-/* ─── Ambient Background ─── */
+  :focus-visible {
+    outline: 2px solid var(--color-solid);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
 
-@keyframes orb-drift-1 {
-  0% {
-    top: -10%;
-    left: -10%;
-  }
-  25% {
-    top: 20%;
-    left: 60%;
-  }
-  50% {
-    top: 60%;
-    left: 40%;
-  }
-  75% {
-    top: 30%;
-    left: -5%;
-  }
-  100% {
-    top: -10%;
-    left: -10%;
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 }
 
-@keyframes orb-drift-2 {
-  0% {
-    bottom: -15%;
-    right: -10%;
-  }
-  20% {
-    bottom: 30%;
-    right: 50%;
-  }
-  40% {
-    bottom: 60%;
-    right: 20%;
-  }
-  60% {
-    bottom: 40%;
-    right: -10%;
-  }
-  80% {
-    bottom: 10%;
-    right: 40%;
-  }
-  100% {
-    bottom: -15%;
-    right: -10%;
-  }
-}
+/* ─── Fluted glass backdrop ───
+   One colour field behind ribbed glass, fixed behind every page. The canvas
+   (components/flutedBackdrop.tsx) paints the bent light; the gradient below is
+   what shows before it has drawn, and ::after lays the rib highlights on top. */
 
-@keyframes orb-drift-3 {
-  0% {
-    top: 20%;
-    left: 30%;
-  }
-  33% {
-    top: 50%;
-    left: 70%;
-  }
-  66% {
-    top: -5%;
-    left: 50%;
-  }
-  100% {
-    top: 20%;
-    left: 30%;
-  }
-}
-
-@keyframes orb-morph {
-  0% {
-    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
-    transform: rotate(-15deg) scale(1);
-  }
-  100% {
-    border-radius: 70% 30% 50% 50% / 30% 30% 70% 70%;
-    transform: rotate(5deg) scale(1.1);
-  }
-}
-
-.ambient-bg {
+.backdrop {
   position: fixed;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-:root {
-  --mouse-x: 50vw;
-  --mouse-y: 50vh;
-  --mouse-x-norm: 0;
-  --mouse-y-norm: 0;
-}
-
-.bg-video {
-  position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
   width: 100vw;
   height: 100vh;
-  object-fit: cover;
+  height: 100lvh;
   z-index: -2;
   pointer-events: none;
-}
-
-.bg-video-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: rgba(0, 0, 0, 0.45);
-}
-
-.light .bg-video-overlay {
-  background: rgba(255, 255, 255, 0.7);
-}
-
-.orb {
-  position: absolute;
-  filter: blur(80px);
-  will-change: transform;
-  transition: transform 0.4s ease-out;
-}
-
-.orb-1 {
-  width: 50vw;
-  height: 50vw;
-  border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
-  animation: orb-drift-1 40s infinite ease-in-out;
-  transform: translate(calc(var(--mouse-x-norm) * 30px), calc(var(--mouse-y-norm) * 30px));
-}
-
-.orb-2 {
-  width: 55vw;
-  height: 55vw;
-  border-radius: 60% 40% 30% 70% / 50% 60% 40% 50%;
-  animation: orb-drift-2 50s infinite ease-in-out;
-  transform: translate(calc(var(--mouse-x-norm) * -40px), calc(var(--mouse-y-norm) * -40px));
-}
-
-.orb-3 {
-  width: 40vw;
-  height: 40vw;
-  border-radius: 50% 60% 40% 70% / 60% 40% 70% 30%;
-  animation: orb-drift-3 45s infinite ease-in-out;
-  transform: translate(calc(var(--mouse-x-norm) * 25px), calc(var(--mouse-y-norm) * -25px));
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .orb {
-    transition: none;
-    transform: none !important;
-  }
-}
-
-/* Dark mode: vivid orbs */
-.dark .orb-1 {
-  background: linear-gradient(135deg, #00d2ff, #0078ff);
-  opacity: 0.45;
-}
-.dark .orb-2 {
-  background: linear-gradient(135deg, #ff0044, #d90022);
-  opacity: 0.35;
-}
-.dark .orb-3 {
-  background: linear-gradient(135deg, #8b5cf6, #6d28d9);
-  opacity: 0.25;
-}
-
-/* Light mode: visible but softer */
-.light .orb-1 {
-  background: linear-gradient(135deg, #00b4d8, #0078ff);
-  opacity: 0.25;
-}
-.light .orb-2 {
-  background: linear-gradient(135deg, #f472b6, #ec4899);
-  opacity: 0.18;
-}
-.light .orb-3 {
-  background: linear-gradient(135deg, #8b5cf6, #a78bfa);
-  opacity: 0.15;
-}
-
-.tech-grid {
-  position: fixed;
-  inset: 0;
-  background-image: radial-gradient(
-    circle,
-    var(--color-fore-subtle) 0.8px,
-    transparent 0.8px
-  );
-  background-size: 20px 20px;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0.4;
-}
-
-.light .tech-grid {
-  opacity: 0.15;
-}
-
-.header-dots {
-  background-image: radial-gradient(
-    circle,
-    var(--color-fore-subtle) 0.8px,
-    transparent 0.8px
-  );
-  background-size: 20px 20px;
-  background-position: top left;
-  opacity: 0.4;
-  z-index: 1;
-}
-
-.light .header-dots {
-  opacity: 0.15;
-}
-
-/* ─── Glass Panel ─── */
-
-.glass-panel {
-  background: rgba(10, 10, 18, 0.35);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--color-border);
-  border-radius: 16px;
-  padding: 1.5rem;
-  position: relative;
   overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  background:
+    radial-gradient(34% 46% at 34% 54%, var(--backdrop-warm), transparent 100%),
+    radial-gradient(40% 44% at 38% 92%, var(--backdrop-rose), transparent 100%),
+    linear-gradient(180deg, var(--backdrop-top), var(--backdrop-bottom));
 }
 
-.glass-panel:hover {
-  background: rgba(10, 10, 18, 0.95);
+.backdrop canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
-.light .glass-panel {
-  background: rgba(255, 255, 255, 0.3);
-}
-.light .glass-panel:hover {
-  background: rgba(255, 255, 255, 0.95);
-}
-
-.glass-panel::before {
+.backdrop::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    var(--color-panel-glow),
-    transparent 40%
-  );
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s;
+  background-image:
+    var(--backdrop-veil),
+    linear-gradient(
+      90deg,
+      var(--rib-light) 0,
+      transparent 22%,
+      transparent 62%,
+      var(--rib-shade) 100%
+    );
+  background-size: 100% 100%, var(--rib) 100%;
+  background-repeat: no-repeat, repeat-x;
 }
 
-.glass-panel:hover::before {
-  opacity: 1;
+/* ─── Links ─── */
+
+a.text-accent {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  text-decoration-color: color-mix(in srgb, currentColor 42%, transparent);
+  transition: text-decoration-color 0.2s ease;
 }
 
-.glass-panel:hover {
-  border-color: var(--color-panel-hover-border);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.3);
+a.text-accent:hover {
+  text-decoration-color: currentColor;
 }
 
-/* ─── Panel list items ─── */
+/* ─── Glass panel ─── */
+
+.glass-panel {
+  background: var(--color-panel-bg);
+  backdrop-filter: blur(14px) saturate(135%);
+  -webkit-backdrop-filter: blur(14px) saturate(135%);
+  border: 1px solid var(--color-panel-border);
+  border-radius: var(--radius-panel);
+  padding: 1.25rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    inset 0 1px 0 var(--color-panel-shine),
+    0 24px 60px -36px rgba(4, 14, 44, 0.55);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+@media (min-width: 640px) {
+  .glass-panel {
+    padding: 1.75rem;
+  }
+}
+
+/* ─── Items inside a panel ─── */
 
 .panel-list-item {
   display: flex;
   flex-direction: column;
-  padding: 0.75rem;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid transparent;
-  transition: all 0.2s;
+  padding: 0.875rem 1rem;
+  border-radius: var(--radius-item);
+  background: var(--color-item-bg);
+  border: 1px solid var(--color-item-border);
+  transition: background-color 0.2s ease;
 }
 
 .panel-list-item:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: var(--color-border);
+  background: var(--color-item-bg-hover);
 }
 
-.light .panel-list-item {
-  background: rgba(0, 0, 0, 0.02);
-}
-
-.light .panel-list-item:hover {
-  background: rgba(0, 0, 0, 0.04);
-}
-
-/* ─── Section label ─── */
+/* ─── Section title ─── */
 
 .section-label {
-  font-family: var(--font-space-mono), 'Space Mono', monospace;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  font-size: 1.0625rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  color: var(--color-fore-primary);
 }
 
-.section-label::before {
-  content: '';
-  display: block;
-  width: 12px;
-  height: 2px;
-  background: #ff0044;
+/* Breadcrumb line above a sub-page title */
+.crumb {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-fore-subtle);
 }
 
-/* ─── Tag badge ─── */
+.crumb a:hover {
+  color: var(--color-fore-primary);
+}
+
+/* ─── Page and hero titles ─── */
+
+.hero-title {
+  font-weight: 300;
+  font-size: clamp(1.875rem, 9.4vw, 5.5rem);
+  line-height: 1.04;
+  letter-spacing: -0.04em;
+}
+
+/* Type that sits straight on the glass needs a little separation from it. */
+.dark .on-glass {
+  text-shadow: 0 1px 28px rgba(6, 18, 48, 0.45);
+}
+
+.page-title {
+  font-weight: 300;
+  font-size: clamp(2.125rem, 5vw, 3.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+/* ─── Tag ─── */
 
 .tag-badge {
   display: inline-flex;
   align-items: center;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-family: var(--font-space-mono), 'Space Mono', monospace;
+  padding: 2px 10px;
+  border-radius: 999px;
   font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
+  font-weight: 600;
+  letter-spacing: 0;
   border: 1px solid;
 }
 
 .tag-badge-accent {
-  color: var(--color-accent);
+  color: var(--color-fore-primary);
   background: var(--color-back-accent);
-  border-color: rgba(0, 210, 255, 0.2);
+  border-color: var(--color-border);
 }
 
 .light .tag-badge-accent {
-  border-color: rgba(0, 120, 255, 0.2);
+  color: var(--color-accent);
 }
 
 .tag-badge-red {
-  color: #ff0044;
-  background: rgba(255, 0, 68, 0.1);
-  border-color: rgba(255, 0, 68, 0.2);
+  color: #ff5a7a;
+  background: rgba(255, 90, 122, 0.14);
+  border-color: rgba(255, 90, 122, 0.3);
 }
 
 /* ─── Stat item ─── */
@@ -482,79 +359,154 @@
 .stat-item {
   border-left: 2px solid var(--color-border);
   padding-left: 1rem;
-  transition: border-color 0.3s;
 }
 
-.glass-panel:hover .stat-item {
-  border-left-color: var(--color-accent);
-}
+/* ─── Round icon links (open a section / back home) ─── */
 
-/* ─── Expand icon ─── */
-
-.expand-icon {
-  width: 24px;
-  height: 24px;
+.expand-icon,
+.shrink-icon {
   border-radius: 50%;
   border: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s;
-  color: var(--color-fore-subtle);
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  color: var(--color-fore-secondary);
   flex-shrink: 0;
 }
 
-.glass-panel:hover .expand-icon {
-  border-color: var(--color-accent);
-  color: var(--color-accent);
-  transform: scale(1.1);
+.expand-icon {
+  width: 30px;
+  height: 30px;
 }
 
-/* ─── Shrink icon (back to home) ─── */
-
 .shrink-icon {
+  width: 38px;
+  height: 38px;
+}
+
+.expand-icon:hover,
+.shrink-icon:hover {
+  background: var(--color-solid);
+  border-color: var(--color-solid);
+  color: var(--color-on-solid);
+}
+
+/* ─── Navigation ─── */
+
+/* Content softens as it slides up behind the floating nav. */
+.nav-haze {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 96px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  -webkit-mask-image: linear-gradient(#000 45%, transparent);
+  mask-image: linear-gradient(#000 45%, transparent);
+  pointer-events: none;
+}
+
+.nav-pill {
+  /* display comes from a utility class so `hidden` can still switch it off */
+  align-items: center;
+  height: 48px;
+  padding: 5px;
+  border-radius: 999px;
+  background: var(--color-nav-bg);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  border: 1px solid var(--color-panel-border);
+  box-shadow: inset 0 1px 0 var(--color-panel-shine);
+  pointer-events: auto;
+}
+
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 100%;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-fore-secondary);
+  white-space: nowrap;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.nav-link:hover {
+  color: var(--color-fore-primary);
+  background: var(--color-nav-active);
+}
+
+.nav-link[aria-current='page'] {
+  color: var(--color-fore-primary);
+  background: var(--color-nav-active);
+  font-weight: 600;
+}
+
+.icon-btn {
+  position: relative;
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s;
-  color: var(--color-fore-subtle);
   flex-shrink: 0;
+  color: var(--color-fore-primary);
+  transition: background-color 0.2s ease;
 }
 
-.shrink-icon:hover {
-  border-color: var(--color-accent);
-  color: var(--color-accent);
-  transform: scale(0.9);
+.icon-btn:hover {
+  background: var(--color-nav-active);
 }
 
-/* ─── Social group (profile card) ─── */
+.nav-menu {
+  background: var(--color-overlay-bg);
+  backdrop-filter: blur(28px) saturate(150%);
+  -webkit-backdrop-filter: blur(28px) saturate(150%);
+  border-radius: var(--radius-panel);
+  pointer-events: auto;
+}
 
+.nav-menu-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.875rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-fore-secondary);
+  border-radius: 14px;
+}
+
+.nav-menu-link:hover,
+.nav-menu-link[aria-current='page'] {
+  color: var(--color-fore-primary);
+  background: var(--color-nav-active);
+}
+
+/* ─── Music prompt / player ─── */
 
 .music-prompt {
-  background: rgba(15, 15, 20, 0.92);
-  backdrop-filter: blur(40px);
-  -webkit-backdrop-filter: blur(40px);
+  background: var(--color-overlay-bg);
+  backdrop-filter: blur(28px) saturate(150%);
+  -webkit-backdrop-filter: blur(28px) saturate(150%);
 }
 
-.light .music-prompt {
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(40px);
-  -webkit-backdrop-filter: blur(40px);
-}
+/* ─── Social links ─── */
 
 .social-group {
   border: 1px solid var(--color-border);
+  background: var(--color-item-bg);
   transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
 .social-group-item {
-  padding: 0.5rem;
+  padding: 0.6rem 0.7rem;
   color: var(--color-fore-primary);
-  transition: all 0.3s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
   flex-shrink: 1;
   min-width: 0;
   display: flex;
@@ -567,95 +519,50 @@
 }
 
 .social-group-item:hover {
-  background: var(--color-back-accent);
-  color: var(--color-accent);
+  background: var(--color-solid);
+  color: var(--color-on-solid);
 }
 
-/* ─── Social nav button ─── */
-
 .social-btn {
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background: var(--color-back-secondary);
+  background: var(--color-item-bg);
   border: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
   position: relative;
   color: var(--color-fore-primary);
 }
 
 .social-btn:hover {
-  transform: scale(1.1);
-  border-color: var(--color-accent);
-  color: var(--color-accent);
-  box-shadow: 0 0 20px var(--color-panel-glow);
+  background: var(--color-solid);
+  border-color: var(--color-solid);
+  color: var(--color-on-solid);
 }
 
-/* ─── Corner decorations ─── */
-
-.corner-decoration {
-  position: fixed;
-  width: 10px;
-  height: 10px;
-  opacity: 0.3;
-  z-index: 20;
-  pointer-events: none;
-}
-
-.corner-tl {
-  top: 2rem;
-  left: 2rem;
-  border-top: 1px solid var(--color-fore-subtle);
-  border-left: 1px solid var(--color-fore-subtle);
-}
-
-.corner-tr {
-  top: 2rem;
-  right: 2rem;
-  border-top: 1px solid var(--color-fore-subtle);
-  border-right: 1px solid var(--color-fore-subtle);
-}
-
-.corner-bl {
-  bottom: 2rem;
-  left: 2rem;
-  border-bottom: 1px solid var(--color-fore-subtle);
-  border-left: 1px solid var(--color-fore-subtle);
-}
-
-.corner-br {
-  bottom: 2rem;
-  right: 2rem;
-  border-bottom: 1px solid var(--color-fore-subtle);
-  border-right: 1px solid var(--color-fore-subtle);
-}
-
-/* ─── Link button outline ─── */
+/* ─── Pill button ─── */
 
 .btn-outline {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 12px;
+  gap: 6px;
+  padding: 5px 13px;
   border: 1px solid var(--color-border);
-  border-radius: 4px;
-  font-family: var(--font-space-mono), 'Space Mono', monospace;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
   text-decoration: none;
-  text-transform: uppercase;
-  transition: all 0.2s;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
   color: var(--color-fore-primary);
 }
 
 .btn-outline:hover {
-  background: var(--color-accent);
-  color: var(--color-back-primary);
-  border-color: var(--color-accent);
+  background: var(--color-solid);
+  color: var(--color-on-solid);
+  border-color: var(--color-solid);
 }
 
 /* ─── Scrollbar ─── */
@@ -689,30 +596,19 @@
 /* ─── Avatar ─── */
 
 .avatar-border {
-  padding: 3px;
-  background: radial-gradient(
-    circle at center,
-    rgba(255, 255, 255, 0.9),
-    rgba(255, 255, 255, 0.1) 50%
-  );
-  border-radius: 1rem;
+  padding: 4px;
+  background: var(--color-item-bg);
+  border: 1px solid var(--color-panel-border);
+  border-radius: 22px;
 }
 
 .avatar-border > img {
-  border-radius: calc(1rem - 3px);
-}
-
-.light .avatar-border {
-  background: radial-gradient(
-    circle at center,
-    rgba(0, 0, 0, 0.25),
-    rgba(0, 0, 0, 0.08) 100%
-  );
+  border-radius: 17px;
 }
 
 @keyframes marqueeScroll {
   0%, 20% { transform: translateX(0); }
-  40%, 60% { transform: translateX(calc(-100% + 8ch)); }
+  40%, 60% { transform: translateX(calc(-100% + 14ch)); }
   80%, 100% { transform: translateX(0); }
 }
 
@@ -845,4 +741,14 @@
 .page-content {
   position: relative;
   z-index: 10;
+}
+
+/* ─── Home: about copy ─── */
+
+.intro-copy p {
+  break-inside: avoid;
+}
+
+.intro-copy p:last-child {
+  margin-bottom: 0;
 }

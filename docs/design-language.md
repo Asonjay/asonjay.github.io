@@ -90,15 +90,16 @@ A serif italic (Fraunces) was tried for panel titles and rejected by Jason.
 ## Layout
 
 ### Homepage
-- **Hero**: fills most of the first screen, with the open glass above it. Two
-  blocks rest on the same line above the first panel. Left: "Hi there, I'm" and
-  "Zexin Xu 徐泽鑫" as two lines of the same light type (`.hero-title`, max 4.25rem),
-  the pronunciation sentence, then a solid "View CV" pill and a frosted
-  "Publications" pill. Right: the profile panel (small photo, name and role, an
-  Affiliation card, a Research focus card, social links). On phones: text, then panel.
-  Earlier attempts Jason rejected: a small profile card floating top-right, a
-  144px name, and chips under the name.
-- **About** panel (two columns on desktop).
+- **Identity panel**: the page starts right under the nav with one glass panel, no
+  empty hero above it. Left: "Hi there, I'm Zexin Xu 徐泽鑫" (`.identity-title`,
+  max 2.375rem), the pronunciation sentence, the introduction (two columns from
+  `xl`), then "View CV" and "Publications" pills. Right, behind a hairline: a large
+  photo (176px), name, role, university, social links. On phones: greeting, a photo
+  row with the social links under it, then the introduction.
+  Jason rejected every version that left the greeting on bare glass with space
+  around it (floating card top-right, 144px name with chips, two-block hero with a
+  facts panel). He wants the greeting inside glass, merged with the profile and
+  introduction, and the photo large.
 - **News** (5 cols) + **Publications** (7 cols), then **Projects** (7) + **Blog** (5).
   Single column below `lg`.
 

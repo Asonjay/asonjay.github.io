@@ -82,8 +82,8 @@ A serif italic (Fraunces) was tried for panel titles and rejected by Jason.
   the tags: each distinct tag is handed the next of eight hues (warm, cool, rose,
   mint, violet, amber, teal, lime) in order of first appearance, so the same technology is the
   same colour everywhere and tags on one card differ. Jason did not
-  want differently coloured cards. Demo is a solid pill (`.btn-solid`), GitHub an
-  outlined one.
+  want differently coloured cards. Demo and GitHub are the same outlined pills
+  (`.btn-outline`) as PDF and Code on publications; Jason wanted them to match.
 - **Blog row** (`.post-row`): date-led rows separated by hairlines rather than
   boxes: big light day numeral with the month under it, title, description and
   reading time, arrow circle that fills on hover.

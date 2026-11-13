@@ -656,26 +656,6 @@ a.text-accent:hover {
   border-color: var(--color-solid);
 }
 
-.btn-solid {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  border: 1px solid var(--color-solid);
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  background: var(--color-solid);
-  color: var(--color-on-solid);
-  transition: opacity 0.2s ease;
-}
-
-.btn-solid:hover {
-  opacity: 0.85;
-}
-
-
-
 /* ─── Project tiles ───
    The tiles themselves are plain glass; colour lives in the tags. */
 

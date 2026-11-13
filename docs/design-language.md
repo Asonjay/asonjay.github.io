@@ -78,9 +78,12 @@ A serif italic (Fraunces) was tried for panel titles and rejected by Jason.
 - **Round icon link** (`.expand-icon`, `.shrink-icon`): arrow up-right opens a
   section's page; inward arrows go back home.
 - **Breadcrumb** (`.crumb`): "Home / Publications" above each sub-page title.
-- **Project tile** (`.project-tile`): each tile is washed with one of three backdrop
-  hues in turn (warm, cool, rose); the year, tags and border pick up that hue.
-  Demo is a solid pill (`.btn-solid`), GitHub an outlined one.
+- **Project tile** (`.project-tile`): plain glass, all tiles alike. The colour is in
+  the tags: each distinct tag is handed the next of six hues (warm, cool, rose,
+  mint, violet, amber) in order of first appearance, so the same technology is the
+  same colour everywhere and tags on one card differ. Jason did not
+  want differently coloured cards. Demo is a solid pill (`.btn-solid`), GitHub an
+  outlined one.
 - **Blog row** (`.post-row`): date-led rows separated by hairlines rather than
   boxes: big light day numeral with the month under it, title, description and
   reading time, arrow circle that fills on hover.

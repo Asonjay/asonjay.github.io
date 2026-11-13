@@ -1,3 +1,4 @@
+import React from 'react'
 import { getProjects } from '../lib/mdx'
 import { Project } from '../types/project'
 import { GitHub24 } from '../components/icons'
@@ -10,9 +11,22 @@ function ArrowUpRight() {
   )
 }
 
-// Each tile is tinted with one of the backdrop's colours (see .project-tile in
-// globals.css), so a row of projects doesn't read as identical boxes.
-function ProjectCard({ project }: { project: Project }) {
+const TAG_HUES = ['warm', 'cool', 'rose', 'mint', 'violet', 'amber']
+
+// Hand each distinct tag the next hue, in the order tags first appear across
+// all projects. "React" is then the same colour on every project, and tags
+// sharing a card differ until there are more tags than hues.
+function assignTagHues(projects: Project[]) {
+  const hues = new Map<string, string>()
+  for (const project of projects) {
+    for (const tag of project.tags ?? []) {
+      if (!hues.has(tag)) hues.set(tag, `var(--hue-${TAG_HUES[hues.size % TAG_HUES.length]})`)
+    }
+  }
+  return hues
+}
+
+function ProjectCard({ project, hues }: { project: Project; hues: Map<string, string> }) {
   return (
     <article className="project-tile h-full">
       <div className="flex items-start justify-between gap-3">
@@ -20,7 +34,11 @@ function ProjectCard({ project }: { project: Project }) {
         {project.tags && project.tags.length > 0 && (
           <div className="flex flex-wrap justify-end gap-1.5 pt-1">
             {project.tags.map(tag => (
-              <span key={tag} className="tag-badge project-tag">
+              <span
+                key={tag}
+                className="tag-badge project-tag"
+                style={{ '--tag-hue': hues.get(tag) } as React.CSSProperties}
+              >
                 {tag}
               </span>
             ))}
@@ -91,6 +109,9 @@ const ProjectList = async ({ selectedOnly = false }: Props) => {
       )
     }
 
+    // From the full list, so the home page and the projects page agree.
+    const hues = assignTagHues(projects)
+
     const filteredProjects = selectedOnly
       ? projects.filter(p => p.selected === true)
       : projects
@@ -99,7 +120,7 @@ const ProjectList = async ({ selectedOnly = false }: Props) => {
       <section>
         <div className="project-grid grid grid-cols-1 sm:grid-cols-2 gap-4">
           {filteredProjects.map(project => (
-            <ProjectCard key={project.id || project.title} project={project} />
+            <ProjectCard key={project.id || project.title} project={project} hues={hues} />
           ))}
         </div>
       </section>

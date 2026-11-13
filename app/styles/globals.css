@@ -56,10 +56,13 @@
   --sheen-warm: #c9482c;
   --sheen-cool: #1746c4;
 
-  --hue-warm: #e0532f;
+  --hue-warm: #d04a25;
   --hue-cool: #1f5fd6;
-  --hue-rose: #d0457f;
-  --tile-wash: 16%;
+  --hue-rose: #c63a78;
+  --hue-mint: #0b8a68;
+  --hue-violet: #6a48d6;
+  --hue-amber: #9a6400;
+  --tag-ink: 100%;
 
   --color-tag-fg: #1746c4;
   --color-tag-bg: rgba(23, 70, 196, 0.1);
@@ -129,10 +132,13 @@
   --sheen-warm: #ffc2a8;
   --sheen-cool: #a6d6ff;
 
-  --hue-warm: #ff9a78;
-  --hue-cool: #7cc4ff;
-  --hue-rose: #f29ac4;
-  --tile-wash: 30%;
+  --hue-warm: #ffa07e;
+  --hue-cool: #86c8ff;
+  --hue-rose: #f79fc8;
+  --hue-mint: #7fe3c4;
+  --hue-violet: #c4b3ff;
+  --hue-amber: #ffd27a;
+  --tag-ink: 55%;
 
   --color-tag-fg: #d3eaff;
   --color-tag-bg: rgba(150, 205, 255, 0.16);
@@ -667,27 +673,20 @@ a.text-accent:hover {
 
 
 /* ─── Project tiles ───
-   Three tints taken from the backdrop, dealt out in turn. */
+   The tiles themselves are plain glass; colour lives in the tags. */
 
 .project-tile {
-  --tile-hue: var(--hue-warm);
   display: flex;
   flex-direction: column;
   padding: 1.25rem;
   border-radius: 20px;
-  border: 1px solid color-mix(in srgb, var(--tile-hue) 34%, var(--color-item-border));
-  background:
-    radial-gradient(120% 110% at 0% 0%, color-mix(in srgb, var(--tile-hue) var(--tile-wash), transparent), transparent 64%),
-    var(--color-item-bg);
+  border: 1px solid var(--color-item-border);
+  background: var(--color-item-bg);
   transition: background-color 0.2s ease;
 }
 
-.project-grid > :nth-child(3n + 2) {
-  --tile-hue: var(--hue-cool);
-}
-
-.project-grid > :nth-child(3n) {
-  --tile-hue: var(--hue-rose);
+.project-tile:hover {
+  background: var(--color-item-bg-hover);
 }
 
 .project-year {
@@ -696,13 +695,15 @@ a.text-accent:hover {
   letter-spacing: 0.01em;
   font-variant-numeric: tabular-nums;
   line-height: 1.7;
-  color: color-mix(in srgb, var(--tile-hue) 72%, var(--color-fore-primary));
+  color: var(--color-fore-subtle);
 }
 
+/* Each distinct tag gets its own hue (assigned in projectList.tsx), so the
+   same technology is the same colour wherever it appears. */
 .project-tag {
-  color: var(--color-fore-primary);
-  background: color-mix(in srgb, var(--tile-hue) 20%, transparent);
-  border-color: color-mix(in srgb, var(--tile-hue) 42%, transparent);
+  color: color-mix(in srgb, var(--tag-hue) var(--tag-ink), var(--color-fore-primary));
+  background: color-mix(in srgb, var(--tag-hue) 18%, transparent);
+  border-color: color-mix(in srgb, var(--tag-hue) 44%, transparent);
 }
 
 /* ─── Blog rows ─── */

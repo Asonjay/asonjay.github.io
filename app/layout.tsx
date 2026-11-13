@@ -30,10 +30,10 @@ export const metadata: Metadata = {
     default: 'Zexin (Jason) Xu',
     template: '%s | Jason Xu',
   },
-  description: 'PhD Student at The University of Texas at Dallas',
+  description: 'PhD Candidate at The University of Texas at Dallas',
   openGraph: {
     title: 'Zexin (Jason) Xu',
-    description: 'PhD Student at The University of Texas at Dallas',
+    description: 'PhD Candidate at The University of Texas at Dallas',
     url: 'https://zexinxu.com',
     siteName: 'Zexin (Jason) Xu',
     images: [
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
   twitter: {
     creator: '@zexin_jason_xu',
     title: 'Zexin (Jason) Xu',
-    description: 'PhD Student at The University of Texas at Dallas',
+    description: 'PhD Candidate at The University of Texas at Dallas',
     card: 'summary',
     images: ['https://zexinxu.com/images/JJ-icon.png'],
   },

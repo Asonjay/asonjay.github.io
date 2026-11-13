@@ -16,6 +16,15 @@ import Introduction from '../components/introduction'
 import avatar from '../public/images/profile-img.jpeg'
 import { wenKai } from './fonts'
 
+// Follows the Research Interests paragraph of the CV, in the field's own terms.
+const RESEARCH_INTERESTS = [
+  'Egocentric multimodal agents',
+  'Embodied agents',
+  'Multimodal learning',
+  'Proactive AI assistants',
+  'AI in education',
+]
+
 function SocialLinks() {
   const icon = 'w-[1.125rem] h-[1.125rem]'
   return (
@@ -55,7 +64,7 @@ export default async function Page() {
       {/* ─── Identity: greeting, introduction and profile in one glass panel ─── */}
       <section className="glass-panel grid gap-y-6 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-x-10" aria-labelledby="identity-title">
         <div className="lg:col-start-1 lg:row-start-1">
-          <h1 id="identity-title" className="identity-title text-fore-primary">
+          <h1 id="identity-title" className="identity-title name-sheen w-fit max-w-full">
             Hi there, I&apos;m Zexin Xu{' '}
             <span className="whitespace-nowrap">
               (<span className={wenKai.className}>徐泽鑫</span>)
@@ -64,8 +73,7 @@ export default async function Page() {
           <p className="mt-2.5 text-[0.9375rem] leading-relaxed text-fore-subtle">
             My full name is pronounced as{' '}
             <span className="ipa" lang="en-fonipa">/zɛˈʃɪn ʃiː/</span>, with the &quot;X&quot; sounding
-            like &quot;sh&quot;. I also go by{' '}
-            <strong className="font-semibold text-fore-primary">Jason</strong>.
+            like &quot;sh&quot;.
           </p>
         </div>
 
@@ -89,7 +97,7 @@ export default async function Page() {
             <div className="text-[1.0625rem] font-semibold tracking-tight text-fore-primary leading-tight">
               Zexin (Jason) Xu
             </div>
-            <div className="text-[0.8125rem] text-fore-secondary mt-1.5">PhD Student</div>
+            <div className="text-[0.8125rem] text-fore-secondary mt-1.5">PhD Candidate</div>
             <div className="text-[0.8125rem] text-fore-subtle">University of Texas at Dallas</div>
           </div>
           <div className="social-group hidden lg:flex items-stretch rounded-full overflow-hidden w-full">
@@ -106,6 +114,17 @@ export default async function Page() {
           <div className="intro-copy text-fore-secondary text-[0.9375rem] leading-relaxed xl:columns-2 xl:gap-10">
             <Introduction />
           </div>
+        </div>
+
+        <div className="lg:col-span-2 flex flex-col gap-3 pt-5 border-t border-[var(--color-border)] sm:flex-row sm:items-baseline sm:gap-5">
+          <h2 className="flex-shrink-0 text-[0.8125rem] font-semibold text-accent-secondary">Research interests</h2>
+          <ul className="flex flex-wrap gap-2">
+            {RESEARCH_INTERESTS.map(topic => (
+              <li key={topic} className="focus-tag">
+                {topic}
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 

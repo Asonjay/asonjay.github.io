@@ -52,6 +52,10 @@
   --rib-light: rgba(255, 255, 255, 0.36);
   --rib-shade: rgba(20, 50, 110, 0.18);
 
+  --sheen-base: #0b1e3f;
+  --sheen-warm: #c9482c;
+  --sheen-cool: #1746c4;
+
   --hue-warm: #e0532f;
   --hue-cool: #1f5fd6;
   --hue-rose: #d0457f;
@@ -120,6 +124,10 @@
   --backdrop-veil: linear-gradient(180deg, rgba(6, 18, 48, 0.3), rgba(6, 18, 48, 0.08) 30%, rgba(6, 18, 48, 0.3));
   --rib-light: rgba(255, 255, 255, 0.19);
   --rib-shade: rgba(4, 14, 44, 0.32);
+
+  --sheen-base: #ffffff;
+  --sheen-warm: #ffc2a8;
+  --sheen-cool: #a6d6ff;
 
   --hue-warm: #ff9a78;
   --hue-cool: #7cc4ff;
@@ -329,10 +337,61 @@ a.text-accent:hover {
 
 /* Home greeting, at the top of the identity panel */
 .identity-title {
-  font-weight: 400;
+  font-weight: 500; /* a little weight gives the sheen something to show on */
   font-size: clamp(1.625rem, 3.1vw, 2.375rem);
   line-height: 1.15;
   letter-spacing: -0.035em;
+}
+
+/* The greeting catches the light: a band of the backdrop's two hues travels
+   slowly across it, the way a highlight slides over glass. */
+.name-sheen {
+  background-image: linear-gradient(
+    100deg,
+    var(--sheen-base) 0%,
+    var(--sheen-base) 30%,
+    var(--sheen-warm) 44%,
+    var(--sheen-cool) 56%,
+    var(--sheen-base) 70%,
+    var(--sheen-base) 100%
+  );
+  background-size: 260% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: nameSheen 7s ease-in-out infinite;
+}
+
+@keyframes nameSheen {
+  0%,
+  12% {
+    background-position: 100% 0;
+  }
+  88%,
+  100% {
+    background-position: 0% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .name-sheen {
+    animation: none;
+    background-position: 50% 0; /* hold the band still, mid-name */
+  }
+}
+
+.focus-tag {
+  padding: 5px 13px;
+  border-radius: 999px;
+  border: 1px solid var(--color-item-border);
+  background: var(--color-item-bg);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-fore-primary);
 }
 
 /* Phonetic transcription. Manrope has no IPA letters, so name faces that do

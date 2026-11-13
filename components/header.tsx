@@ -94,7 +94,7 @@ export function Header() {
               </Link>
             ))}
             <a href={CV_URL} target="_blank" rel="noopener noreferrer" className="nav-link">
-              CV <span className="text-[0.6875rem] font-normal text-fore-subtle">03.26</span>
+              CV <span className="text-[0.6875rem] font-normal text-fore-subtle">10.26</span>
             </a>
           </div>
 
@@ -168,7 +168,7 @@ export function Header() {
                 </Link>
               ))}
               <a href={CV_URL} target="_blank" rel="noopener noreferrer" className="nav-menu-link">
-                CV <span className="text-xs font-normal text-fore-subtle">03.26</span>
+                CV <span className="text-xs font-normal text-fore-subtle">10.26</span>
               </a>
             </div>
           </div>

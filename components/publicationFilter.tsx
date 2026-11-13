@@ -8,6 +8,7 @@ import CiteButton from './citeButton'
 
 const FILTER_TYPES = [
   { key: 'all', label: 'All' },
+  { key: 'Multimodal', label: 'Multimodal' },
   { key: 'Security', label: 'Security' },
   { key: 'Embodied AI', label: 'Embodied AI' },
   { key: 'Alignment', label: 'Alignment' },

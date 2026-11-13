@@ -97,6 +97,9 @@ A serif italic (Fraunces) was tried for panel titles and rejected by Jason.
   `xl`). No buttons: Jason had the CV and Publications pills removed. Right, behind a hairline: a large
   photo (176px), name, role, university, social links. On phones: greeting, a photo
   row with the social links under it, then the introduction.
+  The name carries a slow sheen (`.name-sheen`: a band of the warm and cool accent
+  travelling across it, still under reduced motion). A "Research interests" row of
+  tags closes the panel, under a hairline.
   Jason rejected every version that left the greeting on bare glass with space
   around it (floating card top-right, 144px name with chips, two-block hero with a
   facts panel). He wants the greeting inside glass, merged with the profile and
